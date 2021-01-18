@@ -45,4 +45,4 @@ jobs:
           DD_BOT_SECRET: ${{ github.event.client_payload.DD_BOT_SECRET || secrets.DD_BOT_SECRET }} # 密钥，机器人安全设置页面，加签一栏下面显示的SEC开头的字符串 , 注:填写了DD_BOT_TOKEN和DD_BOT_SECRET，钉钉机器人安全设置只需勾选加签即可，其他选项不要勾选
           IGOT_PUSH_KEY: ${{ github.event.client_payload.IGOT_PUSH_KEY || secrets.IGOT_PUSH_KEY }} # iGot聚合推送，支持多方式推送，确保消息可达. 参考 https://wahao.github.io/Bark-MP-helper
           # 同步地址
-          SYNCURL: https://raw.githubusercontent.com/zsh35/jd_scripts/master/jd_bean_change.js
+          SYNCURL: https://github.com/Xinx1201/action/raw/master/Task/jd_bean_change.js
