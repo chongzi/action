@@ -27,7 +27,7 @@ jobs:
           npm install
       - name: '运行 【聚看点】'
         run: |
-          node ./Task/jkd.js
+          node ./Task/jukandian.js
         env:
           # 聚看点专属配置
           JKD_COOKIE: ${{ secrets.JKD_COOKIE }}
