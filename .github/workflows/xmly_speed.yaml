@@ -26,7 +26,7 @@ jobs:
           python-version: 3.7
 
       - name: '安装依赖包'
-        run: pip install -r ./Task/requirements.txt
+        run: pip install -r ./Task/xmly_requirements.txt
 
       - name: '运行 喜马拉雅极速版'
         run: python3 ./Task/xmly_speed.py
