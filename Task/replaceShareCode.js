@@ -29,7 +29,7 @@ async function inject_jd() {
         });
     }
     await downloader_jd();
-    // await downloader_notify();
+    await downloader_notify();
 }
 
 function batchReplace() {
@@ -89,7 +89,7 @@ async function downloader_jd() {
 }
 
 async function downloader_notify() {
-    // await download("https://raw.githubusercontent.com/zsh35/jd_scripts/master/sendNotify.js", "./sendNotify.js", "统一通知");
+    await download("https://github.com/Xinx1201/action/raw/master/Task/sendNotify.js", "./sendNotify.js", "统一通知");
 }
 
 async function download(url, path, target) {
