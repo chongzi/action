@@ -26,41 +26,28 @@
 
 
 
-
-#### 聚看点
-
-| Name | 属性 | 说明 |
-| --- | --- | --- |
-| `JKD_COOKIE` | 必须 | `聚看点→我的 获取Cookie`可选择用&、@、换行隔开 |
-| `JKD_USER_AGENT` | 非必须 | 用户ua，默认为ios                              |
-| `JKD_WITHDRAW` | 非必须 | 提现金额                                       |
-| `JKD_FAKE_IOS` | 非必须 | 将安卓cookie伪装成iOS 默认伪装，填写任意值     |
-| `JKD_NOTIFY` | 非必须 | 是否开启通知，开启则22点通知一次 |
-
-
-
 #### 推送通知
 
-| Name | 归属 | 属性 | 说明 |
-| --- | :-: | --- | --- |
-| `PUSH_KEY` | 推送 | 非必须 | cookie 失效推送[server 酱的微信通知](http://sc.ftqq.com/3.version) |
-| `BARK_PUSH` | 推送 | 非必须 | cookie 失效推送 BARK 这个 APP,此 token 是https://api.day.app/后面的内容 |
-| `BARK_SOUND` | 推送 | 非必须 | bark 推送声音设置，例如`choo`,具体值请在`bark`-`推送铃声`-`查看所有铃声` |
-| `TG_BOT_TOKEN` | 推送 | 非必须 | tg 推送,填写自己申请[@BotFather](https://t.me/BotFather)的 Token,如`10xxx4:AAFcqxxxxgER5uw` |
-| `TG_USER_ID` | 推送 | 非必须 | tg 推送,填写[@getuseridbot](https://t.me/getuseridbot)中获取到的纯数字 ID，[关于 TG 推送的说明](#关于TG推送的说明) |
-| `DD_BOT_TOKEN` | 钉钉推送 | 非必须 | 钉钉推送[官方文档](https://ding-doc.dingtalk.com/doc#/serverapi2/qf2nxq) ,只需`https://oapi.dingtalk.com/robot/send?access_token=XXX` 等于符号后面的 XXX， 注：如果钉钉推送只填写`DD_BOT_TOKEN`，那么安全设置需勾选`自定义关键词`，内容输入输入`账号`即可，其他安全设置不要勾选 |
-| `DD_BOT_SECRET` | 钉钉推送 | 非必须 | 密钥，机器人安全设置页面，加签一栏下面显示的 SEC 开头的字符串,填写了`DD_BOT_TOKEN`和`DD_BOT_SECRET`，钉钉机器人安全设置只需勾选`加签`即可，其他选项不要勾选 |
-| `IGOT_PUSH_KEY` | 推送 | 非必须 | IGOT 推送 |
-| `PUSH_PLUS_TOKEN`|   pushplus推送  | 非必须 | 微信扫码登录后一对一推送或一对多推送下面的token(您的Token) [官方网站](http://pushplus.hxtrip.com/)|
-| `PUSH_PLUS_USER`|   pushplus推送  | 非必须 | 一对多推送的“群组编码”（一对多推送下面->您的群组(如无则新建)->群组编码）注:(1、需订阅者扫描二维码 2、如果您是创建群组所属人，也需点击“查看二维码”扫描绑定，否则不能接受群组消息推送)，只填`PUSH_PLUS_TOKEN`默认为一对一推送 |
-| `QQ_SKEY`|   酷推(Cool Push)推送   | 非必须 | 推送所需的Skey,登录后获取Skey [参考文档](https://cp.xuthus.cc/) |
-| `QQ_MODE` |   酷推(Cool Push)推送   | 非必须 | 推送方式(send或group或者wx，默认send) [参考文档](https://cp.xuthus.cc/) |
-| `PET_NOTIFY_CONTROL` | 东东萌宠推送开关 | 非必须 | 控制京东萌宠是否静默运行,`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
-| `FRUIT_NOTIFY_CONTROL` | 东东农场推送开关 | 非必须 | 控制京东农场是否静默运行,`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
-| `JD_JOY_REWARD_NOTIFY` | 宠汪汪兑换京豆推送开关 | 非必须 | 控制 jd_joy_reward.js 脚本是否静默运行,`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
-| `MARKET_REWARD_NOTIFY` | 京小超兑换奖品推送开关 | 非必须 | 控制 jd_blueCoin.js 兑换奖品成功后是否静默运行, `false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
-| `DREAMFACTORY_NOTIFY_CONTROL` | 京喜工厂推送开关 | 非必须 | jd_dreamFactory.js, 默认 true (不推送) |
-| `JXSTORY_NOTIFY_CONTROL` | 京喜故事推送开关 | 非必须 | jd_jxstory.js, 默认 true (不推送) |
+| Name                          |          归属          | 属性   | 说明                                                         |
+| ----------------------------- | :--------------------: | ------ | ------------------------------------------------------------ |
+| `PUSH_KEY`                    |          推送          | 非必须 | cookie 失效推送[server 酱的微信通知](http://sc.ftqq.com/3.version) |
+| `BARK_PUSH`                   |          推送          | 非必须 | cookie 失效推送 BARK 这个 APP,此 token 是https://api.day.app/后面的内容 |
+| `BARK_SOUND`                  |          推送          | 非必须 | bark 推送声音设置，例如`choo`,具体值请在`bark`-`推送铃声`-`查看所有铃声` |
+| `TG_BOT_TOKEN`                |          推送          | 非必须 | tg 推送,填写自己申请[@BotFather](https://t.me/BotFather)的 Token,如`10xxx4:AAFcqxxxxgER5uw` |
+| `TG_USER_ID`                  |          推送          | 非必须 | tg 推送,填写[@getuseridbot](https://t.me/getuseridbot)中获取到的纯数字 ID，[关于 TG 推送的说明](#关于TG推送的说明) |
+| `DD_BOT_TOKEN`                |        钉钉推送        | 非必须 | 钉钉推送[官方文档](https://ding-doc.dingtalk.com/doc#/serverapi2/qf2nxq) ,只需`https://oapi.dingtalk.com/robot/send?access_token=XXX` 等于符号后面的 XXX， 注：如果钉钉推送只填写`DD_BOT_TOKEN`，那么安全设置需勾选`自定义关键词`，内容输入输入`账号`即可，其他安全设置不要勾选 |
+| `DD_BOT_SECRET`               |        钉钉推送        | 非必须 | 密钥，机器人安全设置页面，加签一栏下面显示的 SEC 开头的字符串,填写了`DD_BOT_TOKEN`和`DD_BOT_SECRET`，钉钉机器人安全设置只需勾选`加签`即可，其他选项不要勾选 |
+| `IGOT_PUSH_KEY`               |          推送          | 非必须 | IGOT 推送                                                    |
+| `PUSH_PLUS_TOKEN`             |      pushplus推送      | 非必须 | 微信扫码登录后一对一推送或一对多推送下面的token(您的Token) [官方网站](http://pushplus.hxtrip.com/) |
+| `PUSH_PLUS_USER`              |      pushplus推送      | 非必须 | 一对多推送的“群组编码”（一对多推送下面->您的群组(如无则新建)->群组编码）注:(1、需订阅者扫描二维码 2、如果您是创建群组所属人，也需点击“查看二维码”扫描绑定，否则不能接受群组消息推送)，只填`PUSH_PLUS_TOKEN`默认为一对一推送 |
+| `QQ_SKEY`                     |  酷推(Cool Push)推送   | 非必须 | 推送所需的Skey,登录后获取Skey [参考文档](https://cp.xuthus.cc/) |
+| `QQ_MODE`                     |  酷推(Cool Push)推送   | 非必须 | 推送方式(send或group或者wx，默认send) [参考文档](https://cp.xuthus.cc/) |
+| `PET_NOTIFY_CONTROL`          |    东东萌宠推送开关    | 非必须 | 控制京东萌宠是否静默运行,`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
+| `FRUIT_NOTIFY_CONTROL`        |    东东农场推送开关    | 非必须 | 控制京东农场是否静默运行,`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
+| `JD_JOY_REWARD_NOTIFY`        | 宠汪汪兑换京豆推送开关 | 非必须 | 控制 jd_joy_reward.js 脚本是否静默运行,`false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
+| `MARKET_REWARD_NOTIFY`        | 京小超兑换奖品推送开关 | 非必须 | 控制 jd_blueCoin.js 兑换奖品成功后是否静默运行, `false`为否(发送推送通知消息),`true`为是(即：不发送推送通知消息) |
+| `DREAMFACTORY_NOTIFY_CONTROL` |    京喜工厂推送开关    | 非必须 | jd_dreamFactory.js, 默认 true (不推送)                       |
+| `JXSTORY_NOTIFY_CONTROL`      |    京喜故事推送开关    | 非必须 | jd_jxstory.js, 默认 true (不推送)                            |
 
 
 
