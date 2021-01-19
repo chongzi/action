@@ -1,17 +1,17 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: crazyJoy挂机
+name: 京豆变动通知
 
 on:
   push:
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 17 * * *'
   # watch:
   #   types: [started]
   repository_dispatch:
-    types: jd_crazy_joy
+    types: jd_bean_change
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,7 +35,7 @@ jobs:
         run: |
           cd  ~/scripts
           npm install
-          node jd_crazy_joy_coin.js
+          node  jd_bean_change.js
         env:
           # 专属配置
           JD_COOKIE: ${{ secrets.JD_COOKIE }}
