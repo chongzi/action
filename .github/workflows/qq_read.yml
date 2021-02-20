@@ -16,18 +16,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
+    env:
+      QQ_QQreadURL: ${{ secrets.QQ_QQreadURL }}
     steps:
       - name: Checkout
         run: |
-          git clone -b master https://github.com/ziye66666/JavaScript.git ~/scripts
+          git clone https://github.com/ziye66666/JavaScript.git ~/JavaScript
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install
+        run: |
+          cd ~/JavaScript
+          npm install
       - name: '运行 【QQ阅读】'
         run: |
-          cd  ~/scripts/Task
-          npm install
-          node  QQread.js
+          cd ~/JavaScript
+          node Task/QQread.js
         env:
-          # 专属配置
-          QQ_QQreadURL: ${{ secrets.QQ_QQreadURL }}
           # 推送配置
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
           BARK_PUSH: ${{ secrets.BARK_PUSH }}
