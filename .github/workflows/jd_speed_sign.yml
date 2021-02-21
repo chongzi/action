@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Checkout
         run: |
-          git clone -b master https://github.com/ZFeng3242/JD-haoyangmao.git ~/haoyangmao
+          git clone -b master https://github.com/ZFeng3242/JD-haoyangmao.git ~/JD-haoyangmao
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -33,7 +33,7 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }} # 使用 package-lock.json 的 Hash 作为缓存的 key。也可以使用 package.json 代替
       - name: '运行 【京东极速版签到】'
         run: |
-          cd  ~/haoyangmao
+          cd  ~/JD-haoyangmao
           npm install
           node  jd_speed_sign.js
         env:
