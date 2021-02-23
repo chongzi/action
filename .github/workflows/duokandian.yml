@@ -28,8 +28,6 @@ jobs:
           node ./Task/duokandian.js
         env:
           DKD_duokandianCASH: ${{ secrets.DKD_duokandianCASH }}
-          duokandianbodyVal: ${{ secrets.DKD_duokandianBODY }}
-          duokandianvideobodyVal: ${{ secrets.DKD_duokandianvideoBODY }}
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
           PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
           PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER }}
