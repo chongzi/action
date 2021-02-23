@@ -2,11 +2,9 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 15:05:39 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-02-23 15:07:23
+ * @Last Modified time: 2021-02-23 15:18:09
  * 
  * 【DKD_duokandianCASH】设置提现标准 0 1 3 5 15 50
- * 【DKD_duokandianBODY】出现在url地址中token=xxx
- * 【DKD_duokandianvideoBODY】采用作者加载的12个body
  * 原作者地址:https://raw.githubusercontent.com/ziye66666/JavaScript/main/Task/duokandian.js
  */
 
