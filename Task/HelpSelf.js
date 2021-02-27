@@ -2,12 +2,14 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 09:14:48 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-02-26 17:30:03
+ * @Last Modified time: 2021-02-27 14:21:21
  */
 
 const $ = new Env('🔔HelpMyself design by Xin')
-
+// 获取Cookie
 let cookiesArr = []
+// 失效Cookie
+const invalidCookies=[]
 
 const JD_API_HOST = 'https://api.m.jd.com/client.action'
 
@@ -37,6 +39,8 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action'
       await toHelpMyself()
     }
   }
+  console.log(`❌失效的Cookie为：`)
+  console.log(invalidCookies);
 })()
   .catch(e => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -64,6 +68,11 @@ async function toHelpMyself() {
 
 // 🥔种豆得豆✅
 async function helpPlantBean() {
+// xin mlrdw3aw26j3xtlnoc5rovsdcl364xjx4ctvrhq
+// bao e7lhibzb3zek2volndkiirtldf2etf3cbfqgk5y
+// ksy olmijoxgmjutydzvmwfbl6e6l6h2cth3aj3eb4q
+// ksyd gou7sxm3hztwog43s4wlioc4zwmle4lerqaqbky
+// hw e7lhibzb3zek2stpvartzi4aykd2ea5dzobizwy
 const jdPlantBeanShareArr=[`e7lhibzb3zek2volndkiirtldf2etf3cbfqgk5y@mlrdw3aw26j3xtlnoc5rovsdcl364xjx4ctvrhq@olmijoxgmjutydzvmwfbl6e6l6h2cth3aj3eb4q@gou7sxm3hztwog43s4wlioc4zwmle4lerqaqbky@e7lhibzb3zek2stpvartzi4aykd2ea5dzobizwy`]
 // 格式化
 function shareCodesFormat() {
@@ -114,7 +123,7 @@ async function helpShare(plantUuid) {
   $.helpResult = await request(`plantBeanIndex`, body);
   console.log(`助力结果的code:${$.helpResult && $.helpResult.code}`);
 }
-// ======
+// ===函数方法===
 function request(function_id, body = {}){
   return new Promise(async resolve => {
     $.post(taskUrl(function_id, body), (err, resp, data) => {
@@ -160,6 +169,11 @@ function taskUrl(function_id, body) {
 
 // 🌳东东农场✅
 async function helpFruit() {
+// xin 554359d55fcc4a1fab5f17a946cbf338
+// bao 4625d3914d044bacbae685e9d60f14c8
+// ksy edf5df477f3e4c45960909255988b345
+// ksyd dfb7e6bd0c3649d69d4f61c41a382675
+// hw 7f0d2ecc6e364b938223c3d900eae72d
 const jdFruitShareArr = [`4625d3914d044bacbae685e9d60f14c8@554359d55fcc4a1fab5f17a946cbf338@edf5df477f3e4c45960909255988b345@dfb7e6bd0c3649d69d4f61c41a382675@7f0d2ecc6e364b938223c3d900eae72d`]
 // 格式化
 function shareCodesFormat() {
@@ -219,7 +233,7 @@ async function masterHelp() {
     channel: 1
   });
 }
-// ======
+// ===函数方法===
 function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
@@ -271,6 +285,11 @@ function taskUrl(function_id, body = {}) {
 
 // 🐶东东萌宠✅
 async function helpPet() {
+// xin MTE1NDQ5MzYwMDAwMDAwMzkwMTMzNTk=
+// bao MTAxODEyMjkxMDAwMDAwMDQwMDQ5ODU5
+// ksy MTE1NDAxNzgwMDAwMDAwNDE2NTU0Nzk=
+// ksyd MTE1NDQ5MzYwMDAwMDAwNDI0MDQ1NzM=
+// hw MTE1NDAxNzgwMDAwMDAwNDQ3Mjg3MTM=
 const jdPetShareArr = [`MTAxODEyMjkxMDAwMDAwMDQwMDQ5ODU5@MTE1NDQ5MzYwMDAwMDAwMzkwMTMzNTk=@MTE1NDAxNzgwMDAwMDAwNDE2NTU0Nzk=@MTE1NDQ5MzYwMDAwMDAwNDI0MDQ1NzM=@MTE1NDAxNzgwMDAwMDAwNDQ3Mjg3MTM=`]
 // 格式化
 function shareCodesFormat() {
@@ -315,7 +334,7 @@ async function slaveHelp() {
     message += `【您助力的好友】${helpPeoples.substr(0, helpPeoples.length - 1)}`;
   }
 }
-// ======
+// ===函数方法===
 async function request(function_id, body = {}) {
   await $.wait(3000); //歇口气儿, 不然会报操作频繁
   return new Promise((resolve, reject) => {
@@ -356,6 +375,11 @@ function taskUrl(function_id, body = {}) {
 
 // 🐶Crazy-Joy✅
 async function helpCrazyJoy() {
+// xin 4hcydYCP_3SVJFTBkKtsLKt9zd5YaBeE
+// bao qNOtcKihtPlqVT188Rh9_6t9zd5YaBeE
+// ksy sRQ2jh_ETvfB8zU3_op5Rqt9zd5YaBeE
+// ksyd 2AxO9_8nIcYf8ITfyXlpcg==
+// hw zXtqe9c8Px1A4LFoWwvtS6t9zd5YaBeE
 const jdcrazyjoyArr = [`qNOtcKihtPlqVT188Rh9_6t9zd5YaBeE@4hcydYCP_3SVJFTBkKtsLKt9zd5YaBeE@sRQ2jh_ETvfB8zU3_op5Rqt9zd5YaBeE@2AxO9_8nIcYf8ITfyXlpcg==@zXtqe9c8Px1A4LFoWwvtS6t9zd5YaBeE`]
 // 格式化
 function shareCodesFormat() {
@@ -411,7 +435,18 @@ function helpFriend(code) {
     })
   })
 }
-// ======
+// ===函数方法===
+function safeGet(data) {
+  try {
+    if (typeof JSON.parse(data) == "object") {
+      return true;
+    }
+  } catch (e) {
+    console.log(e);
+    console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
+    return false;
+  }
+}
 function taskUrl(functionId, body = '') {
   let t = Date.now().toString().substr(0, 10)
   let e = body || ""
@@ -432,23 +467,17 @@ function taskUrl(functionId, body = '') {
     }
   }
 }
-function safeGet(data) {
-  try {
-    if (typeof JSON.parse(data) == "object") {
-      return true;
-    }
-  } catch (e) {
-    console.log(e);
-    console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
-    return false;
-  }
-}
   // 🔔助力
   await helpFriends()
 }
 
 // 💸签到领现金✅
 async function helpCash() {
+// xin eU9YaezhZq8j9mbXz3RF1g
+// bao eU9YaOzgYPR082eHmXoa0Q
+// ksy eU9Yar7kYap38m_SmnRBgg
+// ksyd eU9YKqzBMLZXhzyQsxpw
+// hw eU9YaL2wYf1w9zjVySJHhw
 jdCashArr=[`eU9YaezhZq8j9mbXz3RF1g@eU9YaOzgYPR082eHmXoa0Q@eU9Yar7kYap38m_SmnRBgg@eU9YKqzBMLZXhzyQsxpw@eU9YaL2wYf1w9zjVySJHhw`]
 // 格式化
 function shareCodesFormat() {
@@ -496,7 +525,7 @@ function index(info=false) {
     })
   })
 }
-
+// 助力
 async function helpFriends() {
   $.canHelp = true
   await shareCodesFormat()
@@ -537,6 +566,18 @@ function helpFriend(helpInfo) {
     })
   })
 }
+// ===函数方法===
+function safeGet(data) {
+  try {
+    if (typeof JSON.parse(data) == "object") {
+      return true;
+    }
+  } catch (e) {
+    console.log(e);
+    console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
+    return false;
+  }
+}
 function taskUrl(functionId, body = {}) {
   return {
     url: `${JD_API_HOST}?functionId=${functionId}&body=${escape(JSON.stringify(body))}&appid=CashRewardMiniH5Env&appid=9.1.0`,
@@ -552,28 +593,15 @@ function taskUrl(functionId, body = {}) {
     }
   }
 }
-function safeGet(data) {
-  try {
-    if (typeof JSON.parse(data) == "object") {
-      return true;
-    }
-  } catch (e) {
-    console.log(e);
-    console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
-    return false;
-  }
-}
-
-
 async function jdCash() {
   await index()
   await helpFriends()
   await index(true)
 }
-
  await jdCash()
 }
 
+// 从Gitee拿到Cookies
 function getCookies(url) {
   return new Promise(resolve => {
     $.get({url: `${url}?${new Date()}`,
@@ -605,7 +633,7 @@ function getCookies(url) {
   })
 }
 
-
+// 检查Cookie是否过期
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -629,8 +657,10 @@ function TotalBean() {
         } else {
           if (data) {
             data = JSON.parse(data);
+            console.log(data);
             if (data['retcode'] === 13) {
               $.isLogin = false; //cookie过期
+              invalidCookies.push(cookie)
               return
             }
             if (data['retcode'] === 0) {
