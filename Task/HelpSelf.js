@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 09:14:48 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-02-27 14:21:21
+ * @Last Modified time: 2021-02-28 13:31:26
  */
 
 const $ = new Env('🔔HelpMyself design by Xin')
@@ -35,6 +35,11 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action'
       if (!$.isLogin) {
         continue
       }
+      // 查看可以使用的Cookie
+      // console.log(cookie);
+      // 查看多少个
+      // console.log(i);
+      
       // 助力自己
       await toHelpMyself()
     }
@@ -657,7 +662,7 @@ function TotalBean() {
         } else {
           if (data) {
             data = JSON.parse(data);
-            console.log(data);
+            // console.log(data);
             if (data['retcode'] === 13) {
               $.isLogin = false; //cookie过期
               invalidCookies.push(cookie)
