@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 09:14:48 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-01 12:27:59
+ * @Last Modified time: 2021-03-01 17:33:35
  */
 
 const $ = new Env('🔔HelpMyself design by Xin')
@@ -12,6 +12,7 @@ let cookiesArr = []
 const invalidCookies=[]
 
 const JD_API_HOST = 'https://api.m.jd.com/client.action'
+const JXCFD_API_HOST = "https://m.jingxi.com/";
 
 !(async () => {
   await getCookies('https://gitee.com/xinx1201/HelpMyslf/raw/master/Cookie.json')
@@ -68,6 +69,8 @@ async function toHelpMyself() {
   await helpCrazyJoy()
   console.log(`\n💸签到领现金`);
   await helpCash()
+  console.log(`\n⛱️京喜财富岛`);
+  await helpJXcfd()
   console.log(`=========================================================================账号${$.index}结束=========================================================================\n`)
 }
 
@@ -610,6 +613,109 @@ async function jdCash() {
   await index(true)
 }
  await jdCash()
+}
+
+// ⛱️京喜财富岛
+async function helpJXcfd(){
+  // 普通助力码
+  jxcfdPTArr=[`3D73687985ED2B057C16561F9C0C236C938C603D111BC81C4A1F60C12B76D4F0@A5B1AE5D942BB045A784015FDBFFC48A0658FE5F6ADF70CB6EDC31464DD4B412`]
+
+// 普通助力码格式化
+function sharePTCodesFormat() {
+  return new Promise(async resolve => {
+    newPTShareCodes = jxcfdPTArr[0].split('@');
+    // 京喜财富岛需要助力的好友列表
+    // console.log(newPTShareCodes);
+    console.log(`第${$.index}个京东账号将要普通助力的好友${JSON.stringify(newPTShareCodes)}`)
+    resolve();
+  })
+}
+
+// 普通助力
+async function getPT() {
+    await getUserInfo()
+    await sharePTCodesFormat()
+    for(let ptShareCode of newPTShareCodes){
+      console.log(`开始【⭐普通】助力京东账号${$.index} - ${$.nickName}的好友: ${ptShareCode}`);
+      const sceneIds = Object.keys($.info.SceneList);
+      const sceneId = Math.min(...sceneIds);
+      $.get(taskUrl('user/JoinScene', `strShareId=${escape(ptShareCode)}&dwSceneId=${sceneId}`), async (err, resp, data) => {
+        try {
+          // 助力后反馈的信息
+          temp = JSON.parse(data)
+          // console.log(`京喜财富岛普通助力反馈信息：`+data);
+          console.log(`【⭐普通助力】助力：`+temp.sErrMsg);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+      await $.wait(3000); //歇口气儿, 不然会报操作频繁
+    }
+}
+
+// ===函数方法===
+function taskUrl(function_path, body) {
+  return {
+    url: `${JXCFD_API_HOST}jxcfd/${function_path}?strZone=jxcfd&bizCode=jxcfd&source=jxcfd&dwEnv=7&_cfd_t=${Date.now()}&ptag=138631.26.55&${body}&_ste=1&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=ls`,
+    headers: {
+      Cookie: cookie,
+      Accept: "*/*",
+      Connection: "keep-alive",
+      Referer:"https://st.jingxi.com/fortune_island/index.html?ptag=138631.26.55",
+      "Accept-Encoding": "gzip, deflate, br",
+      Host: "m.jingxi.com",
+      "User-Agent":`jdpingou;iPhone;4.1.4;14.3;9f08e3faf2c0b4e72900552400dfad2e7b2273ba;network/wifi;model/iPhone11,6;appBuild/100415;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`,
+      "Accept-Language": "zh-cn",
+    },
+  };
+}
+
+function getUserInfo() {
+  return new Promise(async (resolve) => {
+    $.get(taskUrl(`user/QueryUserInfo`), (err, resp, data) => {
+      try {
+        const {
+          iret,
+          SceneList = {},
+          XbStatus: { XBDetail = [], dwXBRemainCnt } = {},
+          ddwMoney,
+          dwIsNewUser,
+          sErrMsg,
+          strMyShareId,
+          strPin,
+        } = JSON.parse(data);
+        console.log(`获取用户信息：`+sErrMsg);
+        $.info = {
+          ...$.info,
+          SceneList,
+          XBDetail,
+          dwXBRemainCnt,
+          ddwMoney,
+          dwIsNewUser,
+          strMyShareId,
+          strPin,
+        };
+        resolve({
+          SceneList,
+          XBDetail,
+          dwXBRemainCnt,
+          ddwMoney,
+          dwIsNewUser,
+          strMyShareId,
+          strPin,
+        });
+      } catch (e) {
+        console.log(e);
+      } finally {
+        resolve();
+      }
+    });
+  });
+}
+
+
+// 助力
+await getPT()
 }
 
 // 从Gitee拿到Cookies
