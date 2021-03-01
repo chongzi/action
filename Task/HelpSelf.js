@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 09:14:48 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-02 00:00:26
+ * @Last Modified time: 2021-03-02 00:14:13
  */
 
 const $ = new Env('🔔HelpMyself design by Xin')
@@ -59,6 +59,8 @@ const JXCFD_API_HOST = "https://m.jingxi.com/";
 async function toHelpMyself() {
   console.log(`=========================================================================账号${$.index}开始=========================================================================`)
   console.log(`🕛当前执行的Cookie为:`+cookie);
+  console.log(`\n💸签到领现金`);
+  await helpCash()
   console.log(`🥔种豆得豆`)
   await helpPlantBean()
   console.log(`\n🌳东东农场`)
@@ -67,11 +69,146 @@ async function toHelpMyself() {
   await helpPet()
   console.log(`\n🐶Crazy-Joy`)
   await helpCrazyJoy()
-  console.log(`\n💸签到领现金`);
-  await helpCash()
   console.log(`\n⛱️京喜财富岛`);
   await helpJXcfd()
   console.log(`=========================================================================账号${$.index}结束=========================================================================\n`)
+}
+
+// 💸签到领现金✅
+async function helpCash() {
+  // xin eU9YaezhZq8j9mbXz3RF1g
+  // bao eU9YaOzgYPR082eHmXoa0Q
+  // xind eU9YaeW3Y_Ul8zrXmHoQ1A
+  // ksy eU9Yar7kYap38m_SmnRBgg
+  // ksyd eU9YKqzBMLZXhzyQsxpw
+  // hw eU9YaL2wYf1w9zjVySJHhw
+  jdCashArr=[`eU9YaezhZq8j9mbXz3RF1g@eU9YaOzgYPR082eHmXoa0Q@eU9YaeW3Y_Ul8zrXmHoQ1A@eU9Yar7kYap38m_SmnRBgg@eU9YKqzBMLZXhzyQsxpw@eU9YaL2wYf1w9zjVySJHhw`]
+  // 格式化
+  function shareCodesFormat() {
+    return new Promise(async resolve => {
+      newShareCodes = jdCashArr[0].split('@');
+      newShareCodes.map((item, index) => newShareCodes[index] = { "inviteCode": item, "shareDate": $.shareDate })
+      console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
+      resolve();
+    })
+    }
+  function index(info=false) {
+    return new Promise((resolve) => {
+      $.get(taskUrl("cash_mob_home",), async (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`${JSON.stringify(err)}`)
+            console.log(`${$.name} API请求失败，请检查网路重试`)
+          } else {
+            if (safeGet(data)) {
+              data = JSON.parse(data);
+              if(data.code===0 && data.data.result){
+                if(info){
+                  message += `当前现金：${data.data.result.signMoney}`
+                  return
+                }
+                console.log(`您的助力码为${data.data.result.inviteCode}`)
+                let helpInfo = {
+                  'inviteCode': data.data.result.inviteCode,
+                  'shareDate': data.data.result.shareDate
+                }
+                $.shareDate = data.data.result.shareDate;
+                $.log(`shareDate: ${$.shareDate}`)
+                // 打印出来的是带有时间的 json数据类型
+                // { inviteCode: 'xxx', shareDate: 'xxx' }
+                // 拿到自己的助力码上的时间戳 放需要助力的数组内
+                // console.log(helpInfo)
+              }
+            }
+          }
+        } catch (e) {
+          $.logErr(e, resp)
+        } finally {
+          resolve(data);
+        }
+      })
+    })
+  }
+  // 助力
+  async function helpFriends() {
+    $.canHelp = true
+    await shareCodesFormat()
+    for (let code of newShareCodes) {
+      console.log(`去帮助好友${code['inviteCode']}`)
+      await helpFriend(code)
+      if(!$.canHelp) break
+      await $.wait(2000)
+    }
+  }
+  
+  function helpFriend(helpInfo) {
+    return new Promise((resolve) => {
+      $.get(taskUrl("cash_mob_assist", {...helpInfo,"source":1}), (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`${JSON.stringify(err)}`)
+            console.log(`${$.name} API请求失败，请检查网路重试`)
+          } else {
+            if (safeGet(data)) {
+              data = JSON.parse(data);
+              if( data.code === 0 && data.data.bizCode === 0){
+                console.log(`助力成功，获得${data.data.result.cashStr}`)
+                // console.log(data.data.result.taskInfos)
+              } else if (data.data.bizCode===207){
+                console.log(data.data.bizMsg)
+                $.canHelp = false
+              } else{
+                console.log(data.data.bizMsg)
+                // 显示返回信息
+                // console.log(data.data);
+                if(data.data.bizCode===188&&data.data.bizMsg===`助力失败\n活动太火爆了，去看看别的活动吧`){
+                  console.log(`该帐号【签到领现金】活动已经黑号`);
+                  $.canHelp = false
+                }
+              }
+            }
+          }
+        } catch (e) {
+          $.logErr(e, resp)
+        } finally {
+          resolve(data);
+        }
+      })
+    })
+  }
+  // ===函数方法===
+  function safeGet(data) {
+    try {
+      if (typeof JSON.parse(data) == "object") {
+        return true;
+      }
+    } catch (e) {
+      console.log(e);
+      console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
+      return false;
+    }
+  }
+  function taskUrl(functionId, body = {}) {
+    return {
+      url: `${JD_API_HOST}?functionId=${functionId}&body=${escape(JSON.stringify(body))}&appid=CashRewardMiniH5Env&appid=9.1.0`,
+      headers: {
+        'Cookie': cookie,
+        'Host': 'api.m.jd.com',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/json',
+        'Referer': 'http://wq.jd.com/wxapp/pages/hd-interaction/index/index',
+        'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+        'Accept-Language': 'zh-cn',
+        'Accept-Encoding': 'gzip, deflate, br',
+      }
+    }
+  }
+  async function jdCash() {
+    await index()
+    await helpFriends()
+    await index(true)
+  }
+   await jdCash()
 }
 
 // 🥔种豆得豆✅
@@ -481,143 +618,6 @@ function taskUrl(functionId, body = '') {
 }
   // 🔔助力
   await helpFriends()
-}
-
-// 💸签到领现金✅
-async function helpCash() {
-// xin eU9YaezhZq8j9mbXz3RF1g
-// bao eU9YaOzgYPR082eHmXoa0Q
-// xind eU9YaeW3Y_Ul8zrXmHoQ1A
-// ksy eU9Yar7kYap38m_SmnRBgg
-// ksyd eU9YKqzBMLZXhzyQsxpw
-// hw eU9YaL2wYf1w9zjVySJHhw
-jdCashArr=[`eU9YaezhZq8j9mbXz3RF1g@eU9YaOzgYPR082eHmXoa0Q@eU9YaeW3Y_Ul8zrXmHoQ1A@eU9Yar7kYap38m_SmnRBgg@eU9YKqzBMLZXhzyQsxpw@eU9YaL2wYf1w9zjVySJHhw`]
-// 格式化
-function shareCodesFormat() {
-  return new Promise(async resolve => {
-    newShareCodes = jdCashArr[0].split('@');
-    newShareCodes.map((item, index) => newShareCodes[index] = { "inviteCode": item, "shareDate": $.shareDate })
-    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
-    resolve();
-  })
-  }
-function index(info=false) {
-  return new Promise((resolve) => {
-    $.get(taskUrl("cash_mob_home",), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if(data.code===0 && data.data.result){
-              if(info){
-                message += `当前现金：${data.data.result.signMoney}`
-                return
-              }
-              console.log(`您的助力码为${data.data.result.inviteCode}`)
-              let helpInfo = {
-                'inviteCode': data.data.result.inviteCode,
-                'shareDate': data.data.result.shareDate
-              }
-              $.shareDate = data.data.result.shareDate;
-              $.log(`shareDate: ${$.shareDate}`)
-              // 打印出来的是带有时间的 json数据类型
-              // { inviteCode: 'xxx', shareDate: 'xxx' }
-              // 拿到自己的助力码上的时间戳 放需要助力的数组内
-              // console.log(helpInfo)
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
-// 助力
-async function helpFriends() {
-  $.canHelp = true
-  await shareCodesFormat()
-  for (let code of newShareCodes) {
-    console.log(`去帮助好友${code['inviteCode']}`)
-    await helpFriend(code)
-    if(!$.canHelp) break
-    await $.wait(2000)
-  }
-}
-
-function helpFriend(helpInfo) {
-  return new Promise((resolve) => {
-    $.get(taskUrl("cash_mob_assist", {...helpInfo,"source":1}), (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if( data.code === 0 && data.data.bizCode === 0){
-              console.log(`助力成功，获得${data.data.result.cashStr}`)
-              // console.log(data.data.result.taskInfos)
-            } else if (data.data.bizCode===207){
-              console.log(data.data.bizMsg)
-              $.canHelp = false
-            } else{
-              console.log(data.data.bizMsg)
-              // 显示返回信息
-              // console.log(data.data);
-              if(data.data.bizCode===188&&data.data.bizMsg===`助力失败\n活动太火爆了，去看看别的活动吧`){
-                console.log(`该帐号【签到领现金】活动已经黑号`);
-                $.canHelp = false
-              }
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
-// ===函数方法===
-function safeGet(data) {
-  try {
-    if (typeof JSON.parse(data) == "object") {
-      return true;
-    }
-  } catch (e) {
-    console.log(e);
-    console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
-    return false;
-  }
-}
-function taskUrl(functionId, body = {}) {
-  return {
-    url: `${JD_API_HOST}?functionId=${functionId}&body=${escape(JSON.stringify(body))}&appid=CashRewardMiniH5Env&appid=9.1.0`,
-    headers: {
-      'Cookie': cookie,
-      'Host': 'api.m.jd.com',
-      'Connection': 'keep-alive',
-      'Content-Type': 'application/json',
-      'Referer': 'http://wq.jd.com/wxapp/pages/hd-interaction/index/index',
-      'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
-      'Accept-Language': 'zh-cn',
-      'Accept-Encoding': 'gzip, deflate, br',
-    }
-  }
-}
-async function jdCash() {
-  await index()
-  await helpFriends()
-  await index(true)
-}
- await jdCash()
 }
 
 // ⛱️京喜财富岛
