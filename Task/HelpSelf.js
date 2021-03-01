@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 09:14:48 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-02-28 13:31:26
+ * @Last Modified time: 2021-03-01 12:27:59
  */
 
 const $ = new Env('🔔HelpMyself design by Xin')
@@ -560,6 +560,12 @@ function helpFriend(helpInfo) {
               $.canHelp = false
             } else{
               console.log(data.data.bizMsg)
+              // 显示返回信息
+              // console.log(data.data);
+              if(data.data.bizCode===188&&data.data.bizMsg===`助力失败\n活动太火爆了，去看看别的活动吧`){
+                console.log(`该帐号【签到领现金】活动已经黑号`);
+                $.canHelp = false
+              }
             }
           }
         }
