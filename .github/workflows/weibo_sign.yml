@@ -1,4 +1,4 @@
-name: TT语音打卡
+name: 微博红包签到
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
   watch:
     types: started
   repository_dispatch:
-    types: TT
+    types: weibo
 
 jobs:
   build:
@@ -23,9 +23,9 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: '运行 【TT语音打卡】'
+      - name: '运行 【微博签到】'
         run: |
-          node ./Task/TT.js
+          node ./Task/weibo.js
         env:
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
           PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
