@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 09:14:48 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-02 00:14:13
+ * @Last Modified time: 2021-03-02 01:14:41
  */
 
 const $ = new Env('🔔HelpMyself design by Xin')
@@ -67,10 +67,10 @@ async function toHelpMyself() {
   await helpFruit()
   console.log(`\n🐶东东萌宠`)
   await helpPet()
-  console.log(`\n🐶Crazy-Joy`)
-  await helpCrazyJoy()
   console.log(`\n⛱️京喜财富岛`);
   await helpJXcfd()
+  console.log(`\n🐶Crazy-Joy`)
+  await helpCrazyJoy()
   console.log(`=========================================================================账号${$.index}结束=========================================================================\n`)
 }
 
@@ -521,106 +521,7 @@ function taskUrl(function_id, body = {}) {
  await slaveHelp()
 }
 
-// 🐶Crazy-Joy✅
-async function helpCrazyJoy() {
-// xin 4hcydYCP_3SVJFTBkKtsLKt9zd5YaBeE
-// bao qNOtcKihtPlqVT188Rh9_6t9zd5YaBeE
-// xind ButrTtQU6QUlZ_Pc7gJUyqt9zd5YaBeE
-// ksy sRQ2jh_ETvfB8zU3_op5Rqt9zd5YaBeE
-// ksyd 2AxO9_8nIcYf8ITfyXlpcg==
-// hw zXtqe9c8Px1A4LFoWwvtS6t9zd5YaBeE
-const jdcrazyjoyArr = [`qNOtcKihtPlqVT188Rh9_6t9zd5YaBeE@4hcydYCP_3SVJFTBkKtsLKt9zd5YaBeE@ButrTtQU6QUlZ_Pc7gJUyqt9zd5YaBeE@sRQ2jh_ETvfB8zU3_op5Rqt9zd5YaBeE@2AxO9_8nIcYf8ITfyXlpcg==@zXtqe9c8Px1A4LFoWwvtS6t9zd5YaBeE`]
-// 格式化
-function shareCodesFormat() {
-  return new Promise(async resolve => {
-    newShareCodes = jdcrazyjoyArr[0].split('@');
-    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
-    resolve();
-  })
-}
-// 助力
-async function helpFriends() {
-  await shareCodesFormat()
-  let codes = newShareCodes
-  // 查看是否传入成功code助力码
-  // console.log(codes);
-  for (let code of codes) {
-    if (!code) continue
-    await helpFriend(code)
-    await $.wait(500)
-  }
-}
-function helpFriend(code) {
-  let body = {"paramData": {"inviter": code}}
-  return new Promise(async resolve => {
-    $.get(taskUrl('crazyJoy_task_recordAssist', JSON.stringify(body)), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data['resultCode'] ==='0') {
-              hidetemp = JSON.stringify(data)
-              showtemp = JSON.parse(hidetemp)
-              // 返回的结果精简，返回成功键值对success:true
-              // console.log(showtemp);
-              if(showtemp.success===true){
-                console.log(`助力结果:`+showtemp.success);
-              }
-            } else if (data['resultCode'] === '2000402') {
-              console.log(data.resultTips)
-            } else {
-              console.log(`助力异常:${JSON.stringify(data)}`);
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
-// ===函数方法===
-function safeGet(data) {
-  try {
-    if (typeof JSON.parse(data) == "object") {
-      return true;
-    }
-  } catch (e) {
-    console.log(e);
-    console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
-    return false;
-  }
-}
-function taskUrl(functionId, body = '') {
-  let t = Date.now().toString().substr(0, 10)
-  let e = body || ""
-  e = $.md5("aDvScBv$gGQvrXfva8dG!ZC@DA70Y%lX" + e + t)
-  e = e + Number(t).toString(16)
-  return {
-    url: `${JD_API_HOST}?uts=${e}&appid=crazy_joy&functionId=${functionId}&body=${escape(body)}&t=${t}`,
-    headers: {
-      'Cookie': cookie,
-      'Host': 'api.m.jd.com',
-      'Accept': '*/*',
-      'Connection': 'keep-alive',
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
-      'Accept-Language': 'zh-cn',
-      'Referer': 'https://crazy-joy.jd.com/',
-      'origin': 'https://crazy-joy.jd.com',
-      'Accept-Encoding': 'gzip, deflate, br',
-    }
-  }
-}
-  // 🔔助力
-  await helpFriends()
-}
-
-// ⛱️京喜财富岛
+// ⛱️京喜财富岛(普通助力)✅
 async function helpJXcfd(){
   // 普通助力码
   jxcfdPTArr=[`3D73687985ED2B057C16561F9C0C236C938C603D111BC81C4A1F60C12B76D4F0@A5B1AE5D942BB045A784015FDBFFC48A0658FE5F6ADF70CB6EDC31464DD4B412`]
@@ -721,6 +622,105 @@ function getUserInfo() {
 
 // 助力
 await getPT()
+}
+
+// 🐶Crazy-Joy✅
+async function helpCrazyJoy() {
+// xin 4hcydYCP_3SVJFTBkKtsLKt9zd5YaBeE
+// bao qNOtcKihtPlqVT188Rh9_6t9zd5YaBeE
+// xind ButrTtQU6QUlZ_Pc7gJUyqt9zd5YaBeE
+// ksy sRQ2jh_ETvfB8zU3_op5Rqt9zd5YaBeE
+// ksyd 2AxO9_8nIcYf8ITfyXlpcg==
+// hw zXtqe9c8Px1A4LFoWwvtS6t9zd5YaBeE
+const jdcrazyjoyArr = [`qNOtcKihtPlqVT188Rh9_6t9zd5YaBeE@4hcydYCP_3SVJFTBkKtsLKt9zd5YaBeE@ButrTtQU6QUlZ_Pc7gJUyqt9zd5YaBeE@sRQ2jh_ETvfB8zU3_op5Rqt9zd5YaBeE@2AxO9_8nIcYf8ITfyXlpcg==@zXtqe9c8Px1A4LFoWwvtS6t9zd5YaBeE`]
+// 格式化
+function shareCodesFormat() {
+  return new Promise(async resolve => {
+    newShareCodes = jdcrazyjoyArr[0].split('@');
+    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
+    resolve();
+  })
+}
+// 助力
+async function helpFriends() {
+  await shareCodesFormat()
+  let codes = newShareCodes
+  // 查看是否传入成功code助力码
+  // console.log(codes);
+  for (let code of codes) {
+    if (!code) continue
+    await helpFriend(code)
+    await $.wait(500)
+  }
+}
+function helpFriend(code) {
+  let body = {"paramData": {"inviter": code}}
+  return new Promise(async resolve => {
+    $.get(taskUrl('crazyJoy_task_recordAssist', JSON.stringify(body)), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (safeGet(data)) {
+            data = JSON.parse(data);
+            if (data['resultCode'] ==='0') {
+              hidetemp = JSON.stringify(data)
+              showtemp = JSON.parse(hidetemp)
+              // 返回的结果精简，返回成功键值对success:true
+              // console.log(showtemp);
+              if(showtemp.success===true){
+                console.log(`助力结果:`+showtemp.success);
+              }
+            } else if (data['resultCode'] === '2000402') {
+              console.log(data.resultTips)
+            } else {
+              console.log(`助力异常:${JSON.stringify(data)}`);
+            }
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+// ===函数方法===
+function safeGet(data) {
+  try {
+    if (typeof JSON.parse(data) == "object") {
+      return true;
+    }
+  } catch (e) {
+    console.log(e);
+    console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
+    return false;
+  }
+}
+function taskUrl(functionId, body = '') {
+  let t = Date.now().toString().substr(0, 10)
+  let e = body || ""
+  e = $.md5("aDvScBv$gGQvrXfva8dG!ZC@DA70Y%lX" + e + t)
+  e = e + Number(t).toString(16)
+  return {
+    url: `${JD_API_HOST}?uts=${e}&appid=crazy_joy&functionId=${functionId}&body=${escape(body)}&t=${t}`,
+    headers: {
+      'Cookie': cookie,
+      'Host': 'api.m.jd.com',
+      'Accept': '*/*',
+      'Connection': 'keep-alive',
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      'Accept-Language': 'zh-cn',
+      'Referer': 'https://crazy-joy.jd.com/',
+      'origin': 'https://crazy-joy.jd.com',
+      'Accept-Encoding': 'gzip, deflate, br',
+    }
+  }
+}
+  // 🔔助力
+  await helpFriends()
 }
 
 // 从Gitee拿到Cookies
