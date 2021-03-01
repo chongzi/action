@@ -2,17 +2,15 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-02-27 19:28:13
+ * @Last Modified time: 2021-03-01 18:49:12
  * 
  * 原作者地址：https://raw.githubusercontent.com/ZhiYi-N/Private-Script/master/Scripts/TT.js
  * 由于手机LOON为获取Refer和Body 自己手动填入脚本 
  * 使用AC进行打卡
  */
 
-const $ = Env('TT语音')
-const notify = $.isNode() ?require('./sendNotify') : '';
-let status;
-status = (status = ($.getval("TTstatus") || "1") ) > 1 ? `${status}` : ""; // 账号扩展字符
+const $ = Env('TT语音打卡')
+
 const TTreferArr = [
   // xin
   `http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html?device_id=20210226221319898660839bf2f4cc562ffacb74ab9f03011b5fcfffe3a4d4&ip=112.10.236.51&uid=216827676&version=84213766&appid=0&os_type=2&platform=1&app=0&market_id=0`,
@@ -34,34 +32,14 @@ const TTbodyArr = [
   // ksy
   `{"bizType":"340000020002","uid":217037897,"appId":"ttvoice","pageId":"activity_page","pageExt":"http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html","event":"exposure","eventId":"","eventExt":"","platform":"1","generalParam":"","source":""}`,
 ]
-let TTrefer = $.getdata('TTrefer')
-let TTbody= $.getdata('TTbody')
-let tz = ($.getval('tz') || '1');//0关闭通知，1默认开启
-var hour=''
-var minute=''
-if ($.isNode()) {
-   hour = new Date( new Date().getTime() + 8 * 60 * 60 * 1000 ).getHours();
-   minute = new Date( new Date().getTime() + 8 * 60 * 60 * 1000 ).getMinutes();
-}else{
-   hour = (new Date()).getHours();
-   minute = (new Date()).getMinutes();
-}
 
 !(async () => {
-if (!TTreferArr[0] && !TTbodyArr[0] ) {
-    $.msg($.name, '【提示】请先获取TT语音一cookie')
-    return;
-  }
-   console.log(`------------- 共${TTbodyArr.length}个账号----------------\n`)
   for (let i = 0; i < TTbodyArr.length; i++) {
-    if (TTbodyArr[i]) {
-      message = ''
       TTrefer= TTreferArr[i];
       TTbody = TTbodyArr[i];
       $.index = i + 1;
       console.log(`\n开始【TT语音${$.index}】`)
       await checkin() 
-  }
  }
 })()
     .catch((e) => $.logErr(e))
@@ -91,17 +69,12 @@ async function checkin(){
         const result = JSON.parse(data)
         console.log(`反馈数据：`+data)
         if(result.code == 0){
-         for(let i = 0; i < 29; i++){
-         let day = result.data.record.i == 0 ? (i -1) : i
-         }
 	        console.log(`打卡成功：累计获得${result.data.curMoney}元\n`)
-          message += `打卡成功：累计获得${result.data.curMoney}元`
         }else if(result.code == 2){
-        console.log(result.msg+`\n`)
-        message += result.msg
+          console.log(result.msg)
         }
         }catch(e) {
-          $.logErr(e, response);
+          console.log(e);
       } finally {
         resolve();
       } 
