@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-02 01:19:38
+ * @Last Modified time: 2021-03-02 14:34:15
  * 
  * 原作者地址：https://raw.githubusercontent.com/ZhiYi-N/Private-Script/master/Scripts/TT.js
  * 由于手机LOON为获取Refer和Body 自己手动填入脚本 
@@ -13,34 +13,38 @@ const $ = Env('TT语音打卡')
 
 const TTreferArr = [
   // xin
-  // `http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html?device_id=20210226221319898660839bf2f4cc562ffacb74ab9f03011b5fcfffe3a4d4&ip=112.10.236.51&uid=216827676&version=84213766&appid=0&os_type=2&platform=1&app=0&market_id=0`,
+  `http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html?device_id=20210226221319898660839bf2f4cc562ffacb74ab9f03011b5fcfffe3a4d4&ip=112.10.236.51&uid=216827676&version=84213766&appid=0&os_type=2&platform=1&app=0&market_id=0`,
   // bao
-  // `http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html?padding=83&uid=216569814&version=84213761&os_type=1&platform=1&app=0&game_block=1&apk_channel=B59771501.tt_no_game&market_id=0&ip=112.10.236.51&device_id=202008281804025a11d74918e9604f5b79b4ba8eb896e1018d2f4f8af4e0dd&status_height=96`,
+  `http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html?padding=83&uid=216569814&version=84213761&os_type=1&platform=1&app=0&game_block=1&apk_channel=B59771501.tt_no_game&market_id=0&ip=112.10.236.51&device_id=202008281804025a11d74918e9604f5b79b4ba8eb896e1018d2f4f8af4e0dd&status_height=96`,
   // hw
   `http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html?device_id=20210221123810c45e2061aaeb24f4ea3f3f7da5cda0c4018062a193dfac88&ip=112.10.237.173&uid=216918254&version=84213766&appid=0&os_type=2&platform=1&app=0&market_id=0`,
   // ksy
-  // `http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html?device_id=20210227162337f2c6d5b9d38ee34b65f9f221681cca630186ed252c9314bd&ip=123.149.19.79&uid=217037897&version=84213766&appid=0&os_type=2&platform=1&app=0&market_id=0`,
+  `http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html?device_id=20210227162337f2c6d5b9d38ee34b65f9f221681cca630186ed252c9314bd&ip=123.149.19.79&uid=217037897&version=84213766&appid=0&os_type=2&platform=1&app=0&market_id=0`,
 ]
 
 const TTbodyArr = [
   // xin
-  // `{"bizType":"340000020002","uid":216827676,"appId":"ttvoice","pageId":"activity_page","pageExt":"http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html","event":"exposure","eventId":"","eventExt":"","platform":"1","generalParam":"","source":""}`,
+  `{"bizType":"340000020002","uid":216827676,"appId":"ttvoice","pageId":"activity_page","pageExt":"http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html","event":"exposure","eventId":"","eventExt":"","platform":"1","generalParam":"","source":""}`,
   // bao
-  // `{"bizType":"340000020002","uid":216569814,"appId":"ttvoice","pageId":"activity_page","pageExt":"http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html","event":"exposure","eventId":"","eventExt":"","platform":"2","generalParam":"","source":""}`,
+  `{"bizType":"340000020002","uid":216569814,"appId":"ttvoice","pageId":"activity_page","pageExt":"http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html","event":"exposure","eventId":"","eventExt":"","platform":"2","generalParam":"","source":""}`,
   // hw
   `{"device_id":"20210221123810c45e2061aaeb24f4ea3f3f7da5cda0c4018062a193dfac88","ip":"112.10.237.173","uid":"216918254","version":"84213766","appid":"0","os_type":"2","platform":"1","app":"0","market_id":"0","token":"eyJhbGciOiAiSFM1MTIiLCAidHlwIjogIkpXUyJ9.eyJleHAiOiAxNjE0NjE5ODc5LCAiaWF0IjogMTYxNDYxODk3OSwgImlzcyI6ICI1MnR0LmNvbSIsICJzZXNzIjogIiIsICJzdWIiOiAidHQyNzM2NDY4NzciLCAidGVybSI6IDExNzk2NDgsICJ0eXAiOiAxLCAidWlkIjogMjE2OTE4MjU0fQ.UNhN2BpSofwC522iYY0czvxyIsCrPQP_pRgHCtmfK1a_25kiUI8r01PSG328C-aPnNvhIbt92sadl2WRIEs9ng","deviceId":"384C4338-BAD2-480D-A1AF-EFC3E4A403AE"}`,
   // ksy
-  // `{"bizType":"340000020002","uid":217037897,"appId":"ttvoice","pageId":"activity_page","pageExt":"http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html","event":"exposure","eventId":"","eventExt":"","platform":"1","generalParam":"","source":""}`,
+  `{"bizType":"340000020002","uid":217037897,"appId":"ttvoice","pageId":"activity_page","pageExt":"http://appcdn.52tt.com/web/frontend-web-activity-new-user-clock-in-thirty-day/index.html","event":"exposure","eventId":"","eventExt":"","platform":"1","generalParam":"","source":""}`,
 ]
 
 !(async () => {
   for (let i = 0; i < TTbodyArr.length; i++) {
+      await $.wait(500)
       TTrefer= TTreferArr[i];
+      await $.wait(500)
       TTbody = TTbodyArr[i];
       $.index = i + 1;
       console.log(`\n开始【TT语音${$.index}】`)
       await checkin() 
+      console.log(`已经打卡时间`+signDateArr);
  }
+
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
@@ -59,7 +63,7 @@ async function checkin(){
        'Content-Type': 'application/json',
        'Host': 'node.52tt.com',
        'Origin': 'http://appcdn.52tt.com',
-        Refer: TTrefer,
+        Referer: TTrefer,
        'Content-Length':'577',
        'User-Agent': `Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 TT/5.5.6 NetType/Wifi`
        },
@@ -68,10 +72,24 @@ async function checkin(){
    $.post(checkin_url,async(error, response, data) =>{
     try{
         const result = JSON.parse(data)
-        console.log(result);
-        console.log(`反馈数据：`+data)
+        // console.log(result);
+        // 记录打卡天数
+        signDateArr = []
+        // console.log(`反馈数据：`+data)
         if(result.code == 0){
-	        console.log(`打卡成功：累计获得${result.data.curMoney}元\n`)
+	        console.log(`打卡成功：累计获得${result.data.curMoney}元`)
+	        console.log(`累计打卡${result.data.taskIndex}次`)
+          // 打卡记录天数 {} 键值对类型
+          // console.log(result.data.record);
+          for(var key in result.data.record){
+            // 获取到所有的value值
+            // console.log(result.data.record[key]);
+            if(result.data.record[key]===1){
+              // 把key值推送到数组内
+              signDateArr.push(key)
+            }
+
+          }
         }else if(result.code == 2){
           console.log(result.msg)
         }
