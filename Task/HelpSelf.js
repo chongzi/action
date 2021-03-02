@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 09:14:48 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-02 01:14:41
+ * @Last Modified time: 2021-03-02 10:04:08
  */
 
 const $ = new Env('🔔HelpMyself design by Xin')
@@ -12,7 +12,7 @@ let cookiesArr = []
 const invalidCookies=[]
 
 const JD_API_HOST = 'https://api.m.jd.com/client.action'
-const JXCFD_API_HOST = "https://m.jingxi.com/";
+const JX_API_HOST = "https://m.jingxi.com/";
 
 !(async () => {
   await getCookies('https://gitee.com/xinx1201/HelpMyslf/raw/master/Cookie.json')
@@ -36,12 +36,12 @@ const JXCFD_API_HOST = "https://m.jingxi.com/";
       if (!$.isLogin) {
         continue
       }
+      // 查看个数
+      // console.log(i+1);
+
       // 查看可以使用的Cookie
       // console.log(cookie);
-      // 查看多少个
-      // console.log(i);
-      
-      // 助力自己
+      // 助力
       await toHelpMyself()
     }
   }
@@ -58,17 +58,18 @@ const JXCFD_API_HOST = "https://m.jingxi.com/";
 // 助力自己
 async function toHelpMyself() {
   console.log(`=========================================================================账号${$.index}开始=========================================================================`)
-  console.log(`🕛当前执行的Cookie为:`+cookie);
-  console.log(`\n💸签到领现金`);
+  // 不打印
+  // console.log(`🕛当前执行的Cookie为:`+cookie)
+  console.log(`💸签到领现金`);
   await helpCash()
-  console.log(`🥔种豆得豆`)
+  console.log(`\n⛱️京喜财富岛`);
+  await helpJXcfd()
+  console.log(`\n🥔种豆得豆`)
   await helpPlantBean()
   console.log(`\n🌳东东农场`)
   await helpFruit()
   console.log(`\n🐶东东萌宠`)
   await helpPet()
-  console.log(`\n⛱️京喜财富岛`);
-  await helpJXcfd()
   console.log(`\n🐶Crazy-Joy`)
   await helpCrazyJoy()
   console.log(`=========================================================================账号${$.index}结束=========================================================================\n`)
@@ -137,7 +138,7 @@ async function helpCash() {
       console.log(`去帮助好友${code['inviteCode']}`)
       await helpFriend(code)
       if(!$.canHelp) break
-      await $.wait(2000)
+      await $.wait(3000); //歇口气儿, 不然会报操作频繁
     }
   }
   
@@ -211,6 +212,109 @@ async function helpCash() {
    await jdCash()
 }
 
+// ⛱️京喜财富岛(普通助力)✅
+async function helpJXcfd(){
+  // 普通助力码
+  jxcfdPTArr=[`3D73687985ED2B057C16561F9C0C236C938C603D111BC81C4A1F60C12B76D4F0@A5B1AE5D942BB045A784015FDBFFC48A0658FE5F6ADF70CB6EDC31464DD4B412`]
+
+// 普通助力码格式化
+function sharePTCodesFormat() {
+  return new Promise(async resolve => {
+    newPTShareCodes = jxcfdPTArr[0].split('@');
+    // 京喜财富岛需要助力的好友列表
+    // console.log(newPTShareCodes);
+    console.log(`第${$.index}个京东账号将要普通助力的好友${JSON.stringify(newPTShareCodes)}`)
+    resolve();
+  })
+}
+
+// 普通助力
+async function getPT() {
+    await getUserInfo()
+    await sharePTCodesFormat()
+    for(let ptShareCode of newPTShareCodes){
+      console.log(`开始助力京东账号${$.index} - ${$.nickName}的好友: ${ptShareCode}`);
+      const sceneIds = Object.keys($.info.SceneList);
+      const sceneId = Math.min(...sceneIds);
+      $.get(taskUrl('user/JoinScene', `strShareId=${escape(ptShareCode)}&dwSceneId=${sceneId}`), async (err, resp, data) => {
+        try {
+          // 助力后反馈的信息
+          temp = JSON.parse(data)
+          // console.log(`京喜财富岛普通助力反馈信息：`+data);
+          console.log(`【⭐普通助力】：`+temp.sErrMsg);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+      await $.wait(3000); //歇口气儿, 不然会报操作频繁
+    }
+}
+
+// ===函数方法===
+function taskUrl(function_path, body) {
+  return {
+    url: `${JX_API_HOST}jxcfd/${function_path}?strZone=jxcfd&bizCode=jxcfd&source=jxcfd&dwEnv=7&_cfd_t=${Date.now()}&ptag=138631.26.55&${body}&_ste=1&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=ls`,
+    headers: {
+      Cookie: cookie,
+      Accept: "*/*",
+      Connection: "keep-alive",
+      Referer:"https://st.jingxi.com/fortune_island/index.html?ptag=138631.26.55",
+      "Accept-Encoding": "gzip, deflate, br",
+      Host: "m.jingxi.com",
+      "User-Agent":`jdpingou;iPhone;4.1.4;14.3;9f08e3faf2c0b4e72900552400dfad2e7b2273ba;network/wifi;model/iPhone11,6;appBuild/100415;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`,
+      "Accept-Language": "zh-cn",
+    },
+  };
+}
+
+function getUserInfo() {
+  return new Promise(async (resolve) => {
+    $.get(taskUrl(`user/QueryUserInfo`), (err, resp, data) => {
+      try {
+        const {
+          iret,
+          SceneList = {},
+          XbStatus: { XBDetail = [], dwXBRemainCnt } = {},
+          ddwMoney,
+          dwIsNewUser,
+          sErrMsg,
+          strMyShareId,
+          strPin,
+        } = JSON.parse(data);
+        // 查看获取用户信息 成功与否
+        // console.log(`获取用户信息：`+sErrMsg);
+        $.info = {
+          ...$.info,
+          SceneList,
+          XBDetail,
+          dwXBRemainCnt,
+          ddwMoney,
+          dwIsNewUser,
+          strMyShareId,
+          strPin,
+        };
+        resolve({
+          SceneList,
+          XBDetail,
+          dwXBRemainCnt,
+          ddwMoney,
+          dwIsNewUser,
+          strMyShareId,
+          strPin,
+        });
+      } catch (e) {
+        console.log(e);
+      } finally {
+        resolve();
+      }
+    });
+  });
+}
+
+// 助力
+await getPT()
+}
+
 // 🥔种豆得豆✅
 async function helpPlantBean() {
 // xin mlrdw3aw26j3xtlnoc5rovsdcl364xjx4ctvrhq
@@ -259,7 +363,7 @@ async function doHelp() {
 }
 // 助力好友的api
 async function helpShare(plantUuid) {
-  console.log(`开始助力好友: ${plantUuid}`);
+  // console.log(`开始助力好友: ${plantUuid}`);
   const body = {
     "plantUuid": plantUuid,
     "wxHeadImgUrl": "",
@@ -267,11 +371,12 @@ async function helpShare(plantUuid) {
     "followType": "1",
   }
   $.helpResult = await request(`plantBeanIndex`, body);
-  console.log(`助力结果的code:${$.helpResult && $.helpResult.code}`);
+  // console.log(`助力结果:${$.helpResult && $.helpResult.code}`);
 }
 // ===函数方法===
 function request(function_id, body = {}){
   return new Promise(async resolve => {
+    await $.wait(2000); //歇口气儿, 不然会报操作频繁
     $.post(taskUrl(function_id, body), (err, resp, data) => {
       try {
         if (err) {
@@ -333,11 +438,11 @@ function shareCodesFormat() {
 //助力
 async function doHelp() {
   await shareCodesFormat()
-  console.log('开始助力好友')
+  // console.log('开始助力好友')
   let salveHelpAddWater = 0;
   let remainTimes = 4;//今日剩余助力次数,默认4次（京东农场每人每天4次助力机会）。
   let helpSuccessPeoples = '';//成功助力好友
-  console.log(`格式化后的助力码::${JSON.stringify(newShareCodes)}`);
+  // console.log(`格式化后的助力码::${JSON.stringify(newShareCodes)}`);
   for (let code of newShareCodes) {
     console.log(`开始助力京东账号${$.index} - ${$.nickName}的好友: ${code}`);
     if (!code) continue;
@@ -371,6 +476,7 @@ async function doHelp() {
 }
 // 助力好友API
 async function masterHelp() {
+  await $.wait(1000); //歇口气儿, 不然会报操作频繁
   $.helpResult = await request(`initForFarm`, {
     imageUrl: "",
     nickName: "",
@@ -521,109 +627,6 @@ function taskUrl(function_id, body = {}) {
  await slaveHelp()
 }
 
-// ⛱️京喜财富岛(普通助力)✅
-async function helpJXcfd(){
-  // 普通助力码
-  jxcfdPTArr=[`3D73687985ED2B057C16561F9C0C236C938C603D111BC81C4A1F60C12B76D4F0@A5B1AE5D942BB045A784015FDBFFC48A0658FE5F6ADF70CB6EDC31464DD4B412`]
-
-// 普通助力码格式化
-function sharePTCodesFormat() {
-  return new Promise(async resolve => {
-    newPTShareCodes = jxcfdPTArr[0].split('@');
-    // 京喜财富岛需要助力的好友列表
-    // console.log(newPTShareCodes);
-    console.log(`第${$.index}个京东账号将要普通助力的好友${JSON.stringify(newPTShareCodes)}`)
-    resolve();
-  })
-}
-
-// 普通助力
-async function getPT() {
-    await getUserInfo()
-    await sharePTCodesFormat()
-    for(let ptShareCode of newPTShareCodes){
-      console.log(`开始【⭐普通】助力京东账号${$.index} - ${$.nickName}的好友: ${ptShareCode}`);
-      const sceneIds = Object.keys($.info.SceneList);
-      const sceneId = Math.min(...sceneIds);
-      $.get(taskUrl('user/JoinScene', `strShareId=${escape(ptShareCode)}&dwSceneId=${sceneId}`), async (err, resp, data) => {
-        try {
-          // 助力后反馈的信息
-          temp = JSON.parse(data)
-          // console.log(`京喜财富岛普通助力反馈信息：`+data);
-          console.log(`【⭐普通助力】助力：`+temp.sErrMsg);
-        } catch (e) {
-          console.log(e);
-        }
-      });
-      await $.wait(3000); //歇口气儿, 不然会报操作频繁
-    }
-}
-
-// ===函数方法===
-function taskUrl(function_path, body) {
-  return {
-    url: `${JXCFD_API_HOST}jxcfd/${function_path}?strZone=jxcfd&bizCode=jxcfd&source=jxcfd&dwEnv=7&_cfd_t=${Date.now()}&ptag=138631.26.55&${body}&_ste=1&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=ls`,
-    headers: {
-      Cookie: cookie,
-      Accept: "*/*",
-      Connection: "keep-alive",
-      Referer:"https://st.jingxi.com/fortune_island/index.html?ptag=138631.26.55",
-      "Accept-Encoding": "gzip, deflate, br",
-      Host: "m.jingxi.com",
-      "User-Agent":`jdpingou;iPhone;4.1.4;14.3;9f08e3faf2c0b4e72900552400dfad2e7b2273ba;network/wifi;model/iPhone11,6;appBuild/100415;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`,
-      "Accept-Language": "zh-cn",
-    },
-  };
-}
-
-function getUserInfo() {
-  return new Promise(async (resolve) => {
-    $.get(taskUrl(`user/QueryUserInfo`), (err, resp, data) => {
-      try {
-        const {
-          iret,
-          SceneList = {},
-          XbStatus: { XBDetail = [], dwXBRemainCnt } = {},
-          ddwMoney,
-          dwIsNewUser,
-          sErrMsg,
-          strMyShareId,
-          strPin,
-        } = JSON.parse(data);
-        console.log(`获取用户信息：`+sErrMsg);
-        $.info = {
-          ...$.info,
-          SceneList,
-          XBDetail,
-          dwXBRemainCnt,
-          ddwMoney,
-          dwIsNewUser,
-          strMyShareId,
-          strPin,
-        };
-        resolve({
-          SceneList,
-          XBDetail,
-          dwXBRemainCnt,
-          ddwMoney,
-          dwIsNewUser,
-          strMyShareId,
-          strPin,
-        });
-      } catch (e) {
-        console.log(e);
-      } finally {
-        resolve();
-      }
-    });
-  });
-}
-
-
-// 助力
-await getPT()
-}
-
 // 🐶Crazy-Joy✅
 async function helpCrazyJoy() {
 // xin 4hcydYCP_3SVJFTBkKtsLKt9zd5YaBeE
@@ -650,7 +653,7 @@ async function helpFriends() {
   for (let code of codes) {
     if (!code) continue
     await helpFriend(code)
-    await $.wait(500)
+    await $.wait(1000); //歇口气儿, 不然会报操作频繁
   }
 }
 function helpFriend(code) {
