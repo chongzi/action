@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-23 09:14:48 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-02 10:04:08
+ * @Last Modified time: 2021-03-02 13:35:19
  */
 
 const $ = new Env('🔔HelpMyself design by Xin')
@@ -108,13 +108,13 @@ async function helpCash() {
                   message += `当前现金：${data.data.result.signMoney}`
                   return
                 }
-                console.log(`您的助力码为${data.data.result.inviteCode}`)
+                // console.log(`您的助力码为${data.data.result.inviteCode}`)
                 let helpInfo = {
                   'inviteCode': data.data.result.inviteCode,
                   'shareDate': data.data.result.shareDate
                 }
                 $.shareDate = data.data.result.shareDate;
-                $.log(`shareDate: ${$.shareDate}`)
+                $.log(`最新的shareDate为: ${$.shareDate}`)
                 // 打印出来的是带有时间的 json数据类型
                 // { inviteCode: 'xxx', shareDate: 'xxx' }
                 // 拿到自己的助力码上的时间戳 放需要助力的数组内
