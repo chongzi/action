@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-02 14:42:47
+ * @Last Modified time: 2021-03-03 17:16:31
  * 
  */
 const $ = Env('微博签到')
@@ -117,9 +117,10 @@ async function checkin(){
         const result = JSON.parse(data)
         console.log(result);
         // 签到成功 
-        if(result.status!==0){
+        if(result.status===10000){
           console.log(`执行签到：`+result.msg)
-          console.log(`连续签到时间:`+result.data.desc)
+          console.log(`本次获得：`+result.data.desc)
+          console.log(`连续签到:`+result.data.continuous+`天`)
         }
         // 已签到反馈信息
         if(result.errno===30000||result.errno===-100){
