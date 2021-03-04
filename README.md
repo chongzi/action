@@ -39,6 +39,8 @@
 
 [@NobyDa](https://github.com/NobyDa/Script/tree/master) - 京东获取 Cookie&一键签到
 
+[@whyour](https://github.com/whyour/hundun/tree/master/quanx) - 京东小游戏
+
 [@lxk0301](https://github.com/lxk0301/jd_scripts/tree/master) - 京东小游戏
 
 [@sazs34]() - 本教程参考自 sazs34 大佬
