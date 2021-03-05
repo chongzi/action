@@ -2,10 +2,14 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:32:13 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-05 17:26:19
+ * @Last Modified time: 2021-03-05 17:32:18
  */
 
 const $ = new Env('斗鱼签到')
+
+const signCookie = []
+
+const activityCookie = []
 
 if ($.isNode()) {
   if (process.env.SIGN_DOUYU && process.env.SIGN_DOUYU.indexOf('&') > -1) {
