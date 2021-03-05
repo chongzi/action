@@ -7,7 +7,7 @@ on:
   watch:
     types: started
   repository_dispatch:
-    types: _
+    types: baidu_speed
 
 jobs:
   build:
@@ -36,5 +36,3 @@ jobs:
         env:
           BAIDU_TASK: ${{ secrets.BAIDU_TASK }}
           BAIDU_CASH: ${{ secrets.BAIDU_CASH }}
-          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
-          TG_USER_ID: ${{ secrets.TG_USER_ID }}
