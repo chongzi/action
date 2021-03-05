@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:32:13 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-05 18:27:53
+ * @Last Modified time: 2021-03-05 23:36:51
  */
 
 const $ = new Env('斗鱼签到')
@@ -83,8 +83,6 @@ async function dySign(){
        },
     	}
    $.post(URL,async(error, response, data) =>{
-    try{
-      if(data!==undefined){
         result = JSON.parse(data)
         // 查看返回信息
         // console.log(result)
@@ -92,12 +90,6 @@ async function dySign(){
           console.log(`签到时间:${result.data.sign_today}`)
           console.log(`获得鱼丸:${result.data.sign_sum}`)
           console.log(`获得经验:${result.data.sign_exps}`)
-        }
-      }
-        }catch(e) {
-          console.log(e)
-      } finally {
-        resolve();
       } 
     })
    })
@@ -145,8 +137,6 @@ async function userSignActivity() {
        body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=1804862cbb788a576d61d2961e55322e`
     	}
    $.post(URL,async(error, response, data) =>{
-    try{
-      if(data!==undefined){
         result = JSON.parse(data)
         // 查看返回信息
         // console.log(result)
@@ -154,14 +144,8 @@ async function userSignActivity() {
           console.log("鱼丸总共："+result.data.ywTotal)
           console.log("目前参加人数："+result.data.joinTotal)
           console.log("剩余时间："+result.data.clockLeftTime)
-      }
       }else{
         console.log("错误信息："+result.data)
-      }
-        }catch(e) {
-          console.log(e)
-      } finally {
-        resolve();
       } 
     })
    })

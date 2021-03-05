@@ -1,6 +1,7 @@
 name: 斗鱼签到&活动
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: '55 */5 * * *'
