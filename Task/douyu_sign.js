@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:32:13 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-05 18:23:02
+ * @Last Modified time: 2021-03-05 18:27:53
  */
 
 const $ = new Env('斗鱼签到')
@@ -84,13 +84,15 @@ async function dySign(){
     	}
    $.post(URL,async(error, response, data) =>{
     try{
-      result = JSON.parse(data)
-      // 查看返回信息
-      // console.log(result)
-      if(result.error!==0){
-        console.log(`签到时间:${result.data.sign_today}`)
-        console.log(`获得鱼丸:${result.data.sign_sum}`)
-        console.log(`获得经验:${result.data.sign_exps}`)
+      if(data!==undefined){
+        result = JSON.parse(data)
+        // 查看返回信息
+        // console.log(result)
+        if(result.error!==0){
+          console.log(`签到时间:${result.data.sign_today}`)
+          console.log(`获得鱼丸:${result.data.sign_sum}`)
+          console.log(`获得经验:${result.data.sign_exps}`)
+        }
       }
         }catch(e) {
           console.log(e)
@@ -144,13 +146,15 @@ async function userSignActivity() {
     	}
    $.post(URL,async(error, response, data) =>{
     try{
-      result = JSON.parse(data)
-      // 查看返回信息
-      // console.log(result)
-      if(result.error===0){
-        console.log("鱼丸总共："+result.data.ywTotal)
-        console.log("目前参加人数："+result.data.joinTotal)
-        console.log("剩余时间："+result.data.clockLeftTime)
+      if(data!==undefined){
+        result = JSON.parse(data)
+        // 查看返回信息
+        // console.log(result)
+        if(result.error===0){
+          console.log("鱼丸总共："+result.data.ywTotal)
+          console.log("目前参加人数："+result.data.joinTotal)
+          console.log("剩余时间："+result.data.clockLeftTime)
+      }
       }else{
         console.log("错误信息："+result.data)
       }
