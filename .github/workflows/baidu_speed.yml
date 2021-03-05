@@ -6,7 +6,8 @@ name: 百度极速版
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 22,5,10,12 * * *'
+    - cron: '30 * * * *'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,6 +17,14 @@ jobs:
       RUNFILE: 'Task/baidu_speed.js'
       BAIDU_COOKIE: ${{ secrets.BAIDU_COOKIE }}
       BAIDU_CASH: ${{ secrets.BAIDU_CASH }}
+      PUSH_KEY: ${{ secrets.PUSH_KEY }}
+      BARK_PUSH: ${{ secrets.BARK_PUSH }}
+      BARK_SOUND: ${{ secrets.BARK_SOUND }}
+      TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+      TG_USER_ID: ${{ secrets.TG_USER_ID }}
+      DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }}
+      DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }}
+      IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
