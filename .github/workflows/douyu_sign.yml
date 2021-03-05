@@ -1,0 +1,31 @@
+name: 斗鱼签到&活动
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '55 */5 * * *'
+  watch:
+    types: started
+  repository_dispatch:
+    types: douyu
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install
+        run: |
+          npm install
+      - name: '运行 【斗鱼签到&活动】'
+        run: |
+          node ./Task/douyu_sign.js
+        env:
+          SIGN_DOUYU: ${{ secrets.SIGN_DOUYU }}
+          ACTIVITY_DOUYU: ${{ secrets.ACTIVITY_DOUYU }}
