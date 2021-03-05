@@ -2,20 +2,19 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:32:13 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-05 17:32:18
+ * @Last Modified time: 2021-03-05 18:23:02
  */
 
 const $ = new Env('斗鱼签到')
 
-const signCookie = []
-
-const activityCookie = []
+const signCookiesArr =[]
+const activityCookieArr =[]
 
 if ($.isNode()) {
   if (process.env.SIGN_DOUYU && process.env.SIGN_DOUYU.indexOf('&') > -1) {
-      signCookie = process.env.SIGN_DOUYU.split('&');
+     signCookie = process.env.SIGN_DOUYU.split('&');
   } else {
-    signCookie = process.env.SIGN_DOUYU.split()
+     signCookie = process.env.SIGN_DOUYU.split()
   };
   Object.keys(signCookie).forEach((item) => {
         if (signCookie[item]) {
