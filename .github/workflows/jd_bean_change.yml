@@ -4,7 +4,6 @@
 name: 京豆变动通知
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: '0 8 * * *'
