@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-04 15:21:37 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-04 17:05:11
+ * @Last Modified time: 2021-03-05 08:57:17
  */
 
 
@@ -20,7 +20,7 @@ const $ = new Env('火山视频提现')
 async function Withdraw(ts){
  return new Promise((resolve) => {
     let URL = {
-   	url: `https://i.snssdk.com/luckycat/hotsoon/v1/wallet/check_take_cash?&polaris_version=2.0.0&version_code=7.6.4&code=1&app_name=live_stream_lite&vid=98143B35-B286-410F-A83F-D8F11A711E44&device_id=2568877913678359&new_nav=0&channel=App%20Store&resp_js_time=${ts}&aid=1350&recv_js_call_time=${ts}&screen_width=1170&client_request_id=0ba64957bd4bcc60827fe0d5cc022649&openudid=be2f309618f6d8b9c4b067b914dec5a85c55a87b&live_sdk_version=7.6.4&update_version_code=7642&os_api=18&ws_status=CONNECTED&ac=WIFI&mccmnc=46011&os_version=14.3&ret=JSB_SUCCESS&client_version_code=764&device_platform=iphone&iid=246709429220727&device_type=iPhone13%2C2&idfa=0CDF5067-D3F2-49C7-AB9B-60440A608B49&is_bridge_enable=true&ua=Mozilla%2F5.0%20(iPhone%3B%20CPU%20iPhone%20OS%2014_3%20like%20Mac%20OS%20X)%20AppleWebKit%2F605.1.15%20(KHTML%2C%20like%20Gecko)%20Mobile%2F15E148&task_key=jiao_take_cash&_request_from=web&version_code=7.6.4&app_name=live_stream_lite&vid=98143B35-B286-410F-A83F-D8F11A711E44&device_id=2568877913678359&new_nav=0&channel=App%20Store&aid=1350&screen_width=1170&client_request_id=495d1fde39f7d5aa5dada5ca6dcdd9bc&openudid=be2f309618f6d8b9c4b067b914dec5a85c55a87b&live_sdk_version=7.6.4&update_version_code=7642&os_api=18&ws_status=CONNECTED&ac=WIFI&mccmnc=46011&os_version=14.3&client_version_code=764&device_platform=iphone&iid=246709429220727&device_type=iPhone13,2&idfa=0CDF5067-D3F2-49C7-AB9B-60440A608B49`,
+   	url: `https://i.snssdk.com/luckycat/hotsoon/v1/wallet/check_take_cash?&polaris_version=2.0.0&version_code=7.6.4&code=1&app_name=live_stream_lite&vid=98143B35-B286-410F-A83F-D8F11A711E44&device_id=2568877913678359&new_nav=0&channel=App%20Store&resp_js_time=${ts}&aid=1350&recv_js_call_time=${ts}`,
     	headers: {
        'Host': 'i.snssdk.com',
        'Connection':'keep-alive',
@@ -30,11 +30,13 @@ async function Withdraw(ts){
        'Cookie':'passport_csrf_token_default=573297bd728d08f437e6e9a5141df7fc; odin_tt=bb9807167028f2ee7cb6a4f24ea59d9341b47f5adecb414f0036fda04e391bf3a609595174ad9acfd06053050f558dd1e5fa0cf0fe47fe55d29ddd7b3393a596; n_mh=L5N-Ug_WHddGoCQFTe0ZIkB5OqdNl75bDEr79RhaaY4; d_ticket=0b3e35056e0fca924ff6f06849c71639f6587; passport_csrf_token=573297bd728d08f437e6e9a5141df7fc; sid_guard=2e6324393589e2f4c1ee7df2bb124f35%7C1614351178%7C5184000%7CTue%2C+27-Apr-2021+14%3A52%3A58+GMT; uid_tt=099c26cc1c4b3e1c8eb9fa52500bfa4c; uid_tt_ss=099c26cc1c4b3e1c8eb9fa52500bfa4c; sid_tt=2e6324393589e2f4c1ee7df2bb124f35; sessionid=2e6324393589e2f4c1ee7df2bb124f35; sessionid_ss=2e6324393589e2f4c1ee7df2bb124f35; MONITOR_WEB_ID=6691b411-f8e4-4b12-82ad-3979626911da; install_id=246709429220727; ttreq=1$fc46ee27d4942c615b8ece30fa742f0a81d83d7a;',
        'Content-Type':'application/json; encoding=utf-8',
        'X-SS-Cookie':'MONITOR_WEB_ID=6691b411-f8e4-4b12-82ad-3979626911da; install_id=246709429220727; ttreq=1$fc46ee27d4942c615b8ece30fa742f0a81d83d7a; sessionid=2e6324393589e2f4c1ee7df2bb124f35; sessionid_ss=2e6324393589e2f4c1ee7df2bb124f35; sid_guard=2e6324393589e2f4c1ee7df2bb124f35%7C1614351178%7C5184000%7CTue%2C+27-Apr-2021+14%3A52%3A58+GMT; sid_tt=2e6324393589e2f4c1ee7df2bb124f35; uid_tt=099c26cc1c4b3e1c8eb9fa52500bfa4c; uid_tt_ss=099c26cc1c4b3e1c8eb9fa52500bfa4c; d_ticket=0b3e35056e0fca924ff6f06849c71639f6587; n_mh=L5N-Ug_WHddGoCQFTe0ZIkB5OqdNl75bDEr79RhaaY4; odin_tt=bb9807167028f2ee7cb6a4f24ea59d9341b47f5adecb414f0036fda04e391bf3a609595174ad9acfd06053050f558dd1e5fa0cf0fe47fe55d29ddd7b3393a596; passport_csrf_token=573297bd728d08f437e6e9a5141df7fc; passport_csrf_token_default=573297bd728d08f437e6e9a5141df7fc',
+       'tt-request-time':`${ts}`,
        'User-Agent':'HotsoonLite 7.6.4 rv:7642 (iPhone; iOS 14.3; zh_CN) Cronet',
        'sdk-version':'1',
        'X-SS-STUB':'ADBA2DD71665AF6229537A287801E395',
        'x-tt-trace-id':'00-fc350c7b0d920617f84221726c7f0546-fc350c7b0d920617-01',
        'Accept-Encoding':'gzip, deflate',
+       'X-Khronos':`${JSON.parse((ts.toString()).slice(0,10))}`,
        'X-Gorgon':'8402808e00002ee8bfe6d70f55a09616ccd8fd59f16401f8122a',
        },
        body:`{

@@ -26,7 +26,3 @@ jobs:
       - name: '运行 【火山极速版提现】'
         run: |
           node ./Task/hotSoon.js
-        env:
-          PUSH_KEY: ${{ secrets.PUSH_KEY }}
-          PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
-          PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER }}
