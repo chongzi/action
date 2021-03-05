@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:32:13 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-05 23:49:17
+ * @Last Modified time: 2021-03-05 23:58:05
  */
 
 const $ = new Env('斗鱼签到')
@@ -141,7 +141,7 @@ async function userSignActivity() {
         'Content-Length': '87',
         'Cookie': activitycookie
        },
-       body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=1804862cbb788a576d61d2961e55322e`
+       body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=2fa58acdc0f3139b67d18599a6feeb85`
     	}
    $.post(URL,async(error, response, data) =>{
     try{
@@ -196,7 +196,7 @@ async function getActivityInfo(){
         'Content-Length': '87',
         'Cookie': activitycookie
        },
-       body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=1804862cbb788a576d61d2961e55322e`
+       body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=2fa58acdc0f3139b67d18599a6feeb85`
     	}
    $.post(URL,async(error, response, data) =>{
     try{
