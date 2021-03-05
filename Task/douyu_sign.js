@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:32:13 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-05 23:45:01
+ * @Last Modified time: 2021-03-05 23:49:17
  */
 
 const $ = new Env('斗鱼签到')
@@ -84,6 +84,7 @@ async function dySign(){
     	}
    $.post(URL,async(error, response, data) =>{
     try{
+      console.log(data);
         result = JSON.parse(data)
         // 查看返回信息
         // console.log(result)
@@ -144,7 +145,8 @@ async function userSignActivity() {
     	}
    $.post(URL,async(error, response, data) =>{
     try{
-        const result = JSON.parse(data)
+      console.log(data)
+         result = JSON.parse(data)
         // 查看返回信息
         // console.log(result)
         if(result.error===0){
@@ -198,7 +200,7 @@ async function getActivityInfo(){
     	}
    $.post(URL,async(error, response, data) =>{
     try{
-      const result = JSON.parse(data)
+       result = JSON.parse(data)
       // console.log(result)
       if(result.error===0){
         console.log(`参加活动是否成功:`+((result.data.signStatus===1)?'参加成功':'参团失败)'))
