@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:32:13 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-05 23:58:05
+ * @Last Modified time: 2021-03-06 09:39:04
  */
 
 const $ = new Env('斗鱼签到')
@@ -54,6 +54,7 @@ if ($.isNode()) {
     // 参团
     await userSignActivity()
     // 获得活动信息
+    console.log(`\n查看活动->【每日打卡分鱼丸】`)
     await getActivityInfo()
   }
  
@@ -66,31 +67,33 @@ if ($.isNode()) {
 async function dySign(){
  return new Promise((resolve) => {
     let URL = {
-   	url: `https://apiv2.douyucdn.cn/h5nc/sign/getSign`,
-    	headers: {
-        'Host': 'apiv2.douyucdn.cn',
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Accept-Language': 'zh-cn',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Origin': 'https://apiv2.douyucdn.cn',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148, Douyu_IOS, Douyu_IOS',
-        'Connection': 'keep-alive',
-        'Referer': 'https://apiv2.douyucdn.cn/H5/Sign/info?client_sys=ios&ic=0',
-        'Content-Length': '45',
-        'Cookie': signcookie
-       },
-    	}
-   $.post(URL,async(error, response, data) =>{
+   	url: `https://apiv2.douyucdn.cn/h5nc/sign/sendSign`,
+    headers: {
+      'Host': 'apiv2.douyucdn.cn',
+      'Accept': 'application/json, text/javascript, */*; q=0.01',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Accept-Language': 'zh-cn',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'Origin': 'https://apiv2.douyucdn.cn',
+      'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148, Douyu_IOS, Douyu_IOS',
+      'Connection': 'keep-alive',
+      'Referer': 'https://apiv2.douyucdn.cn/H5/Sign/info?client_sys=ios&ic=0',
+      'Content-Length': '97',
+      'Cookie': signcookie
+     },
+     body:`client_sys=ios&did=c0c14731d3f8e7c03c2afbba00001621&token=55110086_11_20dd8f35d959dd27_2_44082409`,
+    }
+  $.post(URL,async(error, response, data) =>{
     try{
-      console.log(data);
         result = JSON.parse(data)
         // 查看返回信息
-        // console.log(result)
+        console.log(result)
         if(result.error!==0){
-          console.log(`签到时间:${result.data.sign_today}`)
-          console.log(`获得鱼丸:${result.data.sign_sum}`)
+          const today = JSON.stringify(new Date())
+          console.log(`签到时间:${result.data.sign_today}`+(result.data.sign_today==today.slice(1,11)?` ✅ 已打卡`:` ❌ 未打卡`))
+          console.log(`连续签到:${result.data.sign_md}天`)
+          console.log(`总共签到:${result.data.sign_sum}天`)
           console.log(`获得经验:${result.data.sign_exps}`)
         }
       }catch(e) {
@@ -106,15 +109,17 @@ async function dySign(){
 {
   "error": "0",
   "data": {
-    "sign_today": "2021-03-05",
-    "sign_cnt": "0",
-    "sign_sum": "16",
-    "sign_rd": "0",
-    "sign_md": "0",
+    "sign_today": "2021-03-06",
+    "sign_cnt": "1",
+    "sign_sum": "18",
+    "sign_rd": "2",
+    "sign_md": "2",
     "sign_exp": "15",
-    "sign_exps": "150",
+    "sign_exps": "177",
+    "sign_cexp": "14",
+    "sign_pl": [],
     "sign_silver": 0,
-    "sign_siln": 0,
+    "sign_siln": 10,
     "sign_silb": 0
   },
   "msg": ""
@@ -141,14 +146,14 @@ async function userSignActivity() {
         'Content-Length': '87',
         'Cookie': activitycookie
        },
-       body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=2fa58acdc0f3139b67d18599a6feeb85`
+       body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=3bb2abeed608866b347c13c5df3def2`
     	}
    $.post(URL,async(error, response, data) =>{
     try{
       console.log(data)
          result = JSON.parse(data)
         // 查看返回信息
-        // console.log(result)
+        console.log(result)
         if(result.error===0){
           console.log("鱼丸总共："+result.data.ywTotal)
           console.log("目前参加人数："+result.data.joinTotal)
@@ -196,12 +201,12 @@ async function getActivityInfo(){
         'Content-Length': '87',
         'Cookie': activitycookie
        },
-       body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=2fa58acdc0f3139b67d18599a6feeb85`
+       body:`token=55110086_11_20dd8f35d959dd27_2_44082409&dy_token=2404d77d62cef1a35ef8e507ac5b5c2`
     	}
    $.post(URL,async(error, response, data) =>{
     try{
        result = JSON.parse(data)
-      // console.log(result)
+      console.log(result)
       if(result.error===0){
         console.log(`参加活动是否成功:`+((result.data.signStatus===1)?'参加成功':'参团失败)'))
         console.log("鱼丸总共："+result.data.ywTotal)
