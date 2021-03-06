@@ -2,17 +2,17 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:04:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-06 18:30:40
+ * @Last Modified time: 2021-03-06 18:45:14
  */
 
 const $ = new Env('得力e+')
 
-const wait = (Math.random()*500000).toFixed()
+const wait = (Math.random()*400000).toFixed()
 
 !(async () => {
   console.log(`此次随机等待${wait/1000}秒`);
   await $.wait(wait)
-  // await sign()
+  await sign()
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
