@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-06 10:20:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-06 16:03:05
+ * @Last Modified time: 2021-03-06 16:08:41
  */
 
 const $ = new Env("JX3推栏")
@@ -17,6 +17,11 @@ if ($.isNode()) {
   } else {
     signCookie = process.env.XOYO_COOKIE.split()
   }
+  Object.keys(signCookie).forEach((item) => {
+    if (signCookie[item]) {
+      Cookie.push(signCookie[item])
+    }
+  })
 }
 
 // 从云函数拿到Token
@@ -26,6 +31,11 @@ if ($.isNode()) {
   } else {
     signToken = process.env.XOYO_TOKEN.split()
   }
+  Object.keys(signToken).forEach((item) => {
+    if (signToken[item]) {
+      Token.push(signToken[item])
+    }
+  })
 }
 
 
