@@ -2,8 +2,10 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-05 16:32:13 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-06 10:15:12
+ * @Last Modified time: 2021-03-06 10:20:00
  */
+
+// TODO 待确认 斗鱼Cookie时效
 
 const $ = new Env('斗鱼签到')
 
