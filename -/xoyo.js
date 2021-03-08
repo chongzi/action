@@ -1,170 +1,266 @@
 /*
  * @Author: Xin https://github.com/Xin-code 
- * @Date: 2021-02-27 16:17:32 
+ * @Date: 2021-03-06 10:20:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-05 10:13:43
- * 
+ * @Last Modified time: 2021-03-08 15:13:27
  */
-const $ = Env('微博签到')
-const notify = $.isNode() ? require('./sendNotify') : '';
 
-const UrlArrs = [
-  // xin 10
-`https://api.weibo.cn/2/checkin/add?gsid=_2A25NOPncDeRxGeRO6FYW8y3Nyz6IHXVsbAoUrDV6PUJbkdAKLWThkWpNUGFlbErggaKFbnjJmd0BK1UsWuIk_EdG&wm=3333_2001&launchid=default&b=0&from=10B2193010&c=iphone&networktype=wifi&v_p=87&skin=default&v_f=1&s=2d3a6cc7&lang=zh_CN&sflag=1&ua=iPhone13,2__weibo__11.2.1__iphone__os14.3&ft=0&aid=01A0oddeHLkj68cNlIQLI2waVUCBzWNHgU-xnBve6-kmv_5Vs.`,
-  // 小号 97
-`https://api.weibo.cn/2/checkin/add?gsid=_2A25NOPmrDeRxGeRL61EW8C7Nyz6IHXVsbApjrDV6PUJbkdAfLRLlkWpNU0Z1A2QaEPwh5LHcOSm9iTS_WYgKkHen&wm=3333_2001&launchid=default&b=0&from=10B2193010&c=iphone&networktype=wifi&v_p=87&skin=default&v_f=1&s=bdc6e969&lang=zh_CN&sflag=1&ua=iPhone13,2__weibo__11.2.1__iphone__os14.3&ft=0&aid=01A0oddeHLkj68cNlIQLI2waVUCBzWNHgU-xnBve6-kmv_5Vs.`,
-]
+const $ = new Env("JX3推栏")
 
-const AuthorizationArr =[
-  // xin
-  'WB-SUT _2A95NOPncDeRxGeRO6FYW8y3Nyz6IHXVsbAoUrDV6PUJbkdAKLVT4kWpNUGFlbI1KfBJUk8CXFwKWIO4K2iOr96Rs',
-  // 小号
-  'WB-SUT _2A95NOPmrDeRxGeRL61EW8C7Nyz6IHXVsbApjrDV6PUJbkdAfLXbDkWpNU0Z1AxeDnxoRcu0C7vf5CXIscpdxkwTo',
-]
+const Cookie = []
+const Token = []
 
-const SessionidArr =[
-  // xin
-  'EA811523-37E3-464C-97F8-9EB2CFEA6B5E',
-  // 小号
-  '39C954E0-1B36-4598-917F-B280E61FEA27',
-]
+// 从云函数拿到Cookie
+if ($.isNode()) {
+  if (process.env.XOYO_COOKIE && process.env.XOYO_COOKIE.indexOf('&') > -1) {
+    signCookie = process.env.XOYO_COOKIE.split('&');
+  } else {
+    signCookie = process.env.XOYO_COOKIE.split()
+  }
+  Object.keys(signCookie).forEach((item) => {
+    if (signCookie[item]) {
+      Cookie.push(signCookie[item])
+    }
+  })
+}
 
-const ValidatorArr =[
-  // xin
-  'ZIOF/KVmD2iGiKobzYhLFEDBNJ+e3Fh9ccHGpzlz0jI=',
-  // 小号
-  'kTSS5yaaYlrh0z6AWnWBTFWPNUKzXQk3hpo7DiiOPrQ=',
-]
+// 从云函数拿到Token
+if ($.isNode()) {
+  if (process.env.XOYO_TOKEN && process.env.XOYO_TOKEN.indexOf('&') > -1) {
+    signToken = process.env.XOYO_TOKEN.split('&');
+  } else {
+    signToken = process.env.XOYO_TOKEN.split()
+  }
+  Object.keys(signToken).forEach((item) => {
+    if (signToken[item]) {
+      Token.push(signToken[item])
+    }
+  })
+}
 
-const cronetridArr = [
-  // xin
-  '1078067',
-  // 小号
-  '10470602'
-]
 
-const logUidArr = [
-  // xin
-  '2034733102',
-  // 小号
-  '2503700102'
-]
+// 文章ID存放
+const ids = []
 
-const ContentLengthArr =[
-  // xin
-  '346',
-  // 小号
-  '346'
-]
+const XOYO_API_HOST = "https://m.pvp.xoyo.com"
+
 
 !(async () => {
-  console.log(`------------- 共${UrlArrs.length}个账号----------------\n`)
-  for (let i = 0; i < UrlArrs.length; i++) {
-      await $.wait(500);
-      Url = UrlArrs[i];
-      await $.wait(500);
-      Authorization = AuthorizationArr[i]
-      await $.wait(500);
-      Sessionid = SessionidArr[i]
-      await $.wait(500);
-      Validator = ValidatorArr[i]
-      await $.wait(500);
-      cronetrid = cronetridArr[i]
-      await $.wait(500);
-      logUid = logUidArr[i]
-      await $.wait(500);
-      ContentLength = ContentLengthArr[i]
-      await $.wait(500);
-      $.index = i + 1;
-      await $.wait(500);
-      console.log(`\n开始【微博${$.index}】`)
-      await $.wait(500);
-      await checkin(i) 
-      await $.wait(500);
- }
+
+  if(!Cookie[0]){
+    console.log(`未拿到Cookie`)
+    return
+  }
+
+  for (let i = 0; i < Cookie.length; i++) {
+    cookie = Cookie[i]
+    token = Token[i]
+    console.log(`执行 -> 【获取任务列表】`)
+    await getTaskProgressList()
+    await $.wait(1000)
+    console.log(`\n执行 -> 【每日签到】`)
+    await dailyCheckin()
+    // await $.wait(1000)
+    // console.log(`\n执行 -> 【浏览社区】`)
+    // await browserCommunity()
+    // await $.wait(1000)
+    // console.log(`\n执行 -> 【点赞动态】`)
+    // await refresh()
+    // for (let i = 0; i < ids.length; i++) {
+    //   id=ids[i]
+    //   await like(id)
+    //   await $.wait(1000)
+    //   await unlike(id)
+    // }
+    
+  }
 })()
-    .catch((e) => $.logErr(e))
-    .finally(() => $.done())
-    
-    
-//checkin
-async function checkin(i){
- return new Promise((resolve) => {
-    let checkin_url = {
-   	url: Url,
-    	headers: {
-       'Accept': '*/*',
-       'Accept-Encoding': 'gzip,deflate',
-       'Authorization':Authorization,
-       'Content-Length':ContentLength,
-       'X-Sessionid':Sessionid,
-       'Accept-Language': 'zh-cn',
-       'Connection': 'keep-alive',
-       'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-       'Host': 'api.weibo.cn',
-       'cronet_rid':cronetrid,
-       'SNRT':'normal',
-       'X-Log-Uid':logUid,
-       'X-Validator':Validator,
-       'User-Agent': `Weibo/52021 (iPhone; iOS 14.3; Scale/3.00)`
-       },
-    	}
-   $.get(checkin_url,async(error, response, data) =>{
-    try{
-        const result = JSON.parse(data)
-        console.log(result);
-        // 签到成功 
-        i=i+1
-        if(result.status===10000){
-          console.log(`执行签到：`+result.msg)
-          console.log(`本次获得：`+result.data.desc)
-          console.log(`连续签到:`+ result.data.continuous+`天`)
-          notify.sendNotify(`微博帐号`+i+`签到成功`,`本次获得：${result.data.desc}\n连续签到：${result.data.continuous}天`)
+.catch((e) => $.logErr(e))
+.finally(() => $.done())
+
+
+
+// 获取任务列表
+function getTaskProgressList() {
+  return new Promise((resolve) => {
+    $.post(taskUrl("trade/bonus/task-progress-list", {"ts":"20210306030339614"}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+            result = JSON.parse(data)
+            if(result.code==0&&result.msg=='success'){
+              // 正则表达式取值
+              console.log(`\n帐号:${token.match(`\:(.+?)\:`)[1]}\n`+result.msg+` ✅ 登录成功`)
+              console.log('当前用户碎银：'+result.data.bonusBalance)
+              // 拿到任务列表
+              // console.log(result.data.bonusTaskList)
+              result.data.bonusTaskList.forEach((task)=>{
+                console.log(`任务【${task.name}】${task.progress}/${task.qtyLimit}  \b奖励${task.bonus}碎银`)
+              })
+            }else{
+              console.log(`❌ 登录失败 检查Cookie`)
+            }
         }
-        // 已签到反馈信息
-        if(result.errno===30000||result.errno===-100){
-          console.log(result.errmsg)
-          notify.sendNotify(`微博帐号`+i+`错误：`+ result.errmsg)
-        }
-        }catch(e) {
-          $.logErr(e, response);
+      } catch (e) {
+        console.log(e)
       } finally {
-        resolve();
-      } 
+        resolve(data)
+      }
     })
-   })
+  })
 }
 
-// 签到成功反馈
-/*
-{
-  "time": 1614558946,
-  "status": 5000,
-  "msg": "操作成功",
-  "data": {
-    "icon": "",
-    "continuous": 2,
-    "desc": "已连续签到2天",
-    "button": {
-      "show": 1,
-      "text": "今日已签到",
-      "type": 0,
-      "scheme": "https:\/\/m.weibo.cn\/c\/checkin?luicode=20000103"
+// 每日签到
+function dailyCheckin() {
+  return new Promise((resolve) => {
+    $.post(taskUrl("trade/bonus/task-check-in", {"ts":"20210306030339614"}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+            result = JSON.parse(data)
+            // console.log(result)
+            if(result.code!==null){
+              console.log((result.msg=='repeat bonus task request'?' ❗ 重复签到':`${result.msg}`))
+            }else{
+              console.log(`❌ 签到任务失败 检查Cookie`);
+            }
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }
+    })
+  })
+}
+
+// 待检验浏览社区
+function browserCommunity() {
+  return new Promise((resolve) => {
+    $.post(taskUrl("socialgw/pop-up-window/query-by-game", {"game":"jx3","ts":"20210306075432714"}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+            result = JSON.parse(data)
+            // Tag = QueryCompositePagePlates
+            // console.log(result)
+            if(result!==null){
+              console.log(`查询社区页面:`+result.msg)
+              // 待检验浏览社区
+            }
+
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }
+    })
+  })
+}
+
+// 刷新文章获得文章ID 用来点赞
+function refresh() {
+  return new Promise((resolve) => {
+    $.post(taskUrl("socialgw/recommend/dynamic",{"cursor":0,"size":10,"ts":"20210306074647091"}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+            result = JSON.parse(data)
+            if(result.code!==null){
+              console.log(`查询文章:`+result.msg)
+              console.log(result.data.data)
+              result.data.data.forEach((item)=>{
+                // 获取文章的ids
+                ids.push(item.id)
+              })
+              // 存放文章id
+              console.log(ids)
+            }
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }
+    })
+  })
+}
+
+// 点赞动态
+function like(id) {
+  return new Promise((resolve) => {
+    $.post(taskUrl(`socialgw/like/add`,{"type":"Article","contentSrcId":`${id}`,"server":"破阵子","school":"霸刀","roleName":"九娄的灵蛇","globalRoleId":"288230376159817831","roleLevel":0,"ts":"20210306074654449"}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+            result = JSON.parse(data)
+            // console.log(result)
+            console.log(`点赞文章`+id+`${result.msg}`);
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }
+    })
+  })
+}
+
+// 取消点赞
+function unlike(id) {
+  return new Promise((resolve) => {
+    $.post(taskUrl(`socialgw/like/cancel`,{"likeId":`${id}`,"ts":"20210306074647091"}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+            result = JSON.parse(data)
+            // console.log(result)
+            console.log(`取消点赞文章♥`+id+`${result.msg}`);
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }
+    })
+  })
+}
+
+
+
+
+
+
+ //URL
+ function taskUrl(activity, body={}) {
+  return {
+    url: `${XOYO_API_HOST}/${activity}`,
+    headers: {
+      'Host': 'm.pvp.xoyo.com',
+      'Connection': 'keep-alive',
+      'Accept': 'application/json',
+      'X-Sk':'9a1f3a2bec7aa7da4880235194a903039dc6a5e16f8db93c63bafb4eb8ef93cc',
+      'token': token,
+      'deviceid': 'OYcLn8zNSsT4zLUCHnEHeg==',
+      'User-Agent': '%E6%8E%A8%E6%A0%8F/52 CFNetwork/1209 Darwin/20.2.0',
+      'Cookie': cookie,
     },
-    "title": "明日签到+0.2元"
+    body:`${JSON.stringify(body)}`
   }
 }
-*/
-
-// 已签到反馈
-/*
-{
-  errmsg: '今天已经签过到啦',
-  errno: 30000,
-  errtype: 'DEFAULT_ERROR',
-  isblock: false
-}
-*/
 
 
 // pretty-ignore
