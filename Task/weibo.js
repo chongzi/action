@@ -2,13 +2,17 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-09 10:40:26
+ * @Last Modified time: 2021-03-09 13:51:35
  * 
  */
 const $ = Env('微博签到')
 const notify = $.isNode() ? require('./sendNotify') : '';
 
-const TokenArr = []
+const TokenArr = [
+  `_2A25NQpEtDeRxGeRO6FYW8y3Nyz6IHXVsWaPlrDV6PUJbkdAfLXfhkWpNUGFlbJsQJCwju9aFyeCAxTuPCH3BlQdF&wm=3333_2001&launchid=default&b=0&from=10B3093010&c=iphone&networktype=wifi&v_p=87&skin=default&v_f=1&s=55555555&lang=zh_CN&sflag=0&ua=iPhone13,2__weibo__11.3.0__iphone__os14.3&ft=0&aid=01A0oddeHLkj68cNlIQLI2waVUCBzWNHgU-xnBve6-kmv_5Vs.`
+]
+
+const A = []
 
 if ($.isNode()) {
   if (process.env.WEIBO_TOKEN && process.env.WEIBO_TOKEN.indexOf('&') > -1) {
@@ -18,7 +22,8 @@ if ($.isNode()) {
   }
   Object.keys(signToken).forEach((item) => {
     if (signToken[item]) {
-      TokenArr.push(signToken[item])
+      A.push(signToken[item])
+      console.log(A)
     }
   })
 }
