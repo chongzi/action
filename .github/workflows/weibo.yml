@@ -1,0 +1,30 @@
+name: 微博签到
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '55 */8 * * *'
+  watch:
+    types: started
+  repository_dispatch:
+    types: weibo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install
+        run: |
+          npm install
+      - name: '运行 【微博签到】'
+        run: |
+          node ./Task/weibo.js
+        env:
+          WEIBO_TOKEN: ${{ secrets.WEIBO_TOKEN }}

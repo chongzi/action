@@ -2,47 +2,57 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-08 15:13:09
+ * @Last Modified time: 2021-03-09 10:40:26
  * 
  */
 const $ = Env('微博签到')
-const notify = $.isNode() ? require('../Task/sendNotify') : '';
+const notify = $.isNode() ? require('./sendNotify') : '';
+
+const TokenArr = []
+
+if ($.isNode()) {
+  if (process.env.WEIBO_TOKEN && process.env.WEIBO_TOKEN.indexOf('&') > -1) {
+    signToken = process.env.WEIBO_TOKEN.split('&');
+  } else {
+    signToken = process.env.WEIBO_TOKEN.split()
+  }
+  Object.keys(signToken).forEach((item) => {
+    if (signToken[item]) {
+      TokenArr.push(signToken[item])
+    }
+  })
+}
 
 !(async () => {
-  await checkin()
+  for (let i = 0; i < TokenArr.length; i++) {
+    token = TokenArr[i]
+    // 日常签到
+    await checkin(i)
+  }
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
     
     
-//checkin
+// 日常签到
 async function checkin(i){
  return new Promise((resolve) => {
-    let checkin_url = {
-   	url: Url,
+    let CheckinURL = {
+   	url: `https://api.weibo.cn/2/checkin/add?gsid=${token}`,
     	headers: {
        'Accept': '*/*',
-       'Accept-Encoding': 'gzip,deflate',
-       'Authorization':Authorization,
-       'Content-Length':ContentLength,
-       'X-Sessionid':Sessionid,
-       'Accept-Language': 'zh-cn',
        'Connection': 'keep-alive',
-       'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
        'Host': 'api.weibo.cn',
-       'cronet_rid':cronetrid,
-       'SNRT':'normal',
-       'X-Log-Uid':logUid,
-       'X-Validator':Validator,
        'User-Agent': `Weibo/52021 (iPhone; iOS 14.3; Scale/3.00)`
        },
     	}
-   $.get(checkin_url,async(error, response, data) =>{
+   $.post(CheckinURL,async(error, response, data) =>{
     try{
         const result = JSON.parse(data)
-        console.log(result);
+        // 签到反馈信息
+        console.log(result)
+        i++
         // 签到成功 
-        i=i+1
         if(result.status===10000){
           console.log(`执行签到：`+result.msg)
           console.log(`本次获得：`+result.data.desc)
