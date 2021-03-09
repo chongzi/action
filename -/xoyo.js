@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-06 10:20:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-08 15:13:27
+ * @Last Modified time: 2021-03-09 09:51:00
  */
 
 const $ = new Env("JX3推栏")
@@ -57,21 +57,17 @@ const XOYO_API_HOST = "https://m.pvp.xoyo.com"
     token = Token[i]
     console.log(`执行 -> 【获取任务列表】`)
     await getTaskProgressList()
-    await $.wait(1000)
     console.log(`\n执行 -> 【每日签到】`)
     await dailyCheckin()
-    // await $.wait(1000)
-    // console.log(`\n执行 -> 【浏览社区】`)
-    // await browserCommunity()
-    // await $.wait(1000)
-    // console.log(`\n执行 -> 【点赞动态】`)
-    // await refresh()
-    // for (let i = 0; i < ids.length; i++) {
-    //   id=ids[i]
-    //   await like(id)
-    //   await $.wait(1000)
-    //   await unlike(id)
-    // }
+    console.log(`\n执行 -> 【浏览社区】`)
+    await browserCommunity()
+    console.log(`\n执行 -> 【点赞动态】`)
+    await refresh()
+    for (let i = 0; i < ids.length; i++) {
+      id=ids[i]
+      await like(id)
+      await unlike(id)
+    }
     
   }
 })()
