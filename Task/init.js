@@ -8,7 +8,7 @@ const XXXX_API_HOST = ''
 //   if (process.env.XXXX_XXXX && process.env.XXXX_XXXX.indexOf('#') > -1) {
 //     signcookie = process.env.XXXX_XXXX.split('#');
 //   } else {
-//     signcookie = process.env.XXXX_XXXX.split()
+//     signcookie = process.env.XXXX_XXXX.split('\n')
 //   }
 //   Object.keys(signcookie).forEach((item) => {
 //     if (signcookie[item]) {

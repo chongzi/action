@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-10 08:38:54 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 09:03:43
+ * @Last Modified time: 2021-03-10 09:06:27
  */
 
 const $ = Env('有道云笔记')
@@ -28,7 +28,7 @@ if ($.isNode()) {
   if (process.env.YDY_BODY && process.env.YDY_BODY.indexOf('#') > -1) {
     signbody = process.env.YDY_BODY.split('#');
   } else {
-    signbody = process.env.YDY_BODY.split()
+    signbody = process.env.YDY_BODY.split('\n')
   }
   Object.keys(signbody).forEach((item) => {
     if (signbody[item]) {

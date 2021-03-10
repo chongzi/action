@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-09 13:56:54
+ * @Last Modified time: 2021-03-10 09:06:32
  * 
  */
 const $ = Env('微博签到')
@@ -14,7 +14,7 @@ if ($.isNode()) {
   if (process.env.WEIBO_TOKEN && process.env.WEIBO_TOKEN.indexOf('#') > -1) {
     signToken = process.env.WEIBO_TOKEN.split('#');
   } else {
-    signToken = process.env.WEIBO_TOKEN.split()
+    signToken = process.env.WEIBO_TOKEN.split('\n')
   }
   Object.keys(signToken).forEach((item) => {
     if (signToken[item]) {
