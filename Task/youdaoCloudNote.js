@@ -2,13 +2,12 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-10 08:38:54 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 09:32:39
+ * @Last Modified time: 2021-03-10 09:38:06
  */
 
 const $ = Env('有道云笔记')
 
 const CookieArr = []
-const BodyArr = []
 
 const YDY_API_HOST = 'https://note.youdao.com/yws/mapi'
 
@@ -24,24 +23,11 @@ if ($.isNode()) {
       CookieArr.push(signcookie[item])
     }
   })
-
-  // Body
-  if (process.env.YDY_BODY && process.env.YDY_BODY.indexOf('#') > -1) {
-    signbody = process.env.YDY_BODY.split('#');
-  } else {
-    signbody = process.env.YDY_BODY.split()
-  }
-  Object.keys(signbody).forEach((item) => {
-    if (signbody[item]) {
-      BodyArr.push(signbody[item])
-    }
-  })
 }
 
 !(async () => {
   for (let i = 0; i < CookieArr.length; i++) {
     cookie = CookieArr[i]
-    body = BodyArr[i]
     await checkin()
   }
 })()
@@ -51,7 +37,7 @@ if ($.isNode()) {
     
 async function checkin(){
  return new Promise((resolve) => {
-   let body = `${body}`
+   let body = `IDFA=0CDF5067-D3F2-49C7-AB9B-60440A608B49&client_ver=7.0.5&device_id=iPhone13%2C2-5FAD9CD9-E388-4078-9A47-A069B37A27B9&device_model=iPhone&device_name=Xin&device_type=iPhone&imei=%2535%2546%2541%2544%2539%2543%2544%2539%252D%2545%2533%2538%2538%252D%2534%2530%2537%2538%252D%2539%2541%2534%2537%252D%2541%2530%2536%2539%2542%2533%2537%2541%2532%2537%2542%2539&keyfrom=%256E%256F%2574%2565%252E%2537%252E%2530%252E%2535%252E%2569%2550%2568%256F%256E%2565&level=user&login=qq&mid=%2531%2534%252E%2533&model=%2569%2550%2568%256F%256E%2565%2531%2533%2C%2532&net=wifi&os=iOS&os_ver=14.3&phoneVersion=%2569%2550%2568%256F%256E%2565&vendor=%2541%2570%2570%2553%2574%256F%2572%2565`
    $.post(BodytaskUrl(`user?method=checkin`,body),async(error, response, data) =>{
     try{
       if (error) {
