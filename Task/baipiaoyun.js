@@ -1,21 +1,22 @@
 /*
  * @Author: Xin https://github.com/Xin-code 
- * @Date: 2021-03-10 10:47:47 
+ * @Date: 2021-03-10 11:27:08 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 11:42:43
+ * @Last Modified time: 2021-03-10 11:44:57
  */
 
 
 
-const $ = Env('ikuuu自动签到')
+
+const $ = Env('白嫖云自动签到')
 
 const CookieArr = []
 
 if ($.isNode()) {
-  if (process.env.IKUUU_COOKIE && process.env.IKUUU_COOKIE.indexOf('#') > -1) {
-    signcookie = process.env.IKUUU_COOKIE.split('#');
+  if (process.env.BAIPIAOYUN_COOKIE && process.env.BAIPIAOYUN_COOKIE.indexOf('#') > -1) {
+    signcookie = process.env.BAIPIAOYUN_COOKIE.split('#');
   } else {
-    signcookie = process.env.IKUUU_COOKIE.split()
+    signcookie = process.env.BAIPIAOYUN_COOKIE.split()
   }
   Object.keys(signcookie).forEach((item) => {
     if (signcookie[item]) {
@@ -37,7 +38,7 @@ if ($.isNode()) {
     
 async function checkIn(){
  return new Promise((resolve) => {
-   $.post(taskUrl(`https://ikuuu.co/user/checkin`),async(error, response, data) =>{
+   $.post(taskUrl(`https://baipiaoyun.xyz/user/checkin`),async(error, response, data) =>{
     try{
       if (error) {
         console.log(`${JSON.stringify(error)}`)
@@ -62,8 +63,8 @@ function taskUrl(activity) {
     url: `${activity}`,
     headers: {
       'cookie': cookie,
-      'origin': 'https://ikuuu.co',
-      'referer': 'https://ikuuu.co/user',
+      'origin': 'https://baipiaoyun.xyz',
+      'referer': 'https://baipiaoyun.xyz/user/',
       'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36',
     }
   }
