@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-10 08:38:54 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 09:10:29
+ * @Last Modified time: 2021-03-10 09:17:14
  */
 
 const $ = Env('有道云笔记')
@@ -16,6 +16,8 @@ if ($.isNode()) {
   // Cookie
   if (process.env.YDY_COOKIE && process.env.YDY_COOKIE.indexOf('#') > -1) {
     signcookie = process.env.YDY_COOKIE.split('#');
+  } else {
+    signcookie = process.env.YDY_COOKIE.split()
   }
   Object.keys(signcookie).forEach((item) => {
     if (signcookie[item]) {
