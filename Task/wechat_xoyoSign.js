@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-10 13:56:42 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 14:30:16
+ * @Last Modified time: 2021-03-10 14:31:36
  */
 const $ = Env('微信端剑三签到')
 
@@ -31,7 +31,7 @@ if ($.isNode()) {
   }
   Object.keys(signToken).forEach((item) => {
     if (signToken[item]) {
-      CookieArr.push(signToken[item])
+      TokenArr.push(signToken[item])
     }
   })
 }
