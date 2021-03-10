@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-10 08:38:54 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 09:23:38
+ * @Last Modified time: 2021-03-10 09:27:15
  */
 
 const $ = Env('有道云笔记')
@@ -15,24 +15,26 @@ const YDY_API_HOST = 'https://note.youdao.com/yws/mapi'
 if ($.isNode()) {
   // Cookie
   if (process.env.YDY_COOKIE && process.env.YDY_COOKIE.indexOf('#') > -1) {
+    console.log(`YDY_COOKIE`+YDY_COOKIE)
     signcookie = process.env.YDY_COOKIE.split('#');
   } else {
     signcookie = process.env.YDY_COOKIE.split()
   }
+  console.log(signcookie)
   Object.keys(signcookie).forEach((item) => {
     if (signcookie[item]) {
       CookieArr.push(signcookie[item])
     }
   })
-}
 
-if ($.isNode()) {
   // Body
   if (process.env.YDY_BODY && process.env.YDY_BODY.indexOf('#') > -1) {
+    console.log(`YDY_BODY`+YDY_BODY);
     signbody = process.env.YDY_BODY.split('#');
   } else {
     signbody = process.env.YDY_BODY.split()
   }
+  console.log(signbody)
   Object.keys(signbody).forEach((item) => {
     if (signbody[item]) {
       BodyArr.push(signbody[item])
