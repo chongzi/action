@@ -2,11 +2,10 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 09:31:31
+ * @Last Modified time: 2021-03-10 09:34:54
  * 
  */
 const $ = Env('微博签到')
-const notify = $.isNode() ? require('./sendNotify') : '';
 
 const TokenArr = []
 
@@ -57,15 +56,13 @@ async function checkin(i){
           console.log(`执行签到：`+result.msg)
           console.log(`本次获得：`+result.data.desc)
           console.log(`连续签到:`+ result.data.continuous+`天`)
-          notify.sendNotify(`微博帐号`+i+`签到成功`,`本次获得：${result.data.desc}\n连续签到：${result.data.continuous}天`)
         }
         // 已签到反馈信息
         if(result.errno===30000||result.errno===-100){
           console.log(result.errmsg)
-          notify.sendNotify(`微博帐号`+i+`错误：`+ result.errmsg)
         }
         }catch(e) {
-          $.logErr(e, response);
+          console.log(e)
       } finally {
         resolve();
       } 
