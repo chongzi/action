@@ -27,4 +27,4 @@ jobs:
         run: |
           node ./Task/dragonflyFM.js
         env:
-          YDY_COOKIE: ${{ secrets.YDY_COOKIE }}
+          QTFM_COOKIE: ${{ secrets.QTFM_COOKIE }}
