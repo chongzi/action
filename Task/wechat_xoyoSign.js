@@ -2,39 +2,18 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-10 13:56:42 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 14:06:27
+ * @Last Modified time: 2021-03-10 14:23:18
  */
 const $ = Env('微信端剑三签到')
 
-const CookieArr = []
+const CookieArr = [
+  `session_id=nQJt4hPY2qKPynjasGKBxNMSVdIfDY8jBi5YQiow; session_id_=nQJt4hPY2qKPynjasGKBxNMSVdIfDY8jBi5YQiow; _wechat_oauth_state_="LQuzCJSpFRNDLovu1MMS7Q=="`
+]
 
-const TokenArr = []
-
+const TokenArr = [
+  `account=z975203723&zone=%E5%8F%8C%E7%BA%BF%E4%B8%80%E5%8C%BA%EF%BC%88%E7%82%B9%E5%8D%A1%EF%BC%89&server=%E7%A0%B4%E9%98%B5%E5%AD%90&role=%E4%B9%9D%E5%A8%84%E7%9A%84%E7%81%B5%E8%9B%87&token=9312f7af81d4b2cda8d02ab4ac770191&_=1615355398179`
+]
 const XOYO_API_HOST = 'https://ws.xoyo.com/jx3/subwechatcenter'
-
-if ($.isNode()) {
-  if (process.env.XOYO_COOKIE && process.env.XOYO_COOKIE.indexOf('#') > -1) {
-    signcookie = process.env.XOYO_COOKIE.split('#');
-  } else {
-    signcookie = process.env.XOYO_COOKIE.split()
-  }
-  Object.keys(signcookie).forEach((item) => {
-    if (signcookie[item]) {
-      CookieArr.push(signcookie[item])
-    }
-  })
-
-  if (process.env.XOYO_TOKEN && process.env.XOYO_TOKEN.indexOf('#') > -1) {
-    signToken = process.env.XOYO_TOKEN.split('#');
-  } else {
-    signToken = process.env.XOYO_TOKEN.split()
-  }
-  Object.keys(signToken).forEach((item) => {
-    if (signToken[item]) {
-      CookieArr.push(signToken[item])
-    }
-  })
-}
 
 !(async () => {
   for (let i = 0; i < CookieArr.length; i++) {
@@ -55,9 +34,8 @@ async function SignIn(){
         console.log(`${JSON.stringify(error)}`)
         console.log(`API请求失败，请检查网路重试`)
       } else {
-        const result = JSON.parse(data)
         // 反馈信息
-        console.log(result)
+        console.log(JSON.parse(data))
       }}catch(e) {
           console.log(e)
         } finally {
@@ -74,10 +52,7 @@ function taskUrl(activity) {
     url: `${XOYO_API_HOST}/${activity}`,
     headers: {
       "Accept": "*/*",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-cn",
       "Connection": "keep-alive",
-      "Content-Type": "application/x-www-form-urlencoded",
       'Host': 'ws.xoyo.com',
       'Referer': 'https://jx3.xoyo.com/zt/2019/01/21/jx3daily/daily.html',
       'Cookie': cookie,
