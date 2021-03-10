@@ -1,35 +1,55 @@
-const $ = Env('xxx')
+/*
+ * @Author: Xin https://github.com/Xin-code 
+ * @Date: 2021-03-10 13:56:42 
+ * @Last Modified by: Xin 
+ * @Last Modified time: 2021-03-10 14:06:27
+ */
+const $ = Env('微信端剑三签到')
 
-const XXXX_API_HOST = ''
+const CookieArr = []
 
-// if ($.isNode()) {
-//   if (process.env.XXXX_XXXX && process.env.XXXX_XXXX.indexOf('#') > -1) {
-//     signcookie = process.env.XXXX_XXXX.split('#');
-//   } else {
-//     signcookie = process.env.XXXX_XXXX.split()
-//   }
-//   Object.keys(signcookie).forEach((item) => {
-//     if (signcookie[item]) {
-//       XXXX.push(signcookie[item])
-//     }
-//   })
-// }
+const TokenArr = []
+
+const XOYO_API_HOST = 'https://ws.xoyo.com/jx3/subwechatcenter'
+
+if ($.isNode()) {
+  if (process.env.XOYO_COOKIE && process.env.XOYO_COOKIE.indexOf('#') > -1) {
+    signcookie = process.env.XOYO_COOKIE.split('#');
+  } else {
+    signcookie = process.env.XOYO_COOKIE.split()
+  }
+  Object.keys(signcookie).forEach((item) => {
+    if (signcookie[item]) {
+      CookieArr.push(signcookie[item])
+    }
+  })
+
+  if (process.env.XOYO_TOKEN && process.env.XOYO_TOKEN.indexOf('#') > -1) {
+    signToken = process.env.XOYO_TOKEN.split('#');
+  } else {
+    signToken = process.env.XOYO_TOKEN.split()
+  }
+  Object.keys(signToken).forEach((item) => {
+    if (signToken[item]) {
+      CookieArr.push(signToken[item])
+    }
+  })
+}
 
 !(async () => {
-  for (let i = 0; i < XXXX.length; i++) {
-
-    await xxx()
-
+  for (let i = 0; i < CookieArr.length; i++) {
+    cookie = CookieArr[i]
+    token = TokenArr[i]
+    await SignIn()
   }
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
     
     
-async function xxx(){
+async function SignIn(){
  return new Promise((resolve) => {
-   let body = ''
-   $.post(BodytaskUrl(URL,body),async(error, response, data) =>{
+   $.get(taskUrl(`signin?version=2&callback=&${token}`),async(error, response, data) =>{
     try{
       if (error) {
         console.log(`${JSON.stringify(error)}`)
@@ -51,35 +71,17 @@ async function xxx(){
 // URL
 function taskUrl(activity) {
   return {
-    url: `${XXXX_API_HOST}/${activity}`,
+    url: `${XOYO_API_HOST}/${activity}`,
     headers: {
       "Accept": "*/*",
       "Accept-Encoding": "gzip, deflate, br",
       "Accept-Language": "zh-cn",
       "Connection": "keep-alive",
       "Content-Type": "application/x-www-form-urlencoded",
-      'Host': '',
+      'Host': 'ws.xoyo.com',
+      'Referer': 'https://jx3.xoyo.com/zt/2019/01/21/jx3daily/daily.html',
       'Cookie': cookie,
-      'User-Agent': '',
-    }
-  }
-}
-
-
- // BODYURL
- function BodytaskUrl(activity, body={}) {
-  return {
-    url: `${XXXX_API_HOST}/${activity}`,
-    body: body,
-    headers: {
-      "Accept": "*/*",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-cn",
-      "Connection": "keep-alive",
-      "Content-Type": "application/x-www-form-urlencoded",
-      'Host': '',
-      'Cookie': cookie,
-      'User-Agent': '',
+      'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.2(0x18000233) NetType/WIFI Language/zh_CN',
     }
   }
 }
