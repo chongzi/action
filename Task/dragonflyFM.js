@@ -1,36 +1,45 @@
+/*
+ * @Author: Xin https://github.com/Xin-code 
+ * @Date: 2021-03-10 15:07:54 
+ * @Last Modified by: Xin 
+ * @Last Modified time: 2021-03-10 15:20:20
+ */
 
-const $ = Env('xxx')
+const $ = Env('蜻蜓FM签到')
 
-const XXXX_API_HOST = ''
+const QTFM_API_HOST = 'https://15168.activity-1.m.duiba.com.cn'
 
-// if ($.isNode()) {
-//   if (process.env.XXXX_XXXX && process.env.XXXX_XXXX.indexOf('#') > -1) {
-//     signcookie = process.env.XXXX_XXXX.split('#');
-//   } else {
-//     signcookie = process.env.XXXX_XXXX.split()
-//   }
-//   Object.keys(signcookie).forEach((item) => {
-//     if (signcookie[item]) {
-//       XXXX.push(signcookie[item])
-//     }
-//   })
-// }
+const CookieArr = []
+
+if ($.isNode()) {
+  if (process.env.QTFM_COOKIE && process.env.QTFM_COOKIE.indexOf('#') > -1) {
+    signcookie = process.env.QTFM_COOKIE.split('#');
+  } else {
+    signcookie = process.env.QTFM_COOKIE.split()
+  }
+  Object.keys(signcookie).forEach((item) => {
+    if (signcookie[item]) {
+      CookieArr.push(signcookie[item])
+    }
+  })
+}
+
+const ts = new Date().getTime()
 
 !(async () => {
-  for (let i = 0; i < XXXX.length; i++) {
-
-    await xxx()
-
+  for (let i = 0; i < CookieArr.length; i++) {
+    cookie = CookieArr[i]
+    await SignIn()
   }
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
     
     
-async function xxx(){
+async function SignIn(){
  return new Promise((resolve) => {
-   let body = ''
-   $.post(BodytaskUrl(URL,body),async(error, response, data) =>{
+   let body = 'signActivityId=562'
+   $.post(BodytaskUrl(`signactivity/getSignInfo?_=${ts}`,body),async(error, response, data) =>{
     try{
       if (error) {
         console.log(`${JSON.stringify(error)}`)
@@ -39,6 +48,13 @@ async function xxx(){
         const result = JSON.parse(data)
         // 反馈信息
         console.log(result)
+        if(result.success!==true){
+          console.log(error)
+        }else {
+          console.log(`签到:`+result.success)
+          console.log(`连续签到:`+result.signInfoVO.continueDay+`天`)
+          console.log(`总积分:`+result.credits)
+        }
       }}catch(e) {
           console.log(e)
         } finally {
@@ -49,28 +65,10 @@ async function xxx(){
 }
 
 
-// URL
-function taskUrl(activity) {
-  return {
-    url: `${XXXX_API_HOST}/${activity}`,
-    headers: {
-      "Accept": "*/*",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-cn",
-      "Connection": "keep-alive",
-      "Content-Type": "application/x-www-form-urlencoded",
-      'Host': '',
-      'Cookie': cookie,
-      'User-Agent': '',
-    }
-  }
-}
-
-
  // BODYURL
  function BodytaskUrl(activity, body={}) {
   return {
-    url: `${XXXX_API_HOST}/${activity}`,
+    url: `${QTFM_API_HOST}/${activity}`,
     body: body,
     headers: {
       "Accept": "*/*",
@@ -78,9 +76,11 @@ function taskUrl(activity) {
       "Accept-Language": "zh-cn",
       "Connection": "keep-alive",
       "Content-Type": "application/x-www-form-urlencoded",
-      'Host': '',
+      'Host': '15168.activity-1.m.duiba.com.cn',
       'Cookie': cookie,
-      'User-Agent': '',
+      'User-Agent': 'iOS-QingtingFM QingTing-iOS-WV/9.1.5.7 com.Qting.QTTour Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+      'Origin': 'https://15168.activity-1.m.duiba.com.cn',
+      'Referer': 'https://15168.activity-1.m.duiba.com.cn/signactivity/index?id=562&signOptId=9582&dpm=15168.41.1.0&dcm=216.562.601.0&from=login&spm=15168.1.1.1'
     }
   }
 }
