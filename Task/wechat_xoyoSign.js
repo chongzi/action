@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-10 13:56:42 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-11 10:37:08
+ * @Last Modified time: 2021-03-11 10:41:14
  */
 const $ = Env('微信端剑三签到')
 
