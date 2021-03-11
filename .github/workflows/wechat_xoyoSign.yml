@@ -27,5 +27,4 @@ jobs:
         run: |
           node ./Task/wechat_xoyoSign.js
         env:
-          XOYO_COOKIE: ${{ secrets.XOYO_COOKIE }}
-          XOYO_TOKEN: ${{ secrets.XOYO_TOKEN }}
+          PUSH_KEY: ${{ secrets.PUSH_KEY }}

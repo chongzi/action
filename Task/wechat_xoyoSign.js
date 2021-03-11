@@ -2,39 +2,23 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-10 13:56:42 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 14:31:36
+ * @Last Modified time: 2021-03-11 10:37:08
  */
 const $ = Env('微信端剑三签到')
 
-const CookieArr = []
+// 获取时间戳
+const ts = new Date().getTime()
 
-const TokenArr = []
+const CookieArr = [
+  `session_id=8jt09O7daarJaIslOt5IwWm7ZRbrlNGpzBxH8bba; session_id_=8jt09O7daarJaIslOt5IwWm7ZRbrlNGpzBxH8bba`
+]
+
+const TokenArr = [
+  `account=z975203723&zone=%E5%8F%8C%E7%BA%BF%E4%B8%80%E5%8C%BA%EF%BC%88%E7%82%B9%E5%8D%A1%EF%BC%89&server=%E7%A0%B4%E9%98%B5%E5%AD%90&role=%E4%B9%9D%E5%A8%84%E7%9A%84%E7%81%B5%E8%9B%87&token=9312f7af81d4b2cda8d02ab4ac770191&_=${ts}`
+]
 
 const XOYO_API_HOST = 'https://ws.xoyo.com/jx3/subwechatcenter'
 
-if ($.isNode()) {
-  if (process.env.XOYO_COOKIE && process.env.XOYO_COOKIE.indexOf('#') > -1) {
-    signcookie = process.env.XOYO_COOKIE.split('#');
-  } else {
-    signcookie = process.env.XOYO_COOKIE.split()
-  }
-  Object.keys(signcookie).forEach((item) => {
-    if (signcookie[item]) {
-      CookieArr.push(signcookie[item])
-    }
-  })
-
-  if (process.env.XOYO_TOKEN && process.env.XOYO_TOKEN.indexOf('#') > -1) {
-    signToken = process.env.XOYO_TOKEN.split('#');
-  } else {
-    signToken = process.env.XOYO_TOKEN.split()
-  }
-  Object.keys(signToken).forEach((item) => {
-    if (signToken[item]) {
-      TokenArr.push(signToken[item])
-    }
-  })
-}
 
 !(async () => {
   for (let i = 0; i < CookieArr.length; i++) {
