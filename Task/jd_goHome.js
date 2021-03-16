@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-15 15:25:17
+ * @Last Modified time: 2021-03-16 13:09:43
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -119,12 +119,12 @@ async function watering() {
           console.log(`API请求失败，请检查网路重试`)
         } else {
           result = JSON.parse(data)
-          console.log(result)
+          // console.log(result)
           if(result.code!=='0'){
             console.log(result.msg)
           }else{
             beanInfo = result.result
-            console.log(`当前等级【${beanInfo.levelUp}】,还差`+(1-(beanInfo.levelProgress/totalProgress))*100+`%升级`)
+            console.log(`当前等级【${beanInfo.levelUp}】,还差`+(1-(beanInfo.levelProgress/beanInfo.totalProgress))*100+`%升级`)
             $.totalWater = beanInfo.water
           }
         }
