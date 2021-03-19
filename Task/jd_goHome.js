@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-16 13:09:43
+ * @Last Modified time: 2021-03-19 14:52:03
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -37,18 +37,98 @@ const JD_API_HOST = `https://daojia.jd.com/client?_jdrandom=${new Date().getTime
     
     
 async function todoTask(){
+  
+  // 签到
+  await CheckIn()
+
   // 收集水滴
   await getWater()
 
-  // 任务列表
-  await TaskList()
-
   // 浇水
-  for(let i = 1; i<$.totalWater/100;i++){
-    console.log(`\n正在第【${i}】次浇水`)
+  for(let i = 0; i<$.totalWater/100;i++){
+    console.log(`\n正在第【${i+1}】次浇水`)
     await watering()
+    await $.wait(2000) // 避免 重复操作
   }
+
+  // 任务列表
+  // await TaskList()
 }
+
+async function CheckIn() {
+  return new Promise((resolve) => {
+    $.get(taskUrl(`signin/userSigninNew`, {"channel":"qiandao_baibaoxiang"}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          // 反馈信息
+          // console.log(result)
+          console.log(`✅ 已登录 \n${result.msg}`)
+        }} catch (e) {
+          console.log(e)
+        } finally {
+          resolve(data)
+        }})
+      })
+}
+
+// 收集水滴
+async function getWater() {
+  return new Promise((resolve) => {
+    $.post(taskUrlBody(`plantBeans/getWater`, {"activityId":"23d9550546014be"}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          $.totalWater = result.result.water
+          // console.log(result)
+          if(result.code!=='0'){
+            console.log(result.msg)
+          }else{
+            console.log(`\n本次收集：【${result.result.addWater}g】水滴`)
+            console.log(`目前可浇水：【${result.result.water}g】水滴`)
+            console.log(`当日总共收集：【${result.result.dailyWater}g】水滴\n`)
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }})
+    })
+}
+
+// 浇水操作
+async function watering() {
+  return new Promise((resolve) => {
+    $.post(taskUrlBody(`plantBeans/watering`, {"activityId":"23d9550546014be","waterAmount":100}), async(err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          // console.log(result)
+          if(result.code!=='0'){
+            console.log(result.msg)
+          }else{
+            beanInfo = result.result
+            console.log(`当前【${beanInfo.levelUp}】级,还差`+(1-(beanInfo.levelProgress/beanInfo.totalProgress))*100+`%升级`)
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }})
+    })
+}
+
 
 
 // 任务列表
@@ -78,62 +158,6 @@ async function TaskList() {
           resolve(data)
         }})
       })
-}
-
-// 收集水滴
-async function getWater() {
-  return new Promise((resolve) => {
-    $.post(taskUrlBody(`plantBeans/getWater`, {"activityId":"23d9550546014be"}), (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`API请求失败，请检查网路重试`)
-        } else {
-          result = JSON.parse(data)
-          // console.log(result)
-          if(result.code!=='0'){
-            console.log(result.msg)
-          }else{
-            console.log(`✅ 登录:${result.msg}`)
-            console.log(`\n本次收集：【${result.result.addWater}g】水滴`)
-            $.totalWater = result.result.water
-            console.log(`目前可浇水：【${result.result.water}g】水滴`)
-            console.log(`当日总共收集：【${result.result.dailyWater}g】水滴\n`)
-          }
-        }
-      } catch (e) {
-        console.log(e)
-      } finally {
-        resolve(data)
-      }})
-    })
-}
-
-// 浇水操作
-async function watering() {
-  return new Promise((resolve) => {
-    $.post(taskUrlBody(`plantBeans/watering`, {"activityId":"23d9550546014be","waterAmount":100}), (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`API请求失败，请检查网路重试`)
-        } else {
-          result = JSON.parse(data)
-          // console.log(result)
-          if(result.code!=='0'){
-            console.log(result.msg)
-          }else{
-            beanInfo = result.result
-            console.log(`当前等级【${beanInfo.levelUp}】,还差`+(1-(beanInfo.levelProgress/beanInfo.totalProgress))*100+`%升级`)
-            $.totalWater = beanInfo.water
-          }
-        }
-      } catch (e) {
-        console.log(e)
-      } finally {
-        resolve(data)
-      }})
-    })
 }
 
 
