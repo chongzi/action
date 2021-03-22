@@ -1,4 +1,4 @@
-name: 京东到家-鲜豆庄园
+name: 京东到家-到家果园
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
   watch:
     types: started
   repository_dispatch:
-    types: gohomebeans
+    types: gohomefruit
 
 jobs:
   build:
@@ -23,8 +23,8 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: '运行 【京东到家-鲜豆庄园】'
+      - name: '运行 【京东到家-到家果园】'
         run: |
-          node ./Task/jdH_beans.js
+          node ./Task/jdH_fruit.js
         env:
           JDGH_XDZY_COOKIE: ${{ secrets.JDGH_XDZY_COOKIE }}
