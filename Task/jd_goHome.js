@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-22 15:01:53
+ * @Last Modified time: 2021-03-22 15:15:14
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -121,7 +121,7 @@ async function getWater() {
           }else{
             console.log(`本次收集：【${result.result.addWater}g】💧`)
             console.log(`目前可浇水：【${result.result.water}g】💧`)
-            console.log(`当日总共收集：【${result.result.dailyWater}g】💧\n`)
+            console.log(`当日总共收集：【${result.result.dailyWater}g】💧`)
           }
         }
       } catch (e) {
