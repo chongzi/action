@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-22 15:19:50 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-22 16:59:29
+ * @Last Modified time: 2021-03-22 17:04:32
  */
 
 const $ = Env('京东到家-免费水果')
@@ -186,7 +186,7 @@ async function doFinishTask(Task) {
           // console.log(result)
           if(result.code!=='0'){
             // 未去做任务 显示失败原因
-            console.log(`❌ ${result.msg}`)
+            console.log(result.msg)
           }else{
             // 去做任务
             console.log(`📝去做任务：【${result.result.taskName}】 - 任务奖励【${result.result.awardValue}g】💧 - 待领取奖励💰`)
@@ -214,7 +214,7 @@ async function doDailyTaskAward(Task) {
           if(result.code!=='0'){
             // 未完成
             // { code: '-3', msg: '未达到领取奖励的条件', success: false }
-            console.log(`❌ ${result.msg}`)
+            console.log(result.msg)
           }else{
             // 任务完成
             console.log(`收取奖励💰：任务【${result.result.taskName}】-${result.result.buttonText}-获得【${result.result.awardValue}g】💧`)
