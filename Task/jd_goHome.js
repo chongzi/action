@@ -2,12 +2,15 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-19 14:52:03
+ * @Last Modified time: 2021-03-22 15:01:53
  */
 
 const $ = Env('京东到家-鲜豆庄园')
 
 const Cookie = []
+
+// 任务列表
+const TaskArrList = []
 
 if ($.isNode()) {
   if (process.env.JDGH_XDZY_COOKIE && process.env.JDGH_XDZY_COOKIE.indexOf('#') > -1) {
@@ -39,20 +42,46 @@ const JD_API_HOST = `https://daojia.jd.com/client?_jdrandom=${new Date().getTime
 async function todoTask(){
   
   // 签到
+  console.log(`🌱执行 -> 日常签到`)
   await CheckIn()
 
   // 收集水滴
+  console.log(`\n🌱执行 -> 收集水滴`)
   await getWater()
 
-  // 浇水
-  for(let i = 0; i<$.totalWater/100;i++){
-    console.log(`\n正在第【${i+1}】次浇水`)
-    await watering()
+  // 获取任务列表
+  console.log(`\n🌱执行 -> 查看任务列表`);
+  await getTask()
+
+  // 去完成任务
+  console.log(`\n🌱执行 -> 完成任务`);
+  for (let i = 0; i < TaskArrList.length; i++) {
+    Task = TaskArrList[i]
+    await doFinishTask(Task)
     await $.wait(2000) // 避免 重复操作
   }
 
-  // 任务列表
-  // await TaskList()
+  // 任务领取奖励
+  console.log(`\n🌱执行 -> 领取奖励`);
+  for (let i = 0; i < TaskArrList.length; i++) {
+    Task = TaskArrList[i]
+    await doDailyTaskAward(Task)
+    await $.wait(2000) // 避免 重复操作
+  }
+
+
+  // 浇水
+  console.log(`\n🌱执行 -> 浇水`);
+  for(let i = 0; i<$.totalWater/100;i++){
+    if($.totalWater/100<1){
+      console.log(`💧水滴不够,不执行浇水操作···`)
+    }else{
+      console.log(`\n正在第【${i+1}】次浇水`)
+      await watering()
+      await $.wait(2000) // 避免 重复操作
+    }
+  }
+  
 }
 
 async function CheckIn() {
@@ -90,12 +119,52 @@ async function getWater() {
           if(result.code!=='0'){
             console.log(result.msg)
           }else{
-            console.log(`\n本次收集：【${result.result.addWater}g】水滴`)
-            console.log(`目前可浇水：【${result.result.water}g】水滴`)
-            console.log(`当日总共收集：【${result.result.dailyWater}g】水滴\n`)
+            console.log(`本次收集：【${result.result.addWater}g】💧`)
+            console.log(`目前可浇水：【${result.result.water}g】💧`)
+            console.log(`当日总共收集：【${result.result.dailyWater}g】💧\n`)
           }
         }
       } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }})
+    })
+}
+
+// 任务列表
+async function getTask() {
+  return new Promise((resolve) => {
+    $.get(taskUrl(`task/list`, {"modelId":"M10003","plateCode":1}), async(err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          // console.log(result)
+          if(result.code!=='0'){
+            console.log(`❌ ${result.msg}`);
+          }else{
+            console.log(`获取任务列表: ✅ ${result.msg}`)
+            // 任务列表 数组形式
+            taskInfoList = result.result.taskInfoList
+            taskInfoList.forEach((item)=>{
+              // 每个任务
+              // console.log(item)
+              // 把 任务中 内容都推送到TaskArrList内
+              // 采用对象格式 [{},{},{},{}]
+              let taskInfo = {
+                'modelId':`${item.modelId}`,
+                'taskId':`${item.taskId}`,
+                'taskType':`${item.taskType}`,
+                'plateCode':1,
+              }
+              // 去完成内容 推到数组内
+              TaskArrList.push(taskInfo)
+            })
+          }
+        }} catch (e) {
         console.log(e)
       } finally {
         resolve(data)
@@ -118,7 +187,12 @@ async function watering() {
             console.log(result.msg)
           }else{
             beanInfo = result.result
-            console.log(`当前【${beanInfo.levelUp}】级,还差`+(1-(beanInfo.levelProgress/beanInfo.totalProgress))*100+`%升级`)
+            console.log(`当前【${beanInfo.levelUp}】级,还差`+((1-(beanInfo.levelProgress/beanInfo.totalProgress))*100).toFixed(2)+`%升级`)
+            console.log(`当前还剩💧【${beanInfo.water}g】💧,还可以浇${(beanInfo.water/100).toFixed()-1}次`)
+            if((beanInfo.water/100).toFixed()-1===0){
+              console.log(`💧不够,不进行浇水操作···`)
+              return
+            }
           }
         }
       } catch (e) {
@@ -129,42 +203,124 @@ async function watering() {
     })
 }
 
+/*
+{
+  code: '0',
+  msg: '成功',
+  result: {
+    level: -1,
+    dailyWater: 1969,
+    waterCart: 0,
+    levelProgress: 6000,
+    totalProgress: 6500,
+    water: 589,
+    maxLevel: false
+  },
+  success: true
+}
+*/
 
 
-// 任务列表
-async function TaskList() {
+async function doFinishTask(Task) {
   return new Promise((resolve) => {
-    $.get(taskUrl(`task/list`, {"modelId":"M10001","plateCode":1}), (err, resp, data) => {
+    $.get(taskUrl(`task/finished`, Task), async(err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`API请求失败，请检查网路重试`)
         } else {
           result = JSON.parse(data)
-          // 反馈信息
           // console.log(result)
           if(result.code!=='0'){
+            // 未去做任务 显示失败原因
             console.log(result.msg)
           }else{
-            TaskListArr = result.result.taskInfoList
-            TaskListArr.forEach((item)=>{
-              // console.log(item)
-              console.log(`任务【${item.taskName}】,奖励【${item.awardValue}g】水滴`)
-            })
-          }}
-        } catch (e) {
-          console.log(e)
-        } finally {
-          resolve(data)
-        }})
-      })
+            // 去做任务
+            console.log(`📝去做任务：【${result.result.taskName}】 - 任务奖励【${result.result.awardValue}g】💧 - 待领取奖励💰`)
+          }
+        }} catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }})
+    })
 }
+
+
+async function doDailyTaskAward(Task) {
+  return new Promise((resolve) => {
+    $.get(taskUrl(`task/sendPrize`, Task), async(err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          // console.log(result)
+          // 任务是否完成
+          if(result.code!=='0'){
+            // 未完成
+            // { code: '-3', msg: '未达到领取奖励的条件', success: false }
+            console.log(result.msg)
+          }else{
+            // 任务完成
+            console.log(`收取奖励💰：任务【${result.result.taskName}】-${result.result.buttonText}-获得【${result.result.awardValue}g】💧`)
+          }
+        }} catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }})
+    })
+}
+/*
+{
+  code: '0',
+  msg: '成功',
+  result: {
+    modelId: 'M10003',
+    taskId: '23de4e8b8654a15',
+    taskName: '达达 领权益-APP',
+    taskType: 901,
+    awardType: 1,
+    awardValue: '5',
+    taskIcon: 'https://img30.360buyimg.com/mobilecms/jfs/t1/168107/32/1539/8590/5ff7cf69E45cb12aa/b6126b6daa7951b8.png',
+    taskTitle: '去达达快送领现金',
+    taskSubTitle: '每天瓜分10万元现金',
+    buttonText: '已完成',
+    status: 3,
+    to: 'web',
+    params: { path: '', appId: '', url: 'weixin://dl/business/?t=4RlDUcPlwHn' },
+    unreceiveTaskJumpFlag: 0,
+    isShow: 0,
+    identificationCode: '',
+    secondsLeft: 0,
+    rules: '',
+    unreceivedAwardValue: '0',
+    browseTime: -1,
+    ifCanReEnter: 0,
+    toast: '',
+    nextDayUnReceivedAwardValue: 0,
+    finishNum: 1,
+    totalNum: 1,
+    showPosition: 1,
+    finishType: 402,
+    extraFinishMQType: 0,
+    todayFinishNum: 1,
+    ifCanFinishTask: 0,
+    uniqueId: '23e41b4cca78efe'
+  },
+  success: true
+}
+*/
+
+
 
 
 // url
 function taskUrl(function_id, params = {}) {
   return {
-    url: `${JD_API_HOST}&functionId=${function_id}&body=${escape(JSON.stringify(params))}`,
+    url: `${JD_API_HOST}&functionId=${function_id}&isNeedDealError=true&body=${escape(JSON.stringify(params))}`,
     headers: {
       'Accept': '*/*',
       'Connection': 'keep-alive',
