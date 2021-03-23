@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-22 17:05:11
+ * @Last Modified time: 2021-03-23 09:00:02
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -80,6 +80,24 @@ async function todoTask(){
       await watering()
       await $.wait(2000) // 避免 重复操作
     }
+  }
+  
+  /*
+	if(date.getDay() == 0) week = "星期日"
+	if(date.getDay() == 1) week = "星期一"
+	if(date.getDay() == 2) week = "星期二"
+	if(date.getDay() == 3) week = "星期三"
+	if(date.getDay() == 4) week = "星期四"
+	if(date.getDay() == 5) week = "星期五"
+	if(date.getDay() == 6) week = "星期六"
+  */
+
+  if(new Date().getDay()===1){
+    console.log(`\n今天星期一,开始领取上周奖励💰:`)
+    await getLastWeekReward()
+  }else{
+    console.log(`\n今天不是星期一，不执行收取奖励💰`);
+    return
   }
   
 }
@@ -312,6 +330,44 @@ async function doDailyTaskAward(Task) {
   },
   success: true
 }
+*/
+
+
+async function getLastWeekReward() {
+  return new Promise((resolve) => {
+    $.post(taskUrlBody(`plantBeans/getPoints`, {"activityId":"23d9550546014be"}), async(err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          if(result.code!=='0'){
+            // 重复领取
+            console.log(`❌ ${result.msg}`)
+          }else{
+            // 领取奖励
+            rewardInfo = result.result
+            console.log(`收取奖励💰:${rewardInfo.title}`)
+          }
+        }} catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }})
+    })
+}
+/*
+{
+  "code":"0",
+  "msg":"成功",
+  "result":{
+    "title":"恭喜获得364鲜豆",
+    "subTitle":"参与下期活动继续瓜分",
+    "buttonId":0,
+    "buttonText":"参与下期瓜分"
+  },
+  "success":true}
 */
 
 
