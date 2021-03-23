@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-23 09:10:28
+ * @Last Modified time: 2021-03-23 15:55:02
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -71,6 +71,17 @@ async function todoTask(){
     await $.wait(2000) // 避免 重复操作
   }
 
+  // 单独任务 分享好友
+  await shareFriend()
+
+  // 点击果树掉落💧水滴
+  console.log(`\n🌱执行 -> 点击果树`);
+  for (let i = 0; i < 5; i++) {
+    console.log(`第${i+1}次点击果树···`);
+    await doClickTree()
+    await $.wait(2000) // 避免 重复操作
+  }
+
 
   // 浇水
   console.log(`\n🌱执行 -> 浇水`);
@@ -104,6 +115,7 @@ async function todoTask(){
   
 }
 
+// 签到
 async function CheckIn() {
   return new Promise((resolve) => {
     $.get(taskUrl(`signin/userSigninNew`, {"channel":"qiandao_baibaoxiang"}), (err, resp, data) => {
@@ -240,7 +252,7 @@ async function watering() {
 }
 */
 
-
+// 完成任务
 async function doFinishTask(Task) {
   return new Promise((resolve) => {
     $.get(taskUrl(`task/finished`, Task), async(err, resp, data) => {
@@ -266,7 +278,7 @@ async function doFinishTask(Task) {
     })
 }
 
-
+// 领取奖励
 async function doDailyTaskAward(Task) {
   return new Promise((resolve) => {
     $.get(taskUrl(`task/sendPrize`, Task), async(err, resp, data) => {
@@ -334,7 +346,7 @@ async function doDailyTaskAward(Task) {
 }
 */
 
-
+// 上周奖励
 async function getLastWeekReward() {
   return new Promise((resolve) => {
     $.post(taskUrlBody(`plantBeans/getPoints`, {"activityId":"23d9550546014be"}), async(err, resp, data) => {
@@ -372,6 +384,80 @@ async function getLastWeekReward() {
   "success":true}
 */
 
+// 分享好友
+async function shareFriend() {
+  return new Promise((resolve) => {
+    $.get(taskUrl(`task/received`, {"modelId":"M10003","taskId":"22e7e29aaefea08","taskType":503,"plateCode":1}), async(err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          if(result.code!=='0'){
+            console.log(`❌ ${result.msg}`)
+          }else{
+            console.log(`任务【${result.result.buttonText}】${result.msg},奖励水滴:【${result.result.awardValue}g】💧`);
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }})
+    })
+}
+
+
+// 点击果树
+async function doClickTree() {
+  return new Promise((resolve) => {
+    $.post(taskUrlBody(`plantBeans/beansLottery`, {"activityId":"23d9550e68124ae"}), async(err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          console.log(result)
+          if(result.code!=='0'){
+            console.log(`❌ ${result.msg}`)
+          }else{
+            // 文字
+            if(result.result.lotteryType!=='WATER'){
+              console.log(`点击了一次果树··>获得一段话：${(result.result.text).slice(1)}`);
+            }else{
+              // 水滴
+              console.log(`点击了一次果树··>${result.result.title}获得:【${result.result.water}g】💧`)
+            }
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }})
+    })
+}
+
+/*
+{
+  "code":"0",
+  "msg":"成功",
+  "result":{
+    "lotteryType":"WATER",
+    "water":100,
+    "title":"发现了露水"
+  },
+  "success":true}
+
+  {
+  code: '0',
+  msg: '成功',
+  result: { text: '\n我这么可爱，记得每天来看看我呀', lotteryType: 'TEXT' },
+  success: true
+}
+*/
 
 
 
