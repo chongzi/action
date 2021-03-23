@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-23 09:00:02
+ * @Last Modified time: 2021-03-23 09:10:28
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -31,8 +31,10 @@ const JD_API_HOST = `https://daojia.jd.com/client?_jdrandom=${new Date().getTime
 
 !(async () => {
   for (let i = 0; i < Cookie.length; i++) {
+    console.log(`········帐号【${i+1}】开始········`)
     cookie = Cookie[i]
     await todoTask()
+    console.log(`········帐号【${i+1}】结束········`)
   }
 })()
     .catch((e) => $.logErr(e))
