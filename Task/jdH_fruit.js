@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-22 15:19:50 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-22 17:04:32
+ * @Last Modified time: 2021-03-23 09:11:25
  */
 
 const $ = Env('京东到家-免费水果')
@@ -29,9 +29,10 @@ if ($.isNode()) {
 
 !(async () => {
   for (let i = 0; i < Cookie.length; i++) {
+    console.log(`········帐号【${i+1}】开始········`)
     cookie = Cookie[i]
-    // 获取任务列表
     await todoTask()
+    console.log(`········帐号【${i+1}】结束········`)
   }})()
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
