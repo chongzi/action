@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-23 15:55:02
+ * @Last Modified time: 2021-03-23 16:03:24
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -77,8 +77,7 @@ async function todoTask(){
   // 点击果树掉落💧水滴
   console.log(`\n🌱执行 -> 点击果树`);
   for (let i = 0; i < 5; i++) {
-    console.log(`第${i+1}次点击果树···`);
-    await doClickTree()
+    await doClickTree(i)
     await $.wait(2000) // 避免 重复操作
   }
 
@@ -106,10 +105,10 @@ async function todoTask(){
   */
 
   if(new Date().getDay()===1){
-    console.log(`\n今天星期一,开始领取上周奖励💰:`)
+    console.log(`\n🕛今天星期一,开始领取上周奖励💰:`)
     await getLastWeekReward()
   }else{
-    console.log(`\n今天不是星期一，不执行收取奖励💰`);
+    console.log(`\n🕛今天不是星期一，不执行收取奖励💰`);
     return
   }
   
@@ -419,16 +418,16 @@ async function doClickTree() {
           console.log(`API请求失败，请检查网路重试`)
         } else {
           result = JSON.parse(data)
-          console.log(result)
+          // console.log(result)
           if(result.code!=='0'){
             console.log(`❌ ${result.msg}`)
           }else{
             // 文字
             if(result.result.lotteryType!=='WATER'){
-              console.log(`点击了一次果树··>获得一段话：${(result.result.text).slice(1)}`);
+              console.log(`第${i}次点击了果树··>获得一段话：${(result.result.text).slice(1)}`);
             }else{
               // 水滴
-              console.log(`点击了一次果树··>${result.result.title}获得:【${result.result.water}g】💧`)
+              console.log(`第${i}次点击了果树··>${result.result.title}获得:【${result.result.water}g】💧`)
             }
           }
         }
