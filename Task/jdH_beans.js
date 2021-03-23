@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-23 16:07:05
+ * @Last Modified time: 2021-03-23 16:10:41
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -424,10 +424,10 @@ async function doClickTree(i) {
           }else{
             // 文字
             if(result.result.lotteryType!=='WATER'){
-              console.log(`第${i}次点击了果树··>获得一段话：${(result.result.text).slice(1)}`);
+              console.log(`第${i+1}次点击了果树··>获得一段话：${(result.result.text).slice(1)}`);
             }else{
               // 水滴
-              console.log(`第${i}次点击了果树··>${result.result.title}获得:【${result.result.water}g】💧`)
+              console.log(`第${i+1}次点击了果树··>${result.result.title}获得:【${result.result.water}g】💧`)
             }
           }
         }
