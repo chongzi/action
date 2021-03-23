@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-23 16:10:41
+ * @Last Modified time: 2021-03-23 16:14:18
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -52,11 +52,11 @@ async function todoTask(){
   await getWater()
 
   // 获取任务列表
-  console.log(`\n🌱执行 -> 查看任务列表`);
+  console.log(`\n🌱执行 -> 查看任务列表`)
   await getTask()
 
   // 去完成任务
-  console.log(`\n🌱执行 -> 完成任务`);
+  console.log(`\n🌱执行 -> 完成任务`)
   for (let i = 0; i < TaskArrList.length; i++) {
     Task = TaskArrList[i]
     await doFinishTask(Task)
@@ -64,7 +64,7 @@ async function todoTask(){
   }
 
   // 任务领取奖励
-  console.log(`\n🌱执行 -> 领取奖励`);
+  console.log(`\n🌱执行 -> 领取奖励`)
   for (let i = 0; i < TaskArrList.length; i++) {
     Task = TaskArrList[i]
     await doDailyTaskAward(Task)
@@ -72,10 +72,11 @@ async function todoTask(){
   }
 
   // 单独任务 分享好友
+  console.log(`\n🌱执行 -> 分享好友`)
   await shareFriend()
 
   // 点击果树掉落💧水滴
-  console.log(`\n🌱执行 -> 点击果树`);
+  console.log(`\n🌱执行 -> 点击果树`)
   for (let i = 0; i < 5; i++) {
     await doClickTree(i)
     await $.wait(2000) // 避免 重复操作
@@ -83,7 +84,7 @@ async function todoTask(){
 
 
   // 浇水
-  console.log(`\n🌱执行 -> 浇水`);
+  console.log(`\n🌱执行 -> 浇水`)
   for(let i = 0; i<$.totalWater/100;i++){
     if($.totalWater/100<1){
       console.log(`💧水滴不够,不执行浇水操作···`)
