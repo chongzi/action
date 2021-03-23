@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-23 16:03:24
+ * @Last Modified time: 2021-03-23 16:07:05
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -409,7 +409,7 @@ async function shareFriend() {
 
 
 // 点击果树
-async function doClickTree() {
+async function doClickTree(i) {
   return new Promise((resolve) => {
     $.post(taskUrlBody(`plantBeans/beansLottery`, {"activityId":"23d9550e68124ae"}), async(err, resp, data) => {
       try {
