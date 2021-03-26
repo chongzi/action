@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 13:36:21
+ * @Last Modified time: 2021-03-26 13:38:09
  */
 
 const $ = Env('微博剑网三签到')
@@ -43,7 +43,7 @@ if ($.isNode()) {
           console.log(`当前签到的是第【${$.day}】天,当前活动地址为:【${$.RewardURL}】`)
           await getReward($.RewardURL,token.slice(index+4,token.length))
         }else{
-          console.log(`当前已经签到，不会返回任何消息\n`)
+          console.log(`❌ 当前已经签到，不会返回任何消息\n`)
         }
         
         //推送消息
