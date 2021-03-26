@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 13:41:47
+ * @Last Modified time: 2021-03-26 13:47:43
  */
 
 const $ = Env('微博剑网三签到')
@@ -26,8 +26,8 @@ if ($.isNode()) {
 
 !(async () => {
   for(let i = 0 ; i<TokenArr.length;i++){
-
-        console.log(`···帐号【${i+1}】开始···`)
+    
+        console.log(`········【帐号${i+1}】开始········`)
 
         token = TokenArr[i]
         var index = token.indexOf(`aid=`)
@@ -49,7 +49,7 @@ if ($.isNode()) {
         //推送消息
         await sendMsg()
 
-        console.log(`···帐号【${i+1}】结束···`)
+        console.log(`········【帐号${i+1}】结束········`)
 
   }
 

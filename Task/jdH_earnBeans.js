@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-25 14:21:24 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-25 14:56:17
+ * @Last Modified time: 2021-03-26 13:47:05
  */
 
 const $ = Env('京东到家-赚鲜豆')
@@ -30,9 +30,10 @@ const JD_API_HOST = `https://daojia.jd.com/client?_jdrandom=${new Date().getTime
 
 !(async () => {
   for (let i = 0; i < Cookie.length; i++) {
+    console.log(`········【帐号${i+1}】开始········`)
     cookie = Cookie[i]
     await doTask()
-
+    console.log(`········【帐号${i+1}】结束········`)
   }
 })()
     .catch((e) => $.logErr(e))
@@ -53,10 +54,6 @@ async function doTask() {
     await doFinishTask(Task)
     await $.wait(2000) // 避免 重复操作
   }
-
-  console.log(`\n🥔执行 -> 浏览任务`)
-  await browse()
-  await $.wait(1500)
 
   // 任务领取奖励
   console.log(`\n🥔执行 -> 领取奖励`)
@@ -155,26 +152,6 @@ async function doDailyTaskAward(Task) {
             // 任务完成
             console.log(`收取奖励💰：任务【${result.result.taskName}】-${result.result.buttonText}-获得【${result.result.awardValue}】🥔鲜豆`)
           }
-        }} catch (e) {
-        console.log(e)
-      } finally {
-        resolve(data)
-      }})
-    })
-}
-
-// 去浏览10s
-async function browse() {
-  return new Promise((resolve) => {
-    $.get(taskUrl(`signin/seckill/grabFloorListNew`, {"longitude":120.10793,"latitude":30.267014,"areaCode":1213,"city":'%E6%9D%AD%E5%B7%9E%E5%B8%82',"pageSource":"signin"}), async(err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`API请求失败，请检查网路重试`)
-        } else {
-          result = JSON.parse(data)
-          // console.log(result)
-          console.log(`等待10s···`)
         }} catch (e) {
         console.log(e)
       } finally {

@@ -21,10 +21,13 @@ const XXXX_API_HOST = ''
 !(async () => {
   for (let i = 0; i < XXXX.length; i++) {
 
+    console.log(`········【帐号${i+1}】开始········`)
     await xxx()
     
     //推送消息
     await sendMsg()
+
+    console.log(`········【帐号${i+1}】结束········`)
 
   }
 })()

@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-22 15:19:50 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 13:44:21
+ * @Last Modified time: 2021-03-26 13:46:14
  */
 
 const $ = Env('京东到家-免费水果')
@@ -29,10 +29,10 @@ if ($.isNode()) {
 
 !(async () => {
   for (let i = 0; i < Cookie.length; i++) {
-    console.log(`········帐号【${i+1}】开始········`)
+    console.log(`········【帐号${i+1}】开始········`)
     cookie = Cookie[i]
     await todoTask()
-    console.log(`········帐号【${i+1}】结束········`)
+    console.log(`········【帐号${i+1}】结束········`)
   }})()
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
@@ -54,12 +54,6 @@ async function todoTask(){
     await doFinishTask(Task)
     await $.wait(2000) // 避免 重复操作
   }
-
-  // 去完成浏览任务
-  console.log(`\n🍉执行 -> 浏览10s任务`)
-  await browse()
-  await $.wait(1500)
-
 
   // 任务领取奖励
   console.log(`\n🍉执行 -> 领取奖励`);
@@ -198,25 +192,6 @@ async function doFinishTask(Task) {
             // 去做任务
             console.log(`📝去做任务：【${result.result.taskName}】 - 任务奖励【${result.result.awardValue}g】💧 - 待领取奖励💰`)
           }
-        }} catch (e) {
-        console.log(e)
-      } finally {
-        resolve(data)
-      }})
-    })
-}
-
-async function browse() {
-  return new Promise((resolve) => {
-    $.get(taskUrl(`signin/seckill/grabFloorListNew`, {"longitude":120.10793,"latitude":30.267014,"areaCode":1213,"city":'%E6%9D%AD%E5%B7%9E%E5%B8%82',"pageSource":"signin"}), async(err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`API请求失败，请检查网路重试`)
-        } else {
-          result = JSON.parse(data)
-          // console.log(result)
-          console.log(`等待10s···`)
         }} catch (e) {
         console.log(e)
       } finally {
