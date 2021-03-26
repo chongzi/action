@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-01-27 08:40:21 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-04 09:51:36
+ * @Last Modified time: 2021-03-26 10:46:06
  */
 
 const querystring = require("querystring");
@@ -136,7 +136,7 @@ if (process.env.PUSH_PLUS_USER) {
 
 async function sendNotify(text, desp, params = {}) {
   //提供6种通知
-  desp += `\n本脚本开源免费使用`;
+  desp += `\n本脚本开源免费使用 By：https://github.com/LXK9301/jd_scripts`;
   await Promise.all([
     serverNotify(text, desp),//微信server酱
     pushPlusNotify(text, desp)//pushplus(推送加)
@@ -618,10 +618,10 @@ function pushPlusNotify(text, desp) {
         topic: `${PUSH_PLUS_USER}`
       };
       const options = {
-        url: `https://pushplus.hxtrip.com/send`,
+        url: `http://www.pushplus.plus/send`,
         body: JSON.stringify(body),
         headers: {
-          'Content-Type': ' application/json'
+          'Content-Type': 'application/json'
         }
       }
       $.post(options, (err, resp, data) => {
