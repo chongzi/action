@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 13:38:34
+ * @Last Modified time: 2021-03-26 13:41:47
  */
 
 const $ = Env('微博剑网三签到')
@@ -73,9 +73,11 @@ async function signSuper(token) {
           $.day = (result.button.name.slice(4,5))-0
           // 签到成功
           console.log(`✅:${result.button.name}\n`)
+          $.message+=`✅:${result.button.name}`
          }else{
            // 重复签到
            console.log(`❌:${result.error_msg}\n`)
+           $.message+=`❌:${result.error_msg}`
          }
        }}catch(e) {
            console.log(e)
