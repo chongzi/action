@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-01-27 08:40:21 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 10:46:06
+ * @Last Modified time: 2021-03-26 10:57:26
  */
 
 const querystring = require("querystring");
@@ -136,7 +136,7 @@ if (process.env.PUSH_PLUS_USER) {
 
 async function sendNotify(text, desp, params = {}) {
   //提供6种通知
-  desp += `\n本脚本开源免费使用 By：https://github.com/LXK9301/jd_scripts`;
+  desp += `\n本脚本开源免费使用 感谢LXK大佬 脚本自用 \n -v1.0 修改push plus推送地址`;
   await Promise.all([
     serverNotify(text, desp),//微信server酱
     pushPlusNotify(text, desp)//pushplus(推送加)
