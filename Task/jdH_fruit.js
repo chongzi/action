@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-22 15:19:50 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-25 14:56:23
+ * @Last Modified time: 2021-03-26 13:44:21
  */
 
 const $ = Env('京东到家-免费水果')
@@ -160,7 +160,7 @@ async function watering() {
           console.log(`API请求失败，请检查网路重试`)
         } else {
           result = JSON.parse(data)
-          console.log(result)
+          // console.log(result)
           if(result.code!=='0'){
             // 浇水失败
             console.log(`❌ ${result.msg}`)
