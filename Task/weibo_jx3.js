@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 13:47:43
+ * @Last Modified time: 2021-03-26 14:03:50
  */
 
 const $ = Env('微博剑网三签到')
@@ -172,8 +172,10 @@ async function getReward(url,aid){
         console.log(result)
         if(result.data.msg==='success'){
           // 中奖
-          console.log(`\n💰${result.data.layer_conf.success_desc1}:【${result.data.prize_data.card_name}】的${result.data.prize_data.type}为:${result.data.prize_data.card_no}`)
-          $.message+=` 💰 ${result.data.layer_conf.success_desc1}:【${result.data.prize_data.card_name}】的${result.data.prize_data.type}为:${result.data.prize_data.card_no}}`
+          console.log(`中奖信息：`);
+          console.log(result.data.prize_data)
+          console.log(`\n💰${result.data.layer_conf.success_desc1}:【${result.data.prize_data.prize_name}】`)
+          $.message+=` 💰 ${result.data.layer_conf.success_desc1}:【${result.data.prize_data.prize_name}】`
         }else{
           // 未中奖&失败
           console.log(`\ n❗ ${result.data.none_desc1}||${result.data.fail_desc1}`)
