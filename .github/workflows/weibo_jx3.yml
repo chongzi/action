@@ -26,3 +26,5 @@ jobs:
       - name: '运行 【微博剑网三签到】'
         run: |
           node ./Task/weibo_jx3.js
+        env:
+          WEIBO_TOKEN: ${{ secrets.WEIBO_TOKEN }}
