@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 10:30:16
+ * @Last Modified time: 2021-03-26 10:51:45
  * 
  */
 const $ = Env('微博签到')
@@ -66,7 +66,6 @@ async function checkin(i){
         // 已签到反馈信息
         if(result.errno===30000||result.errno===-100){
           console.log(result.errmsg)
-          $.message += result.errmsg
         }
         }catch(e) {
           console.log(e)
@@ -109,7 +108,7 @@ async function checkin(i){
 */
 
 async function sendMsg() {
-  await notify.sendNotify(`${$.message}`);
+  await notify.sendNotify(`微博签到`,`${$.message}`);
 }
 
 

@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 10:27:22
+ * @Last Modified time: 2021-03-26 10:52:09
  */
 
 const $ = Env('微博剑网三签到')
@@ -177,7 +177,7 @@ async function getReward(url,aid){
 }
 
 async function sendMsg() {
-  await notify.sendNotify(`${$.message}`);
+  await notify.sendNotify(`微博超话 - JX3`,`${$.message}`);
 }
 
 /*
