@@ -1,6 +1,8 @@
 
 const $ = Env('xxx')
 
+const notify = $.isNode() ? require('./sendNotify') : '';
+
 const XXXX_API_HOST = ''
 
 // if ($.isNode()) {
@@ -20,6 +22,9 @@ const XXXX_API_HOST = ''
   for (let i = 0; i < XXXX.length; i++) {
 
     await xxx()
+    
+    //推送消息
+    await sendMsg()
 
   }
 })()
@@ -46,6 +51,10 @@ async function xxx(){
       } 
     })
    })
+}
+
+async function sendMsg() {
+  await notify.sendNotify(`xxxx`,`${$.message}`);
 }
 
 
