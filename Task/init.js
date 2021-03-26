@@ -3,6 +3,8 @@ const $ = Env('xxx')
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 
+$.message = ''
+
 const XXXX_API_HOST = ''
 
 // if ($.isNode()) {

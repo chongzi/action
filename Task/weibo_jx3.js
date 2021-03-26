@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 14:03:50
+ * @Last Modified time: 2021-03-26 14:08:35
  */
 
 const $ = Env('微博剑网三签到')
@@ -10,6 +10,8 @@ const $ = Env('微博剑网三签到')
 const notify = $.isNode() ? require('./sendNotify') : '';
 
 const TokenArr = []
+
+$.message = ''
 
 if ($.isNode()) {
   if (process.env.WEIBO_TOKEN && process.env.WEIBO_TOKEN.indexOf('#') > -1) {
