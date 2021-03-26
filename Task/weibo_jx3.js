@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 10:52:09
+ * @Last Modified time: 2021-03-26 13:32:33
  */
 
 const $ = Env('微博剑网三签到')
@@ -37,11 +37,11 @@ if ($.isNode()) {
         await Tricket_ID(token)
 
         // 领取奖励
-        if($.day!==null){
+        if($.day!==undefined){
           console.log(`当前签到的是第【${$.day}】天,当前活动地址为:【${$.RewardURL}】`)
           await getReward($.RewardURL,token.slice(index+4,token.length))
         }else{
-          console.log(`${result.error_msg}`)
+          console.log(`当前已经签到，不会返回任何消息\n`)
         }
         
         //推送消息
@@ -67,8 +67,11 @@ async function signSuper(token) {
          console.log(result)
          if(result.button!==undefined){
           $.day = (result.button.name.slice(4,5))-0
+          // 签到成功
+          console.log(`✅:${result.button.name}\n`)
          }else{
-           console.log(`${result.error_msg}`)
+           // 重复签到
+           console.log(`❌:${result.error_msg}\n`)
          }
        }}catch(e) {
            console.log(e)
@@ -110,8 +113,9 @@ async function Tricket_ID(token) {
                 // console.log(i.title_sub.slice(0,1)-0)
                 // 当返回的是第几天的时候就拿出来第几天的领取奖励地址
                 if($.day===i.title_sub.slice(0,1)-0){
-                  let index = i.scheme.indexOf(`url=`)
-                  $.RewardURL = decodeURIComponent(i.scheme.slice(index+4,i.scheme.length))
+                  let url = decodeURIComponent(i.scheme)
+                  let index = url.indexOf(`1`)
+                  $.RewardURL = (url.slice(index,i.scheme.length))
                 }
               })
             })
@@ -131,8 +135,9 @@ async function Tricket_ID(token) {
                 // console.log(i.title_sub.slice(0,1)-0)
                 // 当返回的是第几天的时候就拿出来第几天的领取奖励地址
                 if($.day===i.title_sub.slice(0,1)-0){
-                  let index = i.scheme.indexOf(`url=`)
-                  $.RewardURL = decodeURIComponent(i.scheme.slice(index+4,i.scheme.length))
+                  let url = decodeURIComponent(i.scheme)
+                  let index = url.indexOf(`1`)
+                  $.RewardURL = (url.slice(index,i.scheme.length))
                 }
               })
             })
@@ -150,22 +155,23 @@ async function Tricket_ID(token) {
 // 获取奖励
 async function getReward(url,aid){
  return new Promise((resolve) => {
-   $.get(BodytaskUrl(`${url}&aid=${aid}&from=10B3393010`),async(error, response, data) =>{
+   $.get(BodytaskUrl(`https://games.weibo.cn/prize/lottery?ticket_id=${url}&aid=${aid}&from=10B3393010`),async(error, response, data) =>{
     try{
       if (error) {
         console.log(`API请求失败，请检查网路重试`)
       } else {
         const result = JSON.parse(data)
         // 反馈信息
-        // console.log(result)
+        console.log(`💰奖励反馈信息:`);
+        console.log(result)
         if(result.data.msg==='success'){
           // 中奖
-          console.log(`\n${result.data.layer_conf.success_desc1}:【${result.data.prize_data.card_name}】的${result.data.prize_data.type}为:${result.data.prize_data.card_no}`)
-          $.message+=`${result.data.layer_conf.success_desc1}:【${result.data.prize_data.card_name}】的${result.data.prize_data.type}为:${result.data.prize_data.card_no}}`
+          console.log(`\n💰${result.data.layer_conf.success_desc1}:【${result.data.prize_data.card_name}】的${result.data.prize_data.type}为:${result.data.prize_data.card_no}`)
+          $.message+=` 💰 ${result.data.layer_conf.success_desc1}:【${result.data.prize_data.card_name}】的${result.data.prize_data.type}为:${result.data.prize_data.card_no}}`
         }else{
           // 未中奖&失败
-          console.log(`\n${result.data.none_desc1}||${result.data.fail_desc1}`)
-          $.message+=`${result.data.none_desc1}||${result.data.fail_desc1}`
+          console.log(`\ n❗ ${result.data.none_desc1}||${result.data.fail_desc1}`)
+          $.message+=` ❗ ${result.data.none_desc1}||${result.data.fail_desc1}`
         }
       }}catch(e) {
           console.log(e)
