@@ -2,12 +2,10 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 09:27:48
+ * @Last Modified time: 2021-03-26 10:10:18
  */
 
 const $ = Env('微博剑网三签到')
-
-const day = [1026,1028,1029,1030,1031,1032,1033]
 
 const TokenArr = []
 
@@ -30,10 +28,14 @@ if ($.isNode()) {
         var index = token.indexOf(`aid=`)
         // 签到
         await signSuper(token)
+
+        // 获取活动ID
+        await Tricket_ID(token)
+
         // 领取奖励
         if($.day!==null){
-          console.log(`当前签到的是第【${$.day}】天,当前活动id为:【${day[$.day-1]}】`)
-          await getReward(token.slice(index+4,token.length),day[$.day-1])
+          console.log(`当前签到的是第【${$.day}】天,当前活动地址为:【${$.RewardURL}】`)
+          await getReward($.RewardURL,token.slice(index+4,token.length))
         }else{
           console.log(`${result.error_msg}`)
         }
@@ -71,24 +73,79 @@ async function signSuper(token) {
 }
 
 
+// 获取领奖ID?不知道会不会活动结束移除
+async function Tricket_ID(token) {
+  return new Promise((resolve) => {
+    $.get(taskUrl(`https://api.weibo.cn/2/page?gsid=${token}&client_key=1f010e1d88debcfa7ba76846859b9d4f&page_id=10080832fb612861131313011fa86bdcda7c7a&card159164_emoji_enable=0&extparam=%E5%89%91%E7%BD%913&refresh_type=0&fid=10080832fb612861131313011fa86bdcda7c7a_-_feed&count=20&uicode=10000011&show_layer=1&image_type=heif&moduleID=pagecard&sourcetype=page&page_interrupt_enable=1&lon=120.1037660608988&need_head_cards=0&need_new_pop=1&containerid=10080832fb612861131313011fa86bdcda7c7a_-_feed&luicode=10000003&open_searchall_164card=1&orifid=231619%24%24102803_ctg1_1770_-_ctg1_1770%24%240%24%24100103type%3D1%26q%3D%E5%89%91%E7%BD%913%E8%B6%85%E8%AF%9D%26t%3D1&featurecode=10000085&oriuicode=10000010_10000327_10000003_10000003&location_accuracy=1&no_location_permission=0&lat=30.26916224993534&page=1&new_comment_171card=1&lfid=100103type%3D1%26q%3D%E5%89%91%E7%BD%913%E8%B6%85%E8%AF%9D%26t%3D1&st_bottom_bar_new_style_enable=1&new_topic_header=1`),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+        //  console.log(result)
+        // 卡片模块
+        // console.log(result.cards)
+        result.cards.forEach((item)=>{
+          // 中间奖励模块ID 点击领取里面的信息
+          if(item.itemid==='pagemanual_1'){
+            console.log(`打印出前四天活动ID奖励：`)
+            // console.log(item)
+            // 整组卡片的详细信息
+            item.card_group.forEach((card)=>{
+              // 前四天所有的信息
+              console.log(card.group)
+              // 每个具体卡片的内容
+              card.group.forEach((i)=>{
+                // 第几天签到
+                // console.log(i.title_sub)
+                // console.log(i.title_sub.slice(0,1)-0)
+                // 当返回的是第几天的时候就拿出来第几天的领取奖励地址
+                if($.day===i.title_sub.slice(0,1)-0){
+                  let index = i.scheme.indexOf(`url=`)
+                  $.RewardURL = decodeURIComponent(i.scheme.slice(index+4,i.scheme.length))
+                }
+              })
+            })
+          }
 
-
-// id
-// 1026 第一天
-// 1028 第二天
-// 1029 第三天
-// 1030 第四天
-// 1031 第五天 
-// 1032 第六天
-// 1033 第七天
+          else if (item.itemid==='pagemanual_2'){
+            console.log(`打印出后四天活动ID奖励：`)
+            // console.log(item)
+            // 整组卡片的详细信息
+            item.card_group.forEach((card)=>{
+              // 后四天所有的信息
+              console.log(card.group)
+              // 每个具体卡片的内容
+              card.group.forEach((i)=>{
+                // 第几天签到
+                // console.log(i.title_sub)
+                // console.log(i.title_sub.slice(0,1)-0)
+                // 当返回的是第几天的时候就拿出来第几天的领取奖励地址
+                if($.day===i.title_sub.slice(0,1)-0){
+                  let index = i.scheme.indexOf(`url=`)
+                  $.RewardURL = decodeURIComponent(i.scheme.slice(index+4,i.scheme.length))
+                }
+              })
+            })
+          }
+        })
+         }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
     
-    
-async function getReward(aid,id){
+// 获取奖励
+async function getReward(url,aid){
  return new Promise((resolve) => {
-   $.get(BodytaskUrl(`https://games.weibo.cn/prize/aj/lottery?ticket_id=${id}&source=chaohua_sign&aid=${aid}&from=10B3393010`),async(error, response, data) =>{
+   $.get(BodytaskUrl(`${url}&aid=${aid}&from=10B3393010`),async(error, response, data) =>{
     try{
       if (error) {
-        console.log(`${JSON.stringify(error)}`)
         console.log(`API请求失败，请检查网路重试`)
       } else {
         const result = JSON.parse(data)
