@@ -2,10 +2,12 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 10:10:18
+ * @Last Modified time: 2021-03-26 10:27:22
  */
 
 const $ = Env('微博剑网三签到')
+
+const notify = $.isNode() ? require('./sendNotify') : '';
 
 const TokenArr = []
 
@@ -24,8 +26,10 @@ if ($.isNode()) {
 
 !(async () => {
   for(let i = 0 ; i<TokenArr.length;i++){
+
         token = TokenArr[i]
         var index = token.indexOf(`aid=`)
+
         // 签到
         await signSuper(token)
 
@@ -39,6 +43,9 @@ if ($.isNode()) {
         }else{
           console.log(`${result.error_msg}`)
         }
+        
+        //推送消息
+        await sendMsg()
 
   }
 
@@ -154,9 +161,11 @@ async function getReward(url,aid){
         if(result.data.msg==='success'){
           // 中奖
           console.log(`\n${result.data.layer_conf.success_desc1}:【${result.data.prize_data.card_name}】的${result.data.prize_data.type}为:${result.data.prize_data.card_no}`)
+          $.message+=`${result.data.layer_conf.success_desc1}:【${result.data.prize_data.card_name}】的${result.data.prize_data.type}为:${result.data.prize_data.card_no}}`
         }else{
           // 未中奖&失败
           console.log(`\n${result.data.none_desc1}||${result.data.fail_desc1}`)
+          $.message+=`${result.data.none_desc1}||${result.data.fail_desc1}`
         }
       }}catch(e) {
           console.log(e)
@@ -165,6 +174,10 @@ async function getReward(url,aid){
       } 
     })
    })
+}
+
+async function sendMsg() {
+  await notify.sendNotify(`${$.message}`);
 }
 
 /*

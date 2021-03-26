@@ -28,3 +28,4 @@ jobs:
           node ./Task/weibo.js
         env:
           WEIBO_TOKEN: ${{ secrets.WEIBO_TOKEN }}
+          PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}

@@ -2,10 +2,12 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-10 09:34:54
+ * @Last Modified time: 2021-03-26 10:30:16
  * 
  */
 const $ = Env('微博签到')
+
+const notify = $.isNode() ? require('./sendNotify') : '';
 
 const TokenArr = []
 
@@ -27,6 +29,9 @@ if ($.isNode()) {
     token = TokenArr[i]
     // 日常签到
     await checkin(i)
+
+    //推送消息
+    await sendMsg()
   }
 })()
     .catch((e) => $.logErr(e))
@@ -56,10 +61,12 @@ async function checkin(i){
           console.log(`执行签到：`+result.msg)
           console.log(`本次获得：`+result.data.desc)
           console.log(`连续签到:`+ result.data.continuous+`天`)
+          $.message += `执行签到：${result.msg}\n 本次获得：${result.data.desc}\n连续签到:${result.data.continuous}天`
         }
         // 已签到反馈信息
         if(result.errno===30000||result.errno===-100){
           console.log(result.errmsg)
+          $.message += result.errmsg
         }
         }catch(e) {
           console.log(e)
@@ -100,6 +107,10 @@ async function checkin(i){
   isblock: false
 }
 */
+
+async function sendMsg() {
+  await notify.sendNotify(`${$.message}`);
+}
 
 
 // pretty-ignore
