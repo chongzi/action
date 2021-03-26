@@ -2,25 +2,52 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-23 14:12:12
+ * @Last Modified time: 2021-03-26 09:27:48
  */
 
 const $ = Env('微博剑网三签到')
 
+const day = [1026,1028,1029,1030,1031,1032,1033]
+
+const TokenArr = []
+
+if ($.isNode()) {
+  if (process.env.WEIBO_TOKEN && process.env.WEIBO_TOKEN.indexOf('#') > -1) {
+    signToken = process.env.WEIBO_TOKEN.split('#');
+  } else {
+    signToken = process.env.WEIBO_TOKEN.split()
+  }
+  Object.keys(signToken).forEach((item) => {
+    if (signToken[item]) {
+      TokenArr.push(signToken[item])
+    }
+  })
+}
 
 !(async () => {
-    // 签到
-    await signSuper()
-    // 领取奖励
-    await getReward()
+  for(let i = 0 ; i<TokenArr.length;i++){
+        token = TokenArr[i]
+        var index = token.indexOf(`aid=`)
+        // 签到
+        await signSuper(token)
+        // 领取奖励
+        if($.day!==null){
+          console.log(`当前签到的是第【${$.day}】天,当前活动id为:【${day[$.day-1]}】`)
+          await getReward(token.slice(index+4,token.length),day[$.day-1])
+        }else{
+          console.log(`${result.error_msg}`)
+        }
+
+  }
+
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
 
 
-async function signSuper() {
+async function signSuper(token) {
   return new Promise((resolve) => {
-    $.get(taskUrl(`https://api.weibo.cn/2/page/button?gsid=_2A25NU1SKDeRxGeRO6FYW8y3Nyz6IHXVsSe9CrDV6PUJbkdAfLXfhkWpNUGFlbDYpROoRYaZNhl4N08OEAxrYxhWG&wm=3333_2001&launchid=10000365--x&b=0&from=10B3393010&c=iphone&networktype=wifi&v_p=87&skin=default&v_f=1&s=aaaaaaaa&lang=zh_CN&sflag=1&ua=iPhone13,2__weibo__11.3.3__iphone__os14.3&ft=0&aid=01A0oddeHLkj68cNlIQLI2waVUCBzWNHgU-xnBve6-kmv_5Vs.&sourcetype=page&page_id=10080832fb612861131313011fa86bdcda7c7a&since_id=4617894895551074&extparam=%E5%89%91%E7%BD%913&orifid=231619%24%24102803_ctg1_1770_-_ctg1_1770%24%240%24%24100103type%3D1%26q%3D%E5%89%91%E7%BD%913%26t%3D2%24%24100103type%3D1%26q%3D%E5%89%91%E7%BD%913%E8%B6%85%E8%AF%9D%26t%3D3&count=15&luicode=10000003&fid=10080832fb612861131313011fa86bdcda7c7a&featurecode=10000085&uicode=10000011&oriuicode=10000010_10000327_10000003_10000003_10000003&request_url=http%3A%2F%2Fi.huati.weibo.com%2Fmobile%2Fsuper%2Factive_checkin%3Fpageid%3D10080832fb612861131313011fa86bdcda7c7a%26in_page%3D1&page=1&lfid=100103type%3D1%26q%3D%E5%89%91%E7%BD%913%E8%B6%85%E8%AF%9D%26t%3D3&moduleID=pagecard&page_interrupt_enable=1&ul_sid=DCC83BD5-1195-4303-AB45-1BD074DFA898&ul_hid=827988EE-99CC-478B-BC91-1CA90663145B&ul_ctime=1616475510131`),async(error, response, data) =>{
+    $.get(taskUrl(`https://api.weibo.cn/2/page/button?gsid=${token}&sourcetype=page&page_id=10080832fb612861131313011fa86bdcda7c7a&since_id=4617894895551074&extparam=%E5%89%91%E7%BD%913&orifid=231619%24%24102803_ctg1_1770_-_ctg1_1770%24%240%24%24100103type%3D1%26q%3D%E5%89%91%E7%BD%913%26t%3D2%24%24100103type%3D1%26q%3D%E5%89%91%E7%BD%913%E8%B6%85%E8%AF%9D%26t%3D3&count=15&luicode=10000003&fid=10080832fb612861131313011fa86bdcda7c7a&featurecode=10000085&uicode=10000011&oriuicode=10000010_10000327_10000003_10000003_10000003&request_url=http%3A%2F%2Fi.huati.weibo.com%2Fmobile%2Fsuper%2Factive_checkin%3Fpageid%3D10080832fb612861131313011fa86bdcda7c7a%26in_page%3D1&page=1&lfid=100103type%3D1%26q%3D%E5%89%91%E7%BD%913%E8%B6%85%E8%AF%9D%26t%3D3&moduleID=pagecard&page_interrupt_enable=1&ul_sid=DCC83BD5-1195-4303-AB45-1BD074DFA898&ul_hid=827988EE-99CC-478B-BC91-1CA90663145B&ul_ctime=1616475510131`),async(error, response, data) =>{
      try{
        if (error) {
          console.log(`${JSON.stringify(error)}`)
@@ -29,6 +56,11 @@ async function signSuper() {
          const result = JSON.parse(data)
          // 反馈信息
          console.log(result)
+         if(result.button!==undefined){
+          $.day = (result.button.name.slice(4,5))-0
+         }else{
+           console.log(`${result.error_msg}`)
+         }
        }}catch(e) {
            console.log(e)
          } finally {
@@ -37,11 +69,23 @@ async function signSuper() {
      })
     })
 }
+
+
+
+
+// id
+// 1026 第一天
+// 1028 第二天
+// 1029 第三天
+// 1030 第四天
+// 1031 第五天 
+// 1032 第六天
+// 1033 第七天
     
     
-async function getReward(){
+async function getReward(aid,id){
  return new Promise((resolve) => {
-   $.get(BodytaskUrl(`https://games.weibo.cn/prize/aj/lottery?ticket_id=1026&source=chaohua_sign&aid=01A0oddeHLkj68cNlIQLI2waVUCBzWNHgU-xnBve6-kmv_5Vs.&from=10B3393010`),async(error, response, data) =>{
+   $.get(BodytaskUrl(`https://games.weibo.cn/prize/aj/lottery?ticket_id=${id}&source=chaohua_sign&aid=${aid}&from=10B3393010`),async(error, response, data) =>{
     try{
       if (error) {
         console.log(`${JSON.stringify(error)}`)
