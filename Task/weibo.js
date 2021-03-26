@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-02-27 16:17:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 10:51:45
+ * @Last Modified time: 2021-03-27 01:36:13
  * 
  */
 const $ = Env('微博签到')
@@ -66,6 +66,7 @@ async function checkin(i){
         // 已签到反馈信息
         if(result.errno===30000||result.errno===-100){
           console.log(result.errmsg)
+          $.message += `${result.errmsg}`
         }
         }catch(e) {
           console.log(e)
