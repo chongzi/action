@@ -28,4 +28,5 @@ jobs:
           node ./Task/weibo_jx3.js
         env:
           WEIBO_TOKEN: ${{ secrets.WEIBO_TOKEN }}
+          WEIBO_JX3_COOKIE: ${{ secrets.WEIBO_JX3_COOKIE }}
           PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
