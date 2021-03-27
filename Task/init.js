@@ -8,16 +8,19 @@ $.message = ''
 const XXXX_API_HOST = ''
 
 // if ($.isNode()) {
-//   if (process.env.XXXX_XXXX && process.env.XXXX_XXXX.indexOf('#') > -1) {
-//     signcookie = process.env.XXXX_XXXX.split('#')
-//   } else {
-//     signcookie = process.env.XXXX_XXXX.split()
-//   }
-//   Object.keys(signcookie).forEach((item) => {
-//     if (signcookie[item]) {
-//       XXXX.push(signcookie[item])
-//     }
-//   })
+  // if (process.env.XXXX_XXXXX && process.env.XXXX_XXXXX.indexOf('#') > -1) {
+  //   xxxx = process.env.XXXX_XXXXX.split('#');
+  // }else if(process.env.XXXX_XXXXX && process.env.XXXX_XXXXX.indexOf('#') > -1) {
+  //   xxxx = process.env.XXXX_XXXXX.split('\n');
+  // }else{
+  //   xxxx = [process.env.XXXX_XXXXX]
+  // }
+
+  // Object.keys(xxxx).forEach((item) => {
+  //   if (xxxx[item]) {
+  //     XXXXxxxx.push(xxxx[item])
+  //   }
+  // })
 // }
 
 !(async () => {
