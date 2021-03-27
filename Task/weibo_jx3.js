@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-27 09:52:21
+ * @Last Modified time: 2021-03-27 10:17:06
  */
 
 const $ = Env('微博剑网三签到')
@@ -133,7 +133,7 @@ async function Tricket_ID(token) {
         result.cards.forEach((item)=>{
           // 中间奖励模块ID 点击领取里面的信息
           if(item.itemid==='pagemanual_1'){
-            console.log(`🖨 打印出前四天活动ID奖励：`)
+            console.log(`👉 打印出前四天活动ID奖励：`)
             // console.log(item)
             // 整组卡片的详细信息
             item.card_group.forEach((card)=>{
@@ -161,7 +161,7 @@ async function Tricket_ID(token) {
           }
 
           else if (item.itemid==='pagemanual_2'){
-            console.log(`🖨 打印出后四天活动ID奖励：`)
+            console.log(`👉 打印出后四天活动ID奖励：`)
             // console.log(item)
             // 整组卡片的详细信息
             item.card_group.forEach((card)=>{
