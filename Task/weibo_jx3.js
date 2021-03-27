@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 14:08:35
+ * @Last Modified time: 2021-03-27 09:52:21
  */
 
 const $ = Env('微博剑网三签到')
@@ -11,47 +11,72 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 
 const TokenArr = []
 
+const CookieArr = []
+
 $.message = ''
 
 if ($.isNode()) {
+  
   if (process.env.WEIBO_TOKEN && process.env.WEIBO_TOKEN.indexOf('#') > -1) {
     signToken = process.env.WEIBO_TOKEN.split('#');
-  } else {
-    signToken = process.env.WEIBO_TOKEN.split()
+  }else if(process.env.WEIBO_TOKEN && process.env.WEIBO_TOKEN.indexOf('#') > -1) {
+    signToken = process.env.WEIBO_TOKEN.split('\n');
+  }else{
+    signToken = [process.env.WEIBO_TOKEN]
   }
+  
   Object.keys(signToken).forEach((item) => {
     if (signToken[item]) {
       TokenArr.push(signToken[item])
     }
   })
+  
+  if (process.env.WEIBO_JX3_COOKIE && process.env.WEIBO_JX3_COOKIE.indexOf('#') > -1) {
+    jx3Cookie = process.env.WEIBO_JX3_COOKIE.split('#');
+  }else if(process.env.WEIBO_JX3_COOKIE && process.env.WEIBO_JX3_COOKIE.indexOf('#') > -1) {
+    jx3Cookie = process.env.WEIBO_JX3_COOKIE.split('\n');
+  }else{
+    jx3Cookie = [process.env.WEIBO_JX3_COOKIE]
+  }
+
+  Object.keys(jx3Cookie).forEach((item) => {
+    if (jx3Cookie[item]) {
+      CookieArr.push(jx3Cookie[item])
+    }
+  })
+  
 }
+
 
 !(async () => {
   for(let i = 0 ; i<TokenArr.length;i++){
     
-        console.log(`········【帐号${i+1}】开始········`)
+    console.log(`········【帐号${i+1}】开始········`)
 
-        token = TokenArr[i]
-        var index = token.indexOf(`aid=`)
+    token = TokenArr[i]
+    cookie  = CookieArr[i]
+    
+    var index = token.indexOf(`aid=`)
 
-        // 签到
-        await signSuper(token)
+    // 签到
+    await signSuper(token)
 
-        // 获取活动ID
-        await Tricket_ID(token)
+    // 获取活动ID
+    await Tricket_ID(token)
 
-        // 领取奖励
-        if($.day!==undefined){
-          console.log(`当前签到的是第【${$.day}】天,当前活动地址为:【${$.RewardURL}】`)
-          await getReward($.RewardURL,token.slice(index+4,token.length))
-        }else{
-          console.log(`❌ 当前已经签到，不会返回任何消息\n`)
-        }
-        
-        //推送消息
-        await sendMsg()
+    // 领取奖励
+    if($.day!==undefined){
+      console.log(`🔥当前签到的是第【${$.day}】天,当前活动地址为:【${$.RewardURL}】`)
+      console.log(`🔥当前RefererURL为:【${$.RefererURL}】`)
+      await getReward($.RewardURL,token.slice(index+4,token.length))
+    }else{
+      console.log(`❌ 当前已经签到，不会返回任何消息\n`)
+    }
+    
+    //推送消息
+    await sendMsg()
 
-        console.log(`········【帐号${i+1}】结束········`)
+    console.log(`········【帐号${i+1}】结束········`)
 
   }
 
@@ -66,7 +91,7 @@ async function signSuper(token) {
      try{
        if (error) {
          console.log(`${JSON.stringify(error)}`)
-         console.log(`API请求失败，请检查网路重试`)
+         console.log(`❌:API请求失败，请检查网路重试`)
        } else {
          const result = JSON.parse(data)
          // 反馈信息
@@ -98,7 +123,7 @@ async function Tricket_ID(token) {
      try{
        if (error) {
          console.log(`${JSON.stringify(error)}`)
-         console.log(`API请求失败，请检查网路重试`)
+         console.log(`❌:API请求失败，请检查网路重试`)
        } else {
          const result = JSON.parse(data)
          // 反馈信息
@@ -108,7 +133,7 @@ async function Tricket_ID(token) {
         result.cards.forEach((item)=>{
           // 中间奖励模块ID 点击领取里面的信息
           if(item.itemid==='pagemanual_1'){
-            console.log(`打印出前四天活动ID奖励：`)
+            console.log(`🖨 打印出前四天活动ID奖励：`)
             // console.log(item)
             // 整组卡片的详细信息
             item.card_group.forEach((card)=>{
@@ -124,13 +149,19 @@ async function Tricket_ID(token) {
                   let url = decodeURIComponent(i.scheme)
                   let index = url.indexOf(`1`)
                   $.RewardURL = (url.slice(index,i.scheme.length))
+                  console.log(`📝当前RewardURL为：`)
+                  console.log($.RewardURL)
+                  let referIndex = url.indexOf(`https`)
+                  $.RefererURL = (url.slice(referIndex,i.scheme.length))
+                  console.log(`📝当前的Referer网址为：`)
+                  console.log($.RefererURL)
                 }
               })
             })
           }
 
           else if (item.itemid==='pagemanual_2'){
-            console.log(`打印出后四天活动ID奖励：`)
+            console.log(`🖨 打印出后四天活动ID奖励：`)
             // console.log(item)
             // 整组卡片的详细信息
             item.card_group.forEach((card)=>{
@@ -146,6 +177,12 @@ async function Tricket_ID(token) {
                   let url = decodeURIComponent(i.scheme)
                   let index = url.indexOf(`1`)
                   $.RewardURL = (url.slice(index,i.scheme.length))
+                  console.log(`📝当前RewardURL为：`)
+                  console.log($.RewardURL)
+                  let referIndex = url.indexOf(`https`)
+                  $.RefererURL = (url.slice(referIndex,i.scheme.length))
+                  console.log(`📝当前的Referer网址为：`)
+                  console.log($.RefererURL)
                 }
               })
             })
@@ -163,7 +200,7 @@ async function Tricket_ID(token) {
 // 获取奖励
 async function getReward(url,aid){
  return new Promise((resolve) => {
-   $.get(BodytaskUrl(`https://games.weibo.cn/prize/lottery?ticket_id=${url}&aid=${aid}&from=10B3393010`),async(error, response, data) =>{
+   $.get(BodytaskUrl(`https://games.weibo.cn/prize/aj/lottery?ticket_id=${url}&aid=${aid}&from=10B3393010`),async(error, response, data) =>{
     try{
       if (error) {
         console.log(`API请求失败，请检查网路重试`)
@@ -232,6 +269,16 @@ async function sendMsg() {
       "card_name":"签到1天-春日普照大礼包",
       "prize_name":"春日普照大礼包"
     }
+    或者
+    "prize_data":{
+      "type":"fillredbag",
+      "eid":"8771132",
+      "ouid":"1255795640",
+      "gid":"1000834",
+      "list_bt_text":"查看详情",
+      "money":"0.60",
+      "prize_name":"红包"
+    }
   }
 }
 */
@@ -263,9 +310,10 @@ function taskUrl(activity) {
       "Connection": "keep-alive",
       "Content-Type": "application/x-www-form-urlencoded",
       'Host': 'games.weibo.cn',
-      'Cookie': `SCF=AsYbPx6c7sI8_OTMTTLBsG6foGyg0MM2MSJr5q5GIV8kksHQrj0Me0vGvnqKj0Ou2Q..; SUB=_2A25NOAFWDeRhGeRO6FYW8y3Nyz6IHXVuEkkerDV6PUJbitAKLUHikWtNUGFlbHMkNUdyBkg2wOEZ8UeBgKdg-yqo; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WFxNBfnPX8_hLsd6XE8lPDP5NHD95QEeheXS0e0eK5EWs4DqcjMi--NiK.Xi-2Ri--ciKnRi-zNeo50ShM0e027entt; TV-G0=09a9937c8ab9f8b1ed33122bd159217f`,
+      "X-Requested-With": 'XMLHttpRequest',
+      'Cookie': cookie,
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Weibo (iPhone13,2__weibo__11.3.3__iphone__os14.3)',
-      'Referer':'https://games.weibo.cn/prize/lottery?ticket_id=1026&source=chaohua_sign',
+      'Referer':`${escape(JSON.stringify($.RefererURL))}`,
     }
   }
 }
