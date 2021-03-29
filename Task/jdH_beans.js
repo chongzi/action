@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 13:47:15
+ * @Last Modified time: 2021-03-29 14:05:35
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -43,8 +43,12 @@ const JD_API_HOST = `https://daojia.jd.com/client?_jdrandom=${new Date().getTime
     
 async function todoTask(){
   
+  // 获取活动信息
+  console.log(`\n🌱执行 -> 初始化信息`)
+  await getSplitDay()
+  
   // 签到
-  console.log(`🌱执行 -> 日常签到`)
+  console.log(`\n🌱执行 -> 日常签到`)
   await CheckIn()
 
   // 收集水滴
@@ -82,7 +86,6 @@ async function todoTask(){
     await $.wait(2000) // 避免 重复操作
   }
 
-
   // 浇水
   console.log(`\n🌱执行 -> 浇水`)
   for(let i = 0; i<$.totalWater/100;i++){
@@ -94,25 +97,54 @@ async function todoTask(){
       await $.wait(2000) // 避免 重复操作
     }
   }
-  
-  /*
-	if(date.getDay() == 0) week = "星期日"
-	if(date.getDay() == 1) week = "星期一"
-	if(date.getDay() == 2) week = "星期二"
-	if(date.getDay() == 3) week = "星期三"
-	if(date.getDay() == 4) week = "星期四"
-	if(date.getDay() == 5) week = "星期五"
-	if(date.getDay() == 6) week = "星期六"
-  */
 
-  if(new Date().getDay()===1){
-    console.log(`\n🕛今天星期一,开始领取上周奖励💰:`)
+  // 获取上一期的奖励
+  // 如果当前日期的前一天为结束日则
+  console.log(`\n🌱执行 -> 收取上期奖励`)
+  console.log(`当前时间为:【${new Date().getDate()-0}号】,上一次瓜分时间为【${$.preDay}号】`)
+  if((new Date().getDate()-1)===$.preDay){
+    console.log(`🕛 到点,开始领取上次活动奖励💰:`)
     await getLastWeekReward()
   }else{
-    console.log(`\n🕛今天不是星期一，不执行收取奖励💰`);
+    console.log(`❌ 时间未到，不执行收取奖励💰操作`)
     return
   }
-  
+
+}
+
+
+// ================================================================ // 
+
+// 获取活动信息
+async function getSplitDay() {
+  return new Promise((resolve) => {
+    $.post(taskUrlBody(`plantBeans/getActivityInfo`, {}), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          result = JSON.parse(data)
+          // 反馈信息
+          // console.log(result)
+          if(result.code!=='0'){
+            console.log(`❌ 获取庄园信息失败~`)
+          }else{
+            preInfo = result.result.pre
+            curInfo = result.result.cur
+            nextInfo = result.result.next
+            console.log(`上次【${preInfo.title}】活动时间为:【${preInfo.activityDay}】,获得奖励💰【${preInfo.points}】鲜豆`)
+            $.preDay = preInfo.activityDay.slice(9,preInfo.activityDay.length)
+            console.log(`本次【${curInfo.title}】活动时间为:【${curInfo.activityDay}】，🕛剩余【${(curInfo.remainTime/1000/60/60).toFixed()}】个小时`)
+            console.log(`下次【${nextInfo.title}】活动时间为:【${nextInfo.activityDay}】`)
+            console.log(`初始化 - 鲜豆庄园✅`)
+          }
+        }} catch (e) {
+          console.log(e)
+        } finally {
+          resolve(data)
+        }})
+      })
 }
 
 // 签到
@@ -127,7 +159,7 @@ async function CheckIn() {
           result = JSON.parse(data)
           // 反馈信息
           // console.log(result)
-          console.log(`✅ 已登录 \n${result.msg}`)
+          console.log(`已登录✅ \n${result.msg}`)
         }} catch (e) {
           console.log(e)
         } finally {
@@ -219,10 +251,16 @@ async function watering() {
             console.log(`❌ ${result.msg}`)
           }else{
             beanInfo = result.result
-            console.log(`当前【${beanInfo.levelUp}】级,还差`+((1-(beanInfo.levelProgress/beanInfo.totalProgress))*100).toFixed(2)+`%升级`)
-            console.log(`当前还剩💧【${beanInfo.water}g】💧,还可以浇${(beanInfo.water/100).toFixed()-1}次`)
+
+            if(beanInfo.levelUp === 10 ){
+              console.log(`当前`+beanInfo.maxLevel===true?'【已达到最大等级】':'【未达到最大等级】'+`,当前成长值有【${beanInfo.levelProgress}】，成长值越高瓜分鲜豆越多！`)
+            }else{
+              console.log(`当前【${beanInfo.levelUp}】级,还差`+((1-(beanInfo.levelProgress/beanInfo.totalProgress))*100).toFixed(2)+`%升级`)
+              console.log(`当前还剩💧【${beanInfo.water}g】💧,还可以浇${(beanInfo.water/100).toFixed()-1}次`)
+            }
+
             if((beanInfo.water/100).toFixed()-1===0){
-              console.log(`💧不够,不进行浇水操作···`)
+              console.log(`水滴💧不够,不进行浇水操作···`)
               return
             }
           }
@@ -346,7 +384,7 @@ async function doDailyTaskAward(Task) {
 }
 */
 
-// 上周奖励
+// 瓜分奖励
 async function getLastWeekReward() {
   return new Promise((resolve) => {
     $.post(taskUrlBody(`plantBeans/getPoints`, {"activityId":"23d9550546014be"}), async(err, resp, data) => {
@@ -381,7 +419,8 @@ async function getLastWeekReward() {
     "buttonId":0,
     "buttonText":"参与下期瓜分"
   },
-  "success":true}
+  "success":true
+}
 */
 
 // 分享好友
@@ -397,7 +436,7 @@ async function shareFriend() {
           if(result.code!=='0'){
             console.log(`❌ ${result.msg}`)
           }else{
-            console.log(`任务【${result.result.buttonText}】${result.msg},奖励水滴:【${result.result.awardValue}g】💧`);
+            console.log(`任务【${result.result.buttonText}】${result.msg},奖励水滴:【${result.result.awardValue}g】💧`)
           }
         }
       } catch (e) {
@@ -407,7 +446,6 @@ async function shareFriend() {
       }})
     })
 }
-
 
 // 点击果树
 async function doClickTree(i) {
