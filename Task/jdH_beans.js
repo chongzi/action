@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-29 14:05:35
+ * @Last Modified time: 2021-03-29 14:09:31
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -133,7 +133,7 @@ async function getSplitDay() {
             preInfo = result.result.pre
             curInfo = result.result.cur
             nextInfo = result.result.next
-            console.log(`上次【${preInfo.title}】活动时间为:【${preInfo.activityDay}】,获得奖励💰【${preInfo.points}】鲜豆`)
+            console.log(`上次【${preInfo.title}】活动时间为:【${preInfo.activityDay}】，获得奖励💰【${preInfo.points}】鲜豆`)
             $.preDay = preInfo.activityDay.slice(9,preInfo.activityDay.length)
             console.log(`本次【${curInfo.title}】活动时间为:【${curInfo.activityDay}】，🕛剩余【${(curInfo.remainTime/1000/60/60).toFixed()}】个小时`)
             console.log(`下次【${nextInfo.title}】活动时间为:【${nextInfo.activityDay}】`)
