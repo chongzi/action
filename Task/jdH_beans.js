@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-30 11:32:47
+ * @Last Modified time: 2021-03-30 11:36:25
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -92,7 +92,7 @@ async function todoTask(){
     if($.totalWater/100<1){
       console.log(`💧水滴不够,不执行浇水操作···`)
     }else{
-      console.log(`正在第【${i+1}】次浇水,水壶内剩余【${$.totalWater}g】💧水滴`)
+      console.log(`正在第【${i+1}】次浇水`)
       await watering()
       await $.wait(2000) // 避免 重复操作
     }
