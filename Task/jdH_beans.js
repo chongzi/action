@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-29 14:09:31
+ * @Last Modified time: 2021-03-30 11:31:24
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -92,7 +92,7 @@ async function todoTask(){
     if($.totalWater/100<1){
       console.log(`💧水滴不够,不执行浇水操作···`)
     }else{
-      console.log(`\n正在第【${i+1}】次浇水`)
+      console.log(`正在第【${i+1}】次浇水,水壶内剩余【${$.totalWater}g】💧水滴`)
       await watering()
       await $.wait(2000) // 避免 重复操作
     }
@@ -106,7 +106,7 @@ async function todoTask(){
     console.log(`🕛 到点,开始领取上次活动奖励💰:`)
     await getLastWeekReward()
   }else{
-    console.log(`❌ 时间未到，不执行收取奖励💰操作`)
+    console.log(`❌ 时间未到，不执行收取奖励💰操作\n`)
     return
   }
 
@@ -130,6 +130,7 @@ async function getSplitDay() {
           if(result.code!=='0'){
             console.log(`❌ 获取庄园信息失败~`)
           }else{
+            console.log(`初始化 - 鲜豆庄园✅`)
             preInfo = result.result.pre
             curInfo = result.result.cur
             nextInfo = result.result.next
@@ -137,7 +138,6 @@ async function getSplitDay() {
             $.preDay = preInfo.activityDay.slice(9,preInfo.activityDay.length)
             console.log(`本次【${curInfo.title}】活动时间为:【${curInfo.activityDay}】，🕛剩余【${(curInfo.remainTime/1000/60/60).toFixed()}】个小时`)
             console.log(`下次【${nextInfo.title}】活动时间为:【${nextInfo.activityDay}】`)
-            console.log(`初始化 - 鲜豆庄园✅`)
           }
         }} catch (e) {
           console.log(e)
@@ -159,7 +159,7 @@ async function CheckIn() {
           result = JSON.parse(data)
           // 反馈信息
           // console.log(result)
-          console.log(`已登录✅ \n${result.msg}`)
+          console.log(`签到:${result.msg}✅`)
         }} catch (e) {
           console.log(e)
         } finally {
@@ -253,7 +253,7 @@ async function watering() {
             beanInfo = result.result
 
             if(beanInfo.levelUp === 10 ){
-              console.log(`当前`+beanInfo.maxLevel===true?'【已达到最大等级】':'【未达到最大等级】'+`,当前成长值有【${beanInfo.levelProgress}】，成长值越高瓜分鲜豆越多！`)
+              console.log(`当前`+(beanInfo.maxLevel==false?'【未达到最大等级】':'【已达到最大等级】')+`,当前成长值有【${beanInfo.levelProgress}】，成长值越高瓜分鲜豆越多！`)
             }else{
               console.log(`当前【${beanInfo.levelUp}】级,还差`+((1-(beanInfo.levelProgress/beanInfo.totalProgress))*100).toFixed(2)+`%升级`)
               console.log(`当前还剩💧【${beanInfo.water}g】💧,还可以浇${(beanInfo.water/100).toFixed()-1}次`)

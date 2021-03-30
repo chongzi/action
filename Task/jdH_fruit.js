@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-22 15:19:50 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-26 13:46:14
+ * @Last Modified time: 2021-03-30 11:23:22
  */
 
 const $ = Env('京东到家-免费水果')
@@ -91,7 +91,7 @@ async function initFruit() {
             console.log(`❌ ${result.msg}`)
           }else{
             initFruitInfo = result.result.activityInfoResponse
-            console.log(`初始化果树信息···\n当前种植：【${initFruitInfo.fruitName}】,当前阶段:【${initFruitInfo.stageName}】,还差【${initFruitInfo.curStageLeftProcess}】次升级下一阶段`)
+            console.log(`初始化果树信息···\n当前种植：【${initFruitInfo.fruitName}】,当前阶段:【${initFruitInfo.stageName}】,还差【${(initFruitInfo.curStageLeftProcess).toFixed()}】次升级下一阶段`)
             console.log(`初始化水壶信息···\n当前水壶剩余水滴:【${result.result.userResponse.waterBalance}g】💧`)
             $.totalWater = result.result.userResponse.waterBalance
           }}} catch (e) {
