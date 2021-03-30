@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-27 10:17:06
+ * @Last Modified time: 2021-03-30 09:17:28
  */
 
 const $ = Env('微博剑网三签到')
@@ -58,7 +58,7 @@ if ($.isNode()) {
     
     var index = token.indexOf(`aid=`)
 
-    // 签到
+    // 超话签到
     await signSuper(token)
 
     // 获取活动ID
@@ -66,8 +66,8 @@ if ($.isNode()) {
 
     // 领取奖励
     if($.day!==undefined){
-      console.log(`🔥当前签到的是第【${$.day}】天,当前活动地址为:【${$.RewardURL}】`)
-      console.log(`🔥当前RefererURL为:【${$.RefererURL}】`)
+      console.log(`📝当前签到的是第【${$.day}】天,当前活动地址为:【${$.RewardURL}】`)
+      console.log(`📝当前RefererURL为:【${$.RefererURL}】`)
       await getReward($.RewardURL,token.slice(index+4,token.length))
     }else{
       console.log(`❌ 当前已经签到，不会返回任何消息\n`)
@@ -84,7 +84,7 @@ if ($.isNode()) {
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
 
-
+// 超话签到
 async function signSuper(token) {
   return new Promise((resolve) => {
     $.get(taskUrl(`https://api.weibo.cn/2/page/button?gsid=${token}&sourcetype=page&page_id=10080832fb612861131313011fa86bdcda7c7a&since_id=4617894895551074&extparam=%E5%89%91%E7%BD%913&orifid=231619%24%24102803_ctg1_1770_-_ctg1_1770%24%240%24%24100103type%3D1%26q%3D%E5%89%91%E7%BD%913%26t%3D2%24%24100103type%3D1%26q%3D%E5%89%91%E7%BD%913%E8%B6%85%E8%AF%9D%26t%3D3&count=15&luicode=10000003&fid=10080832fb612861131313011fa86bdcda7c7a&featurecode=10000085&uicode=10000011&oriuicode=10000010_10000327_10000003_10000003_10000003&request_url=http%3A%2F%2Fi.huati.weibo.com%2Fmobile%2Fsuper%2Factive_checkin%3Fpageid%3D10080832fb612861131313011fa86bdcda7c7a%26in_page%3D1&page=1&lfid=100103type%3D1%26q%3D%E5%89%91%E7%BD%913%E8%B6%85%E8%AF%9D%26t%3D3&moduleID=pagecard&page_interrupt_enable=1&ul_sid=DCC83BD5-1195-4303-AB45-1BD074DFA898&ul_hid=827988EE-99CC-478B-BC91-1CA90663145B&ul_ctime=1616475510131`),async(error, response, data) =>{
@@ -95,7 +95,7 @@ async function signSuper(token) {
        } else {
          const result = JSON.parse(data)
          // 反馈信息
-         console.log(result)
+        //  console.log(result)
          if(result.button!==undefined){
           $.day = (result.button.name.slice(4,5))-0
           // 签到成功
@@ -149,11 +149,9 @@ async function Tricket_ID(token) {
                   let url = decodeURIComponent(i.scheme)
                   let index = url.indexOf(`1`)
                   $.RewardURL = (url.slice(index,i.scheme.length))
-                  console.log(`📝当前RewardURL为：`)
                   console.log($.RewardURL)
                   let referIndex = url.indexOf(`https`)
                   $.RefererURL = (url.slice(referIndex,i.scheme.length))
-                  console.log(`📝当前的Referer网址为：`)
                   console.log($.RefererURL)
                 }
               })
@@ -215,10 +213,14 @@ async function getReward(url,aid){
           console.log(result.data.prize_data)
           console.log(`\n💰${result.data.layer_conf.success_desc1}:【${result.data.prize_data.prize_name}】`)
           $.message+=` 💰 ${result.data.layer_conf.success_desc1}:【${result.data.prize_data.prize_name}】`
-        }else{
-          // 未中奖&失败
-          console.log(`\ n❗ ${result.data.none_desc1}||${result.data.fail_desc1}`)
-          $.message+=` ❗ ${result.data.none_desc1}||${result.data.fail_desc1}`
+        }else if(result.data.msg==='none'){
+          // 未中奖
+          console.log(`\n❗ ${result.data.none_desc1}`)
+          $.message+=` ❗ ${result.data.none_desc1}`
+        }else {
+          // 签到失败
+          console.log(`\n❗ ${result.data.fail_desc1}`)
+          $.message+=` ❗ ${result.data.fail_desc1}`
         }
       }}catch(e) {
           console.log(e)
@@ -229,6 +231,7 @@ async function getReward(url,aid){
    })
 }
 
+// 发送签到通知
 async function sendMsg() {
   await notify.sendNotify(`微博超话 - JX3`,`${$.message}`);
 }
