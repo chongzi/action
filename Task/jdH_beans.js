@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-30 11:31:24
+ * @Last Modified time: 2021-03-30 11:32:47
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -159,7 +159,7 @@ async function CheckIn() {
           result = JSON.parse(data)
           // 反馈信息
           // console.log(result)
-          console.log(`签到:${result.msg}✅`)
+          console.log(`签到:${result.msg}`)
         }} catch (e) {
           console.log(e)
         } finally {
