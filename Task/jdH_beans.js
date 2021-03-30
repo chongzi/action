@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-30 11:36:25
+ * @Last Modified time: 2021-03-30 11:36:52
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -44,7 +44,7 @@ const JD_API_HOST = `https://daojia.jd.com/client?_jdrandom=${new Date().getTime
 async function todoTask(){
   
   // 获取活动信息
-  console.log(`\n🌱执行 -> 初始化信息`)
+  console.log(`🌱执行 -> 初始化信息`)
   await getSplitDay()
   
   // 签到
