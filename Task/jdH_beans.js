@@ -2,12 +2,16 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-31 09:54:13
+ * @Last Modified time: 2021-03-31 15:32:20
  */
 
 const $ = Env('京东到家-鲜豆庄园')
 
 const Cookie = []
+
+const notify = $.isNode() ? require('./sendNotify') : '';
+
+$.message = ''
 
 // 任务列表
 const TaskArrList = []
@@ -107,6 +111,8 @@ async function todoTask(){
   if((new Date().getDate()-0-1)===$.preDay||(JSON.stringify(lastMonthDay).slice(9,11)-0)===$.preDay){
     console.log(`🕛 到点,开始领取上次活动奖励💰:`)
     await getLastWeekReward()
+    //推送消息
+    await sendMsg()
   }else{
     console.log(`❌ 时间未到，不执行收取奖励💰操作\n`)
     return
@@ -403,6 +409,7 @@ async function getLastWeekReward() {
             // 领取奖励
             rewardInfo = result.result
             console.log(`收取奖励💰:${rewardInfo.title}`)
+            $.message+=`收取奖励💰:${rewardInfo.title}`
           }
         }} catch (e) {
         console.log(e)
@@ -498,6 +505,11 @@ async function doClickTree(i) {
   success: true
 }
 */
+
+async function sendMsg() {
+  await notify.sendNotify(`京东到家 - 鲜豆庄园`,`${$.message}`);
+}
+
 
 
 
