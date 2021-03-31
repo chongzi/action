@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-31 15:32:20
+ * @Last Modified time: 2021-04-01 00:37:30
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -108,7 +108,7 @@ async function todoTask(){
   // console.log(JSON.stringify(lastMonthDay).slice(9,11)-0); //28号 number
   console.log(`当前时间为:【${new Date().getDate()-0}号】,上一次瓜分时间为【${$.preDay}号】`)
   // 本月内日期的前一天为结束日 || 上个月的最后一天的日期为结束日
-  if((new Date().getDate()-0-1)===$.preDay||(JSON.stringify(lastMonthDay).slice(9,11)-0)===$.preDay){
+  if((new Date().getDate()-0)===$.preDay||(JSON.stringify(lastMonthDay).slice(9,11)-0)===$.preDay){
     console.log(`🕛 到点,开始领取上次活动奖励💰:`)
     await getLastWeekReward()
     //推送消息
