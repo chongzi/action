@@ -28,3 +28,4 @@ jobs:
           node ./Task/baidu_pan.js
         env:
           BDYP_COOKIE: ${{ secrets.BDYP_COOKIE }}
+          PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
