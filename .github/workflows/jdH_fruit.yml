@@ -3,7 +3,7 @@ name: 京东到家-到家果园
 on:
   workflow_dispatch:
   schedule:
-    - cron: '15 * * * *'
+    - cron: '15 */5 * * *'
   watch:
     types: started
   repository_dispatch:
