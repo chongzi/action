@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-31 17:36:13
+ * @Last Modified time: 2021-03-31 19:12:46
  */
 
 const $ = Env('睡眠赚')
@@ -51,7 +51,7 @@ if ($.isNode()) {
 
 !(async () => {
   for(let i = 0 ; i < CookieArr.length;i++){
-    
+
     cookie =  CookieArr[i]
     body = BodyArr[i]
     
@@ -60,26 +60,31 @@ if ($.isNode()) {
     // await drink()
     
     // 签到
-    console.log(`💎执行 -> 签到`)
+    console.log(`\n💎执行 -> 签到`)
     await sign()
 
     // 幸运大抽奖
-    console.log(`💎执行 -> 幸运大抽奖`)
+    console.log(`\n💎执行 -> 幸运大抽奖`)
     let start = body.indexOf('imei')
     let end = body.indexOf('&source')
     const nowimei = body.slice(start+5,end)
     for(let j = 0 ; j<$.turntableTime;j++){
-      console.log(`当前循环第[${j+1}]次，获得:`);
+      if($.nowTime===undefined) return
+      console.log(`\n当前循环第[${j+1}]次，获得:`)
       await turntable(nowimei)
-      await $.wait(10000) // 等待10s
-      if((j+1)===5||(j+1)===30||(j+1)===60||(j+1)===100){
-        console.log(`当前可以开启宝箱`)
-        await openbox()
+      // if((j+1)===5||(j+1)===30||(j+1)===60||(j+1)===100){
+      if($.nowTime===5||$.nowTime===30||$.nowTime===60||$.nowTime===100){
+        console.log(`当前可以开启宝箱，当前次数为:【${$.nowTime}】`)
+        await openbox($.nowTime,nowimei)
+      }else{
+        console.log(`当前次数为:【${$.nowTime}】`)
       }
+      console.log(`等待了10s···`)
+      await $.wait(10000) // 等待10s
     }
     
     // 每天获取的钻石💎
-    console.log(`💎执行 -> 刷钻石`)
+    console.log(`\n💎执行 -> 刷钻石`)
     for (let a = 0; a < 10000; a++) {
       await loop(a)
       await $.wait(1000) // 等待1s
@@ -87,9 +92,6 @@ if ($.isNode()) {
         return
       }
     }
-
-    //
-  
   }
 })()
     .catch((e) => $.logErr(e))
@@ -111,7 +113,7 @@ async function sign(){
          if(result.code!==200){
            console.log(`签到失败！`)
          }else{
-           console.log((result.data.is_signed===1?'当日已签到':`签到成功`)+`,本次获得:【${result.data.setting[result.data.next_days-2]}个】钻石💎\n总签到【${result.data.signCount}】天\n下一次签到是：第${result.data.next_days}天`)
+           console.log((result.data.is_signed===1?'当日已签到':`签到成功`)+`,获得:【${result.data.setting[result.data.next_days-2]}个】钻石💎\n总签到【${result.data.signCount}】天\n下一次签到是：第${result.data.next_days}天`)
          }
        }}catch(e) {
            console.log(e)
@@ -133,11 +135,12 @@ async function turntable(nowimei){
        } else {
          const result = JSON.parse(data)
          // 反馈信息
-         // console.log(result)
+         console.log(result)
         if(result.code!==200){
           console.log(`❌ 执行大转盘错误！`)
         }else{
           $.turntableTime = result.data.leftNum
+          $.nowTime = (result.data.hasNum)-0
           if(result.data.coin!==0){
             console.log(`获得钻石:【${result.data.coin}个】钻石`)
           }else{
@@ -152,6 +155,40 @@ async function turntable(nowimei){
      })
     })
  }
+
+ // 开启宝箱
+async function openbox(time,nowimei) {
+  return new Promise((resolve) => {
+    let body = `source=ios&device=ios&num=${time}`
+    $.post(bodytaskUrl(`api/turntable/chestcoin?imei=${nowimei}&jsoncallback=`,body,nowimei),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result)
+        if(result.code!==200){
+          console.log(`❌ 执行开宝箱错误！`)
+        }else{
+          console.log(`开宝箱本次获得钻石💎:【${result.data}】个`)
+        }
+        }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+/*
+{
+  "code":200,
+  "message":"Request Success.",
+  "data":5
+}
+ */
 
 // 刷钻石💎
 async function loop(a){
@@ -206,6 +243,25 @@ function taskUrl(activity) {
 function NobodytaskUrl(activity,nowimei) {
   return {
     url: `${SLEEP_API_HOST}/${activity}`,
+    headers: {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate",
+      "Accept-Language": "zh-Hans-CN;q=1",
+      "Connection": "keep-alive",
+      'Content-Length': '110',
+      "Content-Type": "application/x-www-form-urlencoded",
+      'Host': 'sleep.zouluzhuan.com',
+      'Cookie': cookie,
+      'Referer':`http://sleep.zouluzhuan.com/api/turntable/index?imei=${nowimei}&version=1.0.7&device=ios&source=ios`,
+      'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+    }
+  }
+}
+
+function bodytaskUrl(activity,body,nowimei) {
+  return {
+    url: `${SLEEP_API_HOST}/${activity}`,
+    body:body,
     headers: {
       "Accept": "*/*",
       "Accept-Encoding": "gzip, deflate",
