@@ -1,13 +1,13 @@
-name: 微博签到
+name: 百度网盘签到
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '35 0 * * *'
+    - cron: '10 0 * * *'
   watch:
     types: started
   repository_dispatch:
-    types: weibo
+    types: baidu_pan
 
 jobs:
   build:
@@ -23,9 +23,8 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: '运行 【微博签到】'
+      - name: '运行 【百度网盘签到】'
         run: |
-          node ./Task/weibo.js
+          node ./Task/baidu_pan.js
         env:
-          WEIBO_TOKEN: ${{ secrets.WEIBO_TOKEN }}
-          PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
+          BDYP_COOKIE: ${{ secrets.BDYP_COOKIE }}
