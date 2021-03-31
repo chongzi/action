@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-30 11:36:52
+ * @Last Modified time: 2021-03-31 09:54:13
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -99,10 +99,12 @@ async function todoTask(){
   }
 
   // 获取上一期的奖励
-  // 如果当前日期的前一天为结束日则
   console.log(`\n🌱执行 -> 收取上期奖励`)
+  const lastMonthDay = new Date(new Date() - new Date().getDate()*1000*24*60*60)
+  // console.log(JSON.stringify(lastMonthDay).slice(9,11)-0); //28号 number
   console.log(`当前时间为:【${new Date().getDate()-0}号】,上一次瓜分时间为【${$.preDay}号】`)
-  if((new Date().getDate()-1)===$.preDay){
+  // 本月内日期的前一天为结束日 || 上个月的最后一天的日期为结束日
+  if((new Date().getDate()-0-1)===$.preDay||(JSON.stringify(lastMonthDay).slice(9,11)-0)===$.preDay){
     console.log(`🕛 到点,开始领取上次活动奖励💰:`)
     await getLastWeekReward()
   }else{
@@ -135,7 +137,7 @@ async function getSplitDay() {
             curInfo = result.result.cur
             nextInfo = result.result.next
             console.log(`上次【${preInfo.title}】活动时间为:【${preInfo.activityDay}】，获得奖励💰【${preInfo.points}】鲜豆`)
-            $.preDay = preInfo.activityDay.slice(9,preInfo.activityDay.length)
+            $.preDay = (preInfo.activityDay.slice(9,preInfo.activityDay.length)-0) // number
             console.log(`本次【${curInfo.title}】活动时间为:【${curInfo.activityDay}】，🕛剩余【${(curInfo.remainTime/1000/60/60).toFixed()}】个小时`)
             console.log(`下次【${nextInfo.title}】活动时间为:【${nextInfo.activityDay}】`)
           }
