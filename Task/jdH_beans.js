@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-15 11:22:11 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-01 00:37:30
+ * @Last Modified time: 2021-04-01 00:53:03
  */
 
 const $ = Env('京东到家-鲜豆庄园')
@@ -142,7 +142,8 @@ async function getSplitDay() {
             preInfo = result.result.pre
             curInfo = result.result.cur
             nextInfo = result.result.next
-            console.log(`上次【${preInfo.title}】活动时间为:【${preInfo.activityDay}】，获得奖励💰【${preInfo.points}】鲜豆`)
+            console.log(`上次【${preInfo.title}】活动时间为:【${preInfo.activityDay}】，可得奖励💰【${preInfo.points}】鲜豆,上周活动ID【${preInfo.activityId}】`)
+            $.preACid = preInfo.activityId
             $.preDay = (preInfo.activityDay.slice(9,preInfo.activityDay.length)-0) // number
             console.log(`本次【${curInfo.title}】活动时间为:【${curInfo.activityDay}】，🕛剩余【${(curInfo.remainTime/1000/60/60).toFixed()}】个小时`)
             console.log(`下次【${nextInfo.title}】活动时间为:【${nextInfo.activityDay}】`)
@@ -395,7 +396,7 @@ async function doDailyTaskAward(Task) {
 // 瓜分奖励
 async function getLastWeekReward() {
   return new Promise((resolve) => {
-    $.post(taskUrlBody(`plantBeans/getPoints`, {"activityId":"23d9550546014be"}), async(err, resp, data) => {
+    $.post(taskUrlBody(`plantBeans/getPoints`, {"activityId":`${$.preACid}`}), async(err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
