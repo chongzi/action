@@ -1,83 +1,38 @@
 /*
  * @Author: Xin https://github.com/Xin-code 
- * @Date: 2021-03-31 11:10:57 
+ * @Date: 2021-04-01 16:19:30 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-31 13:37:25
+ * @Last Modified time: 2021-04-01 17:31:32
  */
 
-const $ = Env('滴滴出行 - 免费水果')
-
-const notify = $.isNode() ? require('../Task/sendNotify') : '';
-
-$.message = ''
-
-const DIDI_API_HOST = `https://tree.xiaojukeji.com:8443`
-
-const BodyArr = []
-
-const InitBody = []
+const $ = Env('走路赚')
 
 // if ($.isNode()) {
-  // if (process.env.DIDI_API_HOST && process.env.DIDI_API_HOST.indexOf('#') > -1) {
-  //   cookie = process.env.DIDI_API_HOST.split('#');
-  // }else if(process.env.DIDI_API_HOST && process.env.DIDI_API_HOST.indexOf('#') > -1) {
-  //   cookie = process.env.DIDI_API_HOST.split('\n');
+  // if (process.env.XXXX_XXXXX && process.env.XXXX_XXXXX.indexOf('#') > -1) {
+  //   xxxx = process.env.XXXX_XXXXX.split('#');
+  // }else if(process.env.XXXX_XXXXX && process.env.XXXX_XXXXX.indexOf('#') > -1) {
+  //   xxxx = process.env.XXXX_XXXXX.split('\n');
   // }else{
-  //   cookie = [process.env.DIDI_API_HOST]
+  //   xxxx = [process.env.XXXX_XXXXX]
   // }
 
-  // Object.keys(cookie).forEach((item) => {
-  //   if (cookie[item]) {
-  //     BodyArr.push(cookie[item])
+  // Object.keys(xxxx).forEach((item) => {
+  //   if (xxxx[item]) {
+  //     XXXXxxxx.push(xxxx[item])
   //   }
   // })
 // }
 
+const CookieArr = []
+
+const WALK_API_HOST = 'http://sleep.zouluzhuan.com'
+
 !(async () => {
-  for (let i = 0; i < BodyArr.length; i++) {
+  for (let i = 0; i < XXXX.length; i++) {
 
     console.log(`········【帐号${i+1}】开始········`)
 
-    // 初始化信息
-    initbody = InitBody[i]
-    console.log(`🌳执行 -> 初始化信息`)
-    await initFarm()
-
-    // 日常签到
-    Curbody = BodyArr[i]
-    console.log(`\n🌳执行 -> 日常签到`)
-    await dailyCheck()
-    
-    // // 除草
-    // console.log(`\n🌳执行 -> 除草`)
-    // if($.totalWeed!==3){
-    //   for(let i = 0 ; i<3-$.totalWeed;i++){
-    //     console.log(`当前执行第${i+1}次除草`)
-    //     await $.wait(2000) // 等待5s
-    //     await weed() 
-    //   }
-    // }else{
-    //   console.log(`当前已经除草【${$.totalWeed}】次，不执行除草任务`)
-    // }
-
-    // 浇水操作
-    console.log(`\n🌳执行 -> 浇水`)
-    if(($.totalWater/10)>1){
-      for(let i = 0 ; i<($.totalWater/10);i++){
-        console.log(`当前执行第${i+1}次浇水`)
-        await $.wait(2000) // 等待5s
-        await water()
-      }
-    }else{
-      console.log(`当前水滴不够，剩余水滴【${$.totalWater}g】水滴`)
-    }
-
-      
-  
-
-    
-    //推送消息
-    // await sendMsg()
+    await xxx()
 
     console.log(`········【帐号${i+1}】结束········`)
 
@@ -85,77 +40,12 @@ const InitBody = []
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
-
     
-// 初始化信息
-async function initFarm() {
-  return new Promise((resolve) => {
-    $.post(BodytaskUrl(`user/login`,initbody),async(error, response, data) =>{
-     try{
-       if (error) {
-         console.log(`${JSON.stringify(error)}`)
-         console.log(`API请求失败，请检查网路重试`)
-       } else {
-         const result = JSON.parse(data)
-         // 反馈信息
-        //  console.log(result)
-        console.log(`当前化肥：【${result.data.fer}袋】化肥`)
-        console.log(`当前水壶容量：【${result.data.wat}g】水滴💧`)
-        $.totalWater = result.data.wat
-        console.log(`当前已经除草：【${result.data.weed.wmy}】次🌿`)
-        $.totalWeed = result.data.weed.wmy
-        console.log(`奖励盒子：在浇【${result.data.dbox.water/10}】次水即可领取奖励`)
-       }}catch(e) {
-           console.log(e)
-         } finally {
-         resolve();
-       } 
-     })
-    })
-}
-
-/*
-{
-  uid: 'vQ8ql/FhQKrXMq5w6gx/+w==',
-  data: {
-    twat: 10,
-    other: '{"kettleGetTip":"20210331|1|0","xmt":false,"ifp":0,"nst":0,"dflt":1617160156092}',
-    ewt: 1617146640000,
-    sigext: 0,
-    dbox: { bid: 0, water: 90 }, //🎁盒子 奖励 在浇水多少领取奖励
-    ewat: 20,
-    wrace: 0,
-    fr: [],
-    lx_sig: {},
-    tsk: null,
-    tid: 201,
-    kouling: 0,
-    qwt: 0,
-    sig: { t: 1617160177000, n: 1 },
-    fer: 2, // 🎁化肥
-    igw: false,
-    weed: { wmf: 0, wmy: 0, wfm: 0 }, // 🎁当前已经除草次数 wmy
-    notice: 0,
-    st: 1,
-    newbie: 0,
-    tfer: 10,
-    cty: '177',
-    wat: 440,// 🎁水壶 一次消耗10点💧
-    lty: { t: 1617161251000, exn: 0, n: 1 },
-    cxUid: '0',
-    astFlag: 0,
-    gui: 6,
-    register: 1616435705000
-  },
-  d: 1617163134523
-}
-*/
-
-
-// 日常签到
-async function dailyCheck(){
+    
+async function xxx(){
  return new Promise((resolve) => {
-   $.post(BodytaskUrl(`user/sign`,Curbody),async(error, response, data) =>{
+   let body = ''
+   $.post(BodytaskUrl(URL,body),async(error, response, data) =>{
     try{
       if (error) {
         console.log(`${JSON.stringify(error)}`)
@@ -163,13 +53,7 @@ async function dailyCheck(){
       } else {
         const result = JSON.parse(data)
         // 反馈信息
-        // console.log(result)
-        if(result.day!==1){
-          console.log(`❌ ${result.errMsg}`)
-        }else{
-          console.log(`签到成功✅ 当前第：【${result.day}】天`)
-          console.log(`获得:${result.evtChange}`)
-        }
+        console.log(result)
       }}catch(e) {
           console.log(e)
         } finally {
@@ -178,88 +62,6 @@ async function dailyCheck(){
     })
    })
 }
-/*
-{
-  "evtChange":{
-    "weed":0,
-    "fri":0
-  },
-  "day":1
-} 
-*/
-
-
-// 除草
-async function weed() {
-  return new Promise((resolve) => {
-    $.post(BodytaskUrl(`plant/weed`,Curbody),async(error, response, data) =>{
-     try{
-       if (error) {
-         console.log(`${JSON.stringify(error)}`)
-         console.log(`API请求失败，请检查网路重试`)
-       } else {
-         const result = JSON.parse(data)
-         // 反馈信息
-         console.log(result)
-         if(result.wmy!==0){
-          console.log(`❌ ${result.errMsg}`)
-        }else{
-         console.log(`今天已经除草【${result.wmy}】次`)
-         }
-       }}catch(e) {
-           console.log(e)
-         } finally {
-         resolve();
-       } 
-     })
-    })
-}
-
-// 浇水
-async function water() {
-  return new Promise((resolve) => {
-    $.post(BodytaskUrl(`plant/water`,Curbody),async(error, response, data) =>{
-     try{
-       if (error) {
-         console.log(`${JSON.stringify(error)}`)
-         console.log(`API请求失败，请检查网路重试`)
-       } else {
-         const result = JSON.parse(data)
-         // 反馈信息
-         console.log(result)
-         if(result.wat!==0){
-           console.log(`❌ ${result.errMsg}`)
-         }else{
-           console.log(`当前水壶剩余水量：【${result.wat}g】水滴`)
-         }
-       }}catch(e) {
-           console.log(e)
-         } finally {
-         resolve();
-       } 
-     })
-    })
-}
-/*
-{
-  "twat":20,
-  "st":1,
-  "ewt":1617146640000,
-  "tfer":10,
-  "oncew":10,
-  "ewat":20,
-  "evtChange":{
-    "weed":0,
-    "fri":0
-  },
-  "wat":430
-}
-*/
-
-async function sendMsg() {
-  await notify.sendNotify(`xxxx`,`${$.message}`);
-}
-
 
 // URL
 function taskUrl(activity) {
@@ -280,20 +82,19 @@ function taskUrl(activity) {
 
 
  // BODYURL
- function BodytaskUrl(activity, NB) {
+ function BodytaskUrl(activity, body={}) {
   return {
-    url: `${DIDI_API_HOST}/${activity}`,
-    body: NB,
+    url: `${XXXX_API_HOST}/${activity}`,
+    body: body,
     headers: {
       "Accept": "*/*",
       "Accept-Encoding": "gzip, deflate, br",
       "Accept-Language": "zh-cn",
       "Connection": "keep-alive",
       "Content-Type": "application/x-www-form-urlencoded",
-      'Host': `tree.xiaojukeji.com:9443`,
-      'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 didi.passenger/6.1.14 FusionKit/1.2.20',
-      'Origin': 'https://fine.udache.com',
-      'Referer': 'https://fine.udache.com/',
+      'Host': '',
+      'Cookie': cookie,
+      'User-Agent': '',
     }
   }
 }
