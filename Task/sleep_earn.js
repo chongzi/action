@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-31 19:12:46
+ * @Last Modified time: 2021-04-01 15:45:24
  */
 
 const $ = Env('睡眠赚')
@@ -11,10 +11,18 @@ const CookieArr = []
 
 const BodyArr = []
 
+const sportList = [
+  `Roller_skating`,
+  `Basketball`,
+  `Run`,
+  `Footbal`,
+  `Riding`
+]
+
 const SLEEP_API_HOST = 'http://sleep.zouluzhuan.com'
 
 $.go = false
-$.turntableTime = 1
+$.turntableGo = true
 
 if ($.isNode()) {
   
@@ -48,41 +56,79 @@ if ($.isNode()) {
   
 }
 
+const nowTime = new Date().getTime()+8*60*60*1000
+$.BJT = new Date(nowTime)
+// 2021-04-01 09:18:14
+// console.log(JSON.stringify(BJT).slice(1,20).replace('T',' '))
+$.BJH = $.BJT.getUTCHours() // 当前小时
 
 !(async () => {
   for(let i = 0 ; i < CookieArr.length;i++){
 
     cookie =  CookieArr[i]
     body = BodyArr[i]
-    
-    // 首页喝水
-    console.log(`💎执行 -> 首页喝水`)
-    // await drink()
-    
-    // 签到
-    console.log(`\n💎执行 -> 签到`)
-    await sign()
 
-    // 幸运大抽奖
-    console.log(`\n💎执行 -> 幸运大抽奖`)
     let start = body.indexOf('imei')
     let end = body.indexOf('&source')
     const nowimei = body.slice(start+5,end)
-    for(let j = 0 ; j<$.turntableTime;j++){
-      if($.nowTime===undefined) return
-      console.log(`\n当前循环第[${j+1}]次，获得:`)
-      await turntable(nowimei)
-      // if((j+1)===5||(j+1)===30||(j+1)===60||(j+1)===100){
-      if($.nowTime===5||$.nowTime===30||$.nowTime===60||$.nowTime===100){
-        console.log(`当前可以开启宝箱，当前次数为:【${$.nowTime}】`)
-        await openbox($.nowTime,nowimei)
-      }else{
-        console.log(`当前次数为:【${$.nowTime}】`)
+
+    // 签到
+    console.log(`\n💎执行 -> 签到`)
+    await sign()
+  
+
+    // 初始化喝水信息
+    console.log(`\n💎执行 -> 初始化喝水信息`)
+    await initDrink(nowimei)
+
+    // 首页喝水
+    // 10-17点
+    console.log(`\n💎执行 -> 首页喝水`)
+    if($.BJH>=10&&$.BJH<18){
+      console.log($.BJT)
+      console.log(`当前小时数:[${$.BJH}],在领奖区间内，可以执行任务`)
+      for(let d = 0 ; d<8;d++){
+        await drink(d+1,nowimei)
       }
-      console.log(`等待了10s···`)
-      await $.wait(10000) // 等待10s
     }
     
+    // 睡觉奖励
+    console.log(`\n💎执行 -> 睡觉`)
+    for(let p = 0 ; p<8;p++){
+      await sleep(p,nowimei)
+    }
+
+    // 运动
+    console.log(`\n💎执行 -> 去运动`)
+    for(let s = 0;s<sportList.length;s++){
+      nowSport = sportList[s]
+      await goMotion(nowSport,nowimei)
+      console.log(`等待5s···`)
+      await $.wait(5000)
+    }
+
+    // 幸运大抽奖100次
+    console.log(`\n💎执行 -> 幸运大抽奖`)
+    await turntable(nowimei)
+    if($.turntableGo){
+      for(let j = 0 ; j<100;j++){
+        await turntable(nowimei)
+        console.log(`\n当前为第[${$.nowTime}]次:`)
+      }
+    }else{
+      console.log(`当前已经抽完次数，跳出循环`)
+    }
+
+
+    // 幸运大抽奖开启宝箱
+    console.log(`\n💎执行 -> 幸运大抽奖开启宝箱`)
+    for(let o = 0;o<4;o++){
+      let openBoxNum = [5,30,60,100]
+      let nowopenBoxNum = openBoxNum[o]
+      await openbox(nowopenBoxNum,nowimei)
+    }
+
+
     // 每天获取的钻石💎
     console.log(`\n💎执行 -> 刷钻石`)
     for (let a = 0; a < 10000; a++) {
@@ -92,6 +138,9 @@ if ($.isNode()) {
         return
       }
     }
+    
+
+    
   }
 })()
     .catch((e) => $.logErr(e))
@@ -113,7 +162,7 @@ async function sign(){
          if(result.code!==200){
            console.log(`签到失败！`)
          }else{
-           console.log((result.data.is_signed===1?'当日已签到':`签到成功`)+`,获得:【${result.data.setting[result.data.next_days-2]}个】钻石💎\n总签到【${result.data.signCount}】天\n下一次签到是：第${result.data.next_days}天`)
+           console.log((result.data.is_signed===1?'❌ 重复签到':`✅ 签到成功`)+`,获得:【${result.data.setting[result.data.next_days-2]}个】钻石💎\n总签到【${result.data.signCount}】天,下次签到是：第${result.data.next_days}天`)
          }
        }}catch(e) {
            console.log(e)
@@ -124,6 +173,164 @@ async function sign(){
     })
  }
 
+// 初始化喝水信息
+async function initDrink(nowimei) {
+  return new Promise((resolve) => {
+    let body = `device=ios&imei=${nowimei}&source=ios&uid=1286337&version=1.0.7`
+    $.post(drinkURL(`api/home/index`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+        //  console.log(result)
+         if(result.code!==200){
+           console.log(`❌ ${result.message}`)
+         }else{
+           const CupList = result.data.cupslist
+           CupList.forEach((item)=>{
+             console.log(`当前第【${item.cup_id}】杯,${item.cup_title}`)
+           })
+         }
+        }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+
+// 喝水
+async function drink(d,nowimei) {
+  return new Promise((resolve) => {
+    let body = `coin=29&cupid=${d}&device=ios&double=1&imei=${nowimei}&source=ios&uid=1286337&version=1.0.7`
+    $.post(drinkURL(`api/home/drink`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         console.log(`喝水尝试领取[${d}]次奖励`)
+         console.log(result)
+         console.log(`等待5s···`)
+         await $.wait(5000)
+        }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+
+// 睡觉 ✅ 
+// 传递coin=999 double=1
+async function sleep(p,nowimei) {
+  return new Promise((resolve) => {
+    let body = `bubbleid=${p}&coin=999&device=ios&double=1&imei=${nowimei}=ios&type=1&uid=1286337&version=1.0.7`
+    $.post(drinkURL(`api/home/getsleepcoin`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         console.log(result)
+         if(result.code!==200){
+           console.log(`❌ ${result.message}`)
+         }else{
+           console.log(`获得钻石`+999*2+`个`)
+           console.log(`等待5s···`)
+           await $.wait(5000)
+         }
+
+        }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+
+// 运动 ✅
+async function goMotion(sport,nowimei) {
+  return new Promise((resolve) => {
+    $.post(NobodytaskUrl(`api/motion/goMotion?imei=${nowimei}&Identification=${sport}`,nowimei),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         console.log(result)
+         if(result.code!==200){
+           console.log(`❌ ${result.message}`)
+         }else{
+            console.log(`去运动【${sport}】${result.message}`)
+            console.log(`等待${result.data.motion_time}秒后，方可领取【${result.data.coin_numbers}💎】`)
+            console.log(`等待运动完成···`)
+            await $.wait(result.data.motion_time*1000)
+         }
+         console.log(`等待5s···`)
+         await $.wait(5000)
+         console.log(`去收取奖励···`)
+         await goMotionAward(sport,nowimei)
+         
+        }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+
+// 运动收取奖励 ✅
+async function goMotionAward(sport,nowimei) {
+  return new Promise((resolve) => {
+    let body = `Identification=${sport}`
+    $.post(bodytaskUrl(`api/motion/getMotionReward?imei=${nowimei}`,body,nowimei),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         console.log(result)
+         if(result.code!==200){
+           console.log(`❌ ${result.message}`)
+         }else{
+           console.log(`【${sport}】${result.message},获得:【${result.data.coin_numbers}💎】,获得能量:【${result.data.energy}】`)
+         }
+         
+        }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+/*
+{
+  "message" : "领取成功",
+  "data" : {
+    "coin_numbers" : "30",
+    "energy" : "50"
+  },
+  "code" : "200"
+}
+*/
+
 // 幸运大转盘
 async function turntable(nowimei){
   return new Promise((resolve) => {
@@ -133,20 +340,25 @@ async function turntable(nowimei){
          console.log(`${JSON.stringify(error)}`)
          console.log(`API请求失败，请检查网路重试`)
        } else {
+         if(data.match(`2001`)){
+           $.turntableGo = false
+         }else{
          const result = JSON.parse(data)
          // 反馈信息
-         console.log(result)
+        //  console.log(result)
         if(result.code!==200){
           console.log(`❌ 执行大转盘错误！`)
         }else{
-          $.turntableTime = result.data.leftNum
           $.nowTime = (result.data.hasNum)-0
           if(result.data.coin!==0){
-            console.log(`获得钻石:【${result.data.coin}个】钻石`)
+            console.log(`获得:【${result.data.coin}个💎】`)
           }else{
             console.log(`获得空气~`)
           }
         }
+        console.log(`等待10s···`)
+        await $.wait(10000) // 等待10s
+      }
         }}catch(e) {
            console.log(e)
          } finally {
@@ -156,23 +368,23 @@ async function turntable(nowimei){
     })
  }
 
- // 开启宝箱
-async function openbox(time,nowimei) {
+ // 开启宝箱 ✅
+async function openbox(num,nowimei) {
   return new Promise((resolve) => {
-    let body = `source=ios&device=ios&num=${time}`
+    let body = `source=ios&device=ios&num=${num}`
     $.post(bodytaskUrl(`api/turntable/chestcoin?imei=${nowimei}&jsoncallback=`,body,nowimei),async(error, response, data) =>{
      try{
        if (error) {
          console.log(`${JSON.stringify(error)}`)
          console.log(`API请求失败，请检查网路重试`)
        } else {
-         const result = JSON.parse(data)
+         const result = JSON.parse(data.slice(1,data.length-1))
          // 反馈信息
-         // console.log(result)
+        //  console.log(result)
         if(result.code!==200){
-          console.log(`❌ 执行开宝箱错误！`)
+          console.log(`❌ ${result.message}`)
         }else{
-          console.log(`开宝箱本次获得钻石💎:【${result.data}】个`)
+          console.log(`开第【${num}】个宝箱本次获得钻石💎:【${result.data}】个`)
         }
         }}catch(e) {
            console.log(e)
@@ -190,7 +402,7 @@ async function openbox(time,nowimei) {
 }
  */
 
-// 刷钻石💎
+// 刷钻石💎 ✅ 有上限
 async function loop(a){
  return new Promise((resolve) => {
    $.post(taskUrl(`api/member/randCoin`),async(error, response, data) =>{
@@ -204,7 +416,7 @@ async function loop(a){
         // console.log(result)
         if(result.code===200){
           // 本次
-          console.log(`第[${a+0}]次循环，本次钻石+10`)
+          console.log(`第[${a+1}]次循环，本次钻石+10`)
         }else{
           console.log(result.message)
           console.log(`结束刷钻石`)
@@ -273,6 +485,23 @@ function bodytaskUrl(activity,body,nowimei) {
       'Cookie': cookie,
       'Referer':`http://sleep.zouluzhuan.com/api/turntable/index?imei=${nowimei}&version=1.0.7&device=ios&source=ios`,
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+    }
+  }
+}
+
+function drinkURL(activity,body) {
+  return {
+    url: `${SLEEP_API_HOST}/${activity}`,
+    body:body,
+    headers: {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate",
+      "Accept-Language": "zh-Hans-CN;q=1",
+      "Connection": "keep-alive",
+      "Content-Type": "application/x-www-form-urlencoded",
+      'Host': 'sleep.zouluzhuan.com',
+      'Cookie': cookie,
+      'User-Agent': 'SMMon/1.0.7 (iPhone; iOS 14.3; Scale/3.00)',
     }
   }
 }
