@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-02 10:00:10
+ * @Last Modified time: 2021-04-02 10:04:10
  */
 
 const $ = Env('睡眠赚')
@@ -133,7 +133,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
     
       // 每天获取的钻石💎
       console.log(`\n💎执行 -> 刷钻石`)
-      for (let a = 0; a < 100000; a++) {
+      for (let a = 0; a < 10000; a++) {
         await loop(a)
         await $.wait(1000) // 等待1s
         if($.go){
