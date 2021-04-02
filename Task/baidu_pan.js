@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 13:43:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-31 15:24:36
+ * @Last Modified time: 2021-04-02 10:30:07
  */
 
 const $ = Env('百度网盘签到')
@@ -180,7 +180,7 @@ async function doTask(url){
          if(result.errno===0){
            // 完成任务成功
            console.log(`💰 完成任务，获得积分:【${result.result.finishScore}】`)
-           $.message+=`💰 完成任务，获得积分:【${result.result.finishScore}】`
+           $.message+=`💰 完成任务，获得积分:【${result.result.finishScore}】\n`
            $.totalFinishScore += result.result.finishScore
          }else if(result.errno===40004){
           console.log(`❌ ${result.show_msg}任务重复完成`)
@@ -218,7 +218,7 @@ async function doTask(url){
 
 
 async function sendMsg() {
-  await notify.sendNotify(`百度云盘`,`${$.message},总共获得积分[${$.totalFinishScore/$.totalScore}]`);
+  await notify.sendNotify(`百度云盘`,`${$.message},获得[${$.totalFinishScore}/${$.totalScore}]积分`);
 }
 
 
