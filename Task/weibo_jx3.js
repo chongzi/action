@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-23 13:08:45 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-30 09:17:28
+ * @Last Modified time: 2021-04-02 10:38:09
  */
 
 const $ = Env('微博剑网三签到')
@@ -65,12 +65,12 @@ if ($.isNode()) {
     await Tricket_ID(token)
 
     // 领取奖励
-    if($.day!==undefined){
+    if($.day!==undefined&&$.RewardURL!==undefined){
       console.log(`📝当前签到的是第【${$.day}】天,当前活动地址为:【${$.RewardURL}】`)
       console.log(`📝当前RefererURL为:【${$.RefererURL}】`)
       await getReward($.RewardURL,token.slice(index+4,token.length))
     }else{
-      console.log(`❌ 当前已经签到，不会返回任何消息\n`)
+      console.log(`❌ 当前已经签到，不会返回任何消息||未发现奖励URL地址\n`)
     }
     
     //推送消息
