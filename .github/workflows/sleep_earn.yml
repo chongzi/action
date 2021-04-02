@@ -28,4 +28,4 @@ jobs:
           node ./Task/sleep_earn.js
         env:
           SLEEP_EARN_COOKIE: ${{ secrets.SLEEP_EARN_COOKIE }}
-          SLEEP_EARN_BODY: ${{ secrets.SLEEP_EARN_BODY }}
+          PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}

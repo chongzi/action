@@ -2,14 +2,12 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-01 15:45:24
+ * @Last Modified time: 2021-04-02 10:00:10
  */
 
 const $ = Env('睡眠赚')
 
 const CookieArr = []
-
-const BodyArr = []
 
 const sportList = [
   `Roller_skating`,
@@ -19,13 +17,17 @@ const sportList = [
   `Riding`
 ]
 
+const notify = $.isNode() ? require('./sendNotify') : '';
+
 const SLEEP_API_HOST = 'http://sleep.zouluzhuan.com'
 
 $.go = false
 $.turntableGo = true
+$.isLogin = true
+$.nickName = ''
+$.WithdrawCash = 0
 
-if ($.isNode()) {
-  
+if ($.isNode()) {  
   if (process.env.SLEEP_EARN_COOKIE && process.env.SLEEP_EARN_COOKIE.indexOf('#') > -1) {
     signCookie = process.env.SLEEP_EARN_COOKIE.split('#');
   }else if(process.env.SLEEP_EARN_COOKIE && process.env.SLEEP_EARN_COOKIE.indexOf('#') > -1) {
@@ -39,21 +41,6 @@ if ($.isNode()) {
       CookieArr.push(signCookie[item])
     }
   })
-  
-  if (process.env.SLEEP_EARN_BODY && process.env.SLEEP_EARN_BODY.indexOf('#') > -1) {
-    signbody = process.env.SLEEP_EARN_BODY.split('#');
-  }else if(process.env.SLEEP_EARN_BODY && process.env.SLEEP_EARN_BODY.indexOf('#') > -1) {
-    signbody = process.env.SLEEP_EARN_BODY.split('\n');
-  }else{
-    signbody = [process.env.SLEEP_EARN_BODY]
-  }
-
-  Object.keys(signbody).forEach((item) => {
-    if (signbody[item]) {
-      BodyArr.push(signbody[item])
-    }
-  })
-  
 }
 
 const nowTime = new Date().getTime()+8*60*60*1000
@@ -66,85 +53,206 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
   for(let i = 0 ; i < CookieArr.length;i++){
 
     cookie =  CookieArr[i]
-    body = BodyArr[i]
+    // body = BodyArr[i]
 
-    let start = body.indexOf('imei')
-    let end = body.indexOf('&source')
-    const nowimei = body.slice(start+5,end)
+    // let start = body.indexOf('imei')
+    // let end = body.indexOf('&source')
+    // const $.nowimei = body.slice(start+5,end)
+    
+    // 初始化个人信息
+    console.log(`\n💎执行 -> 初始化个人信息`)
+    await initUser()
 
-    // 签到
-    console.log(`\n💎执行 -> 签到`)
-    await sign()
+    if($.isLogin){
+      
+      console.log(`==========================开始账号${i+1}【${$.nickName}】==========================`);
+
+      // 提现
+      console.log(`\n💴执行 -> 提现`)
+      await Withdrew()
+
+      await $.wait(2000)
+
+      // 签到
+      console.log(`\n💎执行 -> 签到`)
+      await sign()
   
-
-    // 初始化喝水信息
-    console.log(`\n💎执行 -> 初始化喝水信息`)
-    await initDrink(nowimei)
-
-    // 首页喝水
-    // 10-17点
-    console.log(`\n💎执行 -> 首页喝水`)
-    if($.BJH>=10&&$.BJH<18){
-      console.log($.BJT)
-      console.log(`当前小时数:[${$.BJH}],在领奖区间内，可以执行任务`)
-      for(let d = 0 ; d<8;d++){
-        await drink(d+1,nowimei)
+      // 初始化喝水信息
+      console.log(`\n💎执行 -> 初始化喝水信息`)
+      await initDrink($.nowimei)
+      
+      // 首页喝水
+      // 10-17点
+      console.log(`\n💎执行 -> 首页喝水`)
+      console.log(`当前小时数:[${$.BJH}]`);
+      if($.BJH>=10&&$.BJH<18){
+        console.log(`执行喝水任务···`)
+        for(let d = 0 ; d<8;d++){
+          await drink(d+1,$.nowimei)
+        }
+      }else{
+        console.log(`不在喝水区间内，跳出···`)
       }
-    }
+      
+      // 睡觉奖励
+      console.log(`\n💎执行 -> 睡觉`)
+      for(let p = 0 ; p<8;p++){
+        await sleep(p,$.nowimei)
+      }
     
-    // 睡觉奖励
-    console.log(`\n💎执行 -> 睡觉`)
-    for(let p = 0 ; p<8;p++){
-      await sleep(p,nowimei)
-    }
-
-    // 运动
-    console.log(`\n💎执行 -> 去运动`)
-    for(let s = 0;s<sportList.length;s++){
-      nowSport = sportList[s]
-      await goMotion(nowSport,nowimei)
-      console.log(`等待5s···`)
-      await $.wait(5000)
-    }
-
-    // 幸运大抽奖100次
-    console.log(`\n💎执行 -> 幸运大抽奖`)
-    await turntable(nowimei)
-    if($.turntableGo){
-      for(let j = 0 ; j<100;j++){
-        await turntable(nowimei)
-        console.log(`\n当前为第[${$.nowTime}]次:`)
+      // 运动
+      console.log(`\n💎执行 -> 去运动`)
+      for(let s = 0;s<sportList.length;s++){
+        nowSport = sportList[s]
+        await goMotion(nowSport,$.nowimei)
+        console.log(`等待5s···`)
+        await $.wait(5000)
       }
-    }else{
-      console.log(`当前已经抽完次数，跳出循环`)
-    }
-
-
-    // 幸运大抽奖开启宝箱
-    console.log(`\n💎执行 -> 幸运大抽奖开启宝箱`)
-    for(let o = 0;o<4;o++){
-      let openBoxNum = [5,30,60,100]
-      let nowopenBoxNum = openBoxNum[o]
-      await openbox(nowopenBoxNum,nowimei)
-    }
-
-
-    // 每天获取的钻石💎
-    console.log(`\n💎执行 -> 刷钻石`)
-    for (let a = 0; a < 10000; a++) {
-      await loop(a)
-      await $.wait(1000) // 等待1s
-      if($.go){
-        return
-      }
-    }
     
+      // 幸运大抽奖100次
+      console.log(`\n💎执行 -> 幸运大抽奖`)
+      await turntable($.nowimei)
+      if($.turntableGo){
+        for(let j = 0 ; j<100;j++){
+          await turntable($.nowimei)
+          console.log(`\n当前为第[${$.nowTime}]次:`)
+        }
+      }else{
+        console.log(`当前已经抽完次数，跳出循环`)
+      }
+    
+    
+      // 幸运大抽奖开启宝箱
+      console.log(`\n💎执行 -> 幸运大抽奖开启宝箱`)
+      for(let o = 0;o<4;o++){
+        let openBoxNum = [5,30,60,100]
+        let nowopenBoxNum = openBoxNum[o]
+        await openbox(nowopenBoxNum,$.nowimei)
+      }
+    
+    
+      // 每天获取的钻石💎
+      console.log(`\n💎执行 -> 刷钻石`)
+      for (let a = 0; a < 100000; a++) {
+        await loop(a)
+        await $.wait(1000) // 等待1s
+        if($.go){
+          return
+        }
+      }
+
+  }else{
+    console.log(`❌ 登录失败~，请重新获取Cookie`)
+  }
+    
+
 
     
   }
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
+
+
+// 初始化个人信息👨‍💻
+async function initUser() {
+  return new Promise((resolve) => {
+    $.post(taskUrl(`api/member/index`),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result)
+         if(result.code!==200){
+           $.isLogin = false
+           console.log(`❌ ${result.message}`)
+         }else{
+           $.nickName = result.data.user.nickname
+           $.nowimei = result.data.user.imei
+           // 50000钻石≈1块钱
+           console.log(`用户${$.nickName}初始化成功\n今日获得💎[${result.data.today_coin}]个,今日获得💴【${result.data.today_coin/50000}】元`)
+           $.Initmessage = `用户${$.nickName}\n获得💎[${result.data.today_coin}]个\n获得💴【${result.data.today_coin/50000}】元`
+         }
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+
+// 提现💴
+async function Withdrew() {
+  return new Promise((resolve) => {
+    $.post(taskUrl(`api/withdraws/index`),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result)
+         if(result.code!==200){
+           console.log(`❌ ${result.message}`)
+         }else{
+          //  console.log(result)
+           $.WithdrawCash = (result.data.canCash-0).toFixed()
+           console.log(`当前可以提现：【${$.WithdrawCash}】💴`)
+           result.data.cashes.forEach((item)=>{
+            //  console.log(item)
+             if($.WithdrawCash>=item){
+               console.log(`当前提现的金额为:【${item}}】`)
+               ConfirmWithdrew(item)
+             }else{
+               console.log(`❌ 未达到提现金额，稍后重试~`)
+             }
+           })
+
+        }}}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+
+// 提现确认💴
+async function ConfirmWithdrew(nowCash) {
+  return new Promise((resolve) => {
+    let body = `amount=${nowCash}&channel=1&device=ios&imei=018e6c84ed05501906d4457d9d3b60fbf2ceadcd&source=ios&uid=1286337&version=1.0.7`
+    $.post(drinkURL(`api/withdraws/confirm`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result)
+         console.log(`\n💴执行 -> 提现确认`);
+         if(result.code!==200){
+           console.log(`❌ ${result.message}`)
+         }else{
+           console.log(`✅提现成功：${result.message}`)
+           $.Withdrawmessage=`✅提现：【${nowCash}】,\n${result.message}`
+           
+           //推送消息
+           await sendMsg()
+         }
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
 
 
 // 签到💎
@@ -174,9 +282,9 @@ async function sign(){
  }
 
 // 初始化喝水信息
-async function initDrink(nowimei) {
+async function initDrink() {
   return new Promise((resolve) => {
-    let body = `device=ios&imei=${nowimei}&source=ios&uid=1286337&version=1.0.7`
+    let body = `device=ios&imei=${$.nowimei}&source=ios&uid=1286337&version=1.0.7`
     $.post(drinkURL(`api/home/index`,body),async(error, response, data) =>{
      try{
        if (error) {
@@ -204,9 +312,9 @@ async function initDrink(nowimei) {
 }
 
 // 喝水
-async function drink(d,nowimei) {
+async function drink(d) {
   return new Promise((resolve) => {
-    let body = `coin=29&cupid=${d}&device=ios&double=1&imei=${nowimei}&source=ios&uid=1286337&version=1.0.7`
+    let body = `coin=29&cupid=${d}&device=ios&double=1&imei=${$.nowimei}&source=ios&uid=1286337&version=1.0.7`
     $.post(drinkURL(`api/home/drink`,body),async(error, response, data) =>{
      try{
        if (error) {
@@ -230,9 +338,9 @@ async function drink(d,nowimei) {
 
 // 睡觉 ✅ 
 // 传递coin=999 double=1
-async function sleep(p,nowimei) {
+async function sleep(p) {
   return new Promise((resolve) => {
-    let body = `bubbleid=${p}&coin=999&device=ios&double=1&imei=${nowimei}=ios&type=1&uid=1286337&version=1.0.7`
+    let body = `bubbleid=${p}&coin=999&device=ios&double=1&imei=${$.nowimei}=ios&type=1&uid=1286337&version=1.0.7`
     $.post(drinkURL(`api/home/getsleepcoin`,body),async(error, response, data) =>{
      try{
        if (error) {
@@ -260,9 +368,9 @@ async function sleep(p,nowimei) {
 }
 
 // 运动 ✅
-async function goMotion(sport,nowimei) {
+async function goMotion(sport) {
   return new Promise((resolve) => {
-    $.post(NobodytaskUrl(`api/motion/goMotion?imei=${nowimei}&Identification=${sport}`,nowimei),async(error, response, data) =>{
+    $.post(NobodytaskUrl(`api/motion/goMotion?imei=${$.nowimei}&Identification=${sport}`,$.nowimei),async(error, response, data) =>{
      try{
        if (error) {
          console.log(`${JSON.stringify(error)}`)
@@ -282,7 +390,7 @@ async function goMotion(sport,nowimei) {
          console.log(`等待5s···`)
          await $.wait(5000)
          console.log(`去收取奖励···`)
-         await goMotionAward(sport,nowimei)
+         await goMotionAward(sport,$.nowimei)
          
         }}catch(e) {
            console.log(e)
@@ -294,10 +402,10 @@ async function goMotion(sport,nowimei) {
 }
 
 // 运动收取奖励 ✅
-async function goMotionAward(sport,nowimei) {
+async function goMotionAward(sport) {
   return new Promise((resolve) => {
     let body = `Identification=${sport}`
-    $.post(bodytaskUrl(`api/motion/getMotionReward?imei=${nowimei}`,body,nowimei),async(error, response, data) =>{
+    $.post(bodytaskUrl(`api/motion/getMotionReward?imei=${$.nowimei}`,body,$.nowimei),async(error, response, data) =>{
      try{
        if (error) {
          console.log(`${JSON.stringify(error)}`)
@@ -332,9 +440,9 @@ async function goMotionAward(sport,nowimei) {
 */
 
 // 幸运大转盘
-async function turntable(nowimei){
+async function turntable(){
   return new Promise((resolve) => {
-    $.get(NobodytaskUrl(`api/turntable/turntableCoin?imei=${nowimei}&source=ios&device=ios`,nowimei),async(error, response, data) =>{
+    $.get(NobodytaskUrl(`api/turntable/turntableCoin?imei=${$.nowimei}&source=ios&device=ios`,$.nowimei),async(error, response, data) =>{
      try{
        if (error) {
          console.log(`${JSON.stringify(error)}`)
@@ -369,10 +477,10 @@ async function turntable(nowimei){
  }
 
  // 开启宝箱 ✅
-async function openbox(num,nowimei) {
+async function openbox(num) {
   return new Promise((resolve) => {
     let body = `source=ios&device=ios&num=${num}`
-    $.post(bodytaskUrl(`api/turntable/chestcoin?imei=${nowimei}&jsoncallback=`,body,nowimei),async(error, response, data) =>{
+    $.post(bodytaskUrl(`api/turntable/chestcoin?imei=${$.nowimei}&jsoncallback=`,body,$.nowimei),async(error, response, data) =>{
      try{
        if (error) {
          console.log(`${JSON.stringify(error)}`)
@@ -431,13 +539,18 @@ async function loop(a){
    })
 }
 
+// 发送通知
+async function sendMsg() {
+  await notify.sendNotify(`睡眠赚`,`${$.Initmessage}\n${$.Withdrawmessage}`);
+}
+
 
 
 // URL
 function taskUrl(activity) {
   return {
     url: `${SLEEP_API_HOST}/${activity}`,
-    body:body,
+    body:`device=ios&imei=${$.imei}&source=ios&uid=1286337&version=1.0.7`,
     headers: {
       "Accept": "*/*",
       "Accept-Encoding": "gzip, deflate",
@@ -452,7 +565,7 @@ function taskUrl(activity) {
   }
 }
 
-function NobodytaskUrl(activity,nowimei) {
+function NobodytaskUrl(activity) {
   return {
     url: `${SLEEP_API_HOST}/${activity}`,
     headers: {
@@ -464,13 +577,13 @@ function NobodytaskUrl(activity,nowimei) {
       "Content-Type": "application/x-www-form-urlencoded",
       'Host': 'sleep.zouluzhuan.com',
       'Cookie': cookie,
-      'Referer':`http://sleep.zouluzhuan.com/api/turntable/index?imei=${nowimei}&version=1.0.7&device=ios&source=ios`,
+      'Referer':`http://sleep.zouluzhuan.com/api/turntable/index?imei=${$.nowimei}&version=1.0.7&device=ios&source=ios`,
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
     }
   }
 }
 
-function bodytaskUrl(activity,body,nowimei) {
+function bodytaskUrl(activity,body) {
   return {
     url: `${SLEEP_API_HOST}/${activity}`,
     body:body,
@@ -483,7 +596,7 @@ function bodytaskUrl(activity,body,nowimei) {
       "Content-Type": "application/x-www-form-urlencoded",
       'Host': 'sleep.zouluzhuan.com',
       'Cookie': cookie,
-      'Referer':`http://sleep.zouluzhuan.com/api/turntable/index?imei=${nowimei}&version=1.0.7&device=ios&source=ios`,
+      'Referer':`http://sleep.zouluzhuan.com/api/turntable/index?imei=${$.nowimei}&version=1.0.7&device=ios&source=ios`,
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
     }
   }
