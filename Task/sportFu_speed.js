@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-02 11:15:20 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-02 11:25:00
+ * @Last Modified time: 2021-04-02 17:45:05
  */
 
 const $ = Env('运动福极速版')
@@ -13,35 +13,54 @@ $.message = ''
 
 const SPORT_FU_API_HOST = 'https://api.yundongfu.mobi'
 
-const TokenArr = [
-  `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdWNreVRva2VuIiwiYXVkIjoiQVBQIiwiaXNzIjoiU0VSVklDRSIsImFsaWFzIjoiMjkxMDAzYTk0MDEyNDdiMWIwNmM5ODRhM2Q4N2FhZDciLCJpYXQiOjE2MTczMzI4NTR9.TN5ITve0RjMzsPqFh8_I11XgHfa4Ucf11r8TrX93TIs`
-]
+const TokenArr = []
 
-// if ($.isNode()) {
-  // if (process.env.SPORTFU_SPEED_COOKIE && process.env.SPORTFU_SPEED_COOKIE.indexOf('#') > -1) {
-  //   signToken = process.env.SPORTFU_SPEED_COOKIE.split('#');
-  // }else if(process.env.SPORTFU_SPEED_COOKIE && process.env.SPORTFU_SPEED_COOKIE.indexOf('#') > -1) {
-  //   signToken = process.env.SPORTFU_SPEED_COOKIE.split('\n');
-  // }else{
-  //   signToken = [process.env.SPORTFU_SPEED_COOKIE]
-  // }
+if ($.isNode()) {
+  if (process.env.SPORTFU_SPEED_COOKIE && process.env.SPORTFU_SPEED_COOKIE.indexOf('#') > -1) {
+    signToken = process.env.SPORTFU_SPEED_COOKIE.split('#');
+  }else if(process.env.SPORTFU_SPEED_COOKIE && process.env.SPORTFU_SPEED_COOKIE.indexOf('#') > -1) {
+    signToken = process.env.SPORTFU_SPEED_COOKIE.split('\n');
+  }else{
+    signToken = [process.env.SPORTFU_SPEED_COOKIE]
+  }
 
-  // Object.keys(signToken).forEach((item) => {
-  //   if (signToken[item]) {
-  //     TokenArr.push(signToken[item])
-  //   }
-  // })
-// }
+  Object.keys(signToken).forEach((item) => {
+    if (signToken[item]) {
+      TokenArr.push(signToken[item])
+    }
+  })
+}
 
 !(async () => {
   for (let i = 0; i < TokenArr.length; i++) {
     token = TokenArr[i]
 
     console.log(`········【帐号${i+1}】开始········`)
-    for(let s = 2 ;s>=1;s--){
-      console.log(`开始签到${s}`)
+
+    // 初始化用户信息
+    console.log(`👨‍💻执行 -> 初始化用户信息`)
+    await InitUserInfo()
+
+    // 获取金币💰
+    console.log(`\n💰执行 -> 获取金币信息`)
+    await goldInfo()
+
+    // 日常签到📝
+    console.log(`\n📝执行 -> 日常签到`)
+    for(let s = 2 ;s >= 1;s--){
       await sign(s)
     }
+
+    // 获取任务信息📝
+    console.log(`\n📝执行 -> 获取任务信息`)
+    await getTaskList()
+
+    // 随机奖励💰
+    console.log(`\n💰执行 -> 随机奖励`)
+    for( a = 2 ; a >= 1; a--){
+      await RandomAward(a)
+    }
+
     
     //推送消息
     // await sendMsg()
@@ -52,8 +71,54 @@ const TokenArr = [
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
-    
-    
+
+// 初始化用户信息👨‍💻
+async function InitUserInfo() {
+  return new Promise((resolve) => {
+    $.get(taskUrl(`v1/user/view`),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result)
+         console.log(`初始化用户信息完成~`)
+         $.alias = result.data.alias
+         console.log(`当前用户[${result.data.user.nick}]拥有:[${result.data.goldAccount.goldNum}]💰\n当前用户的邀请码为:${result.data.user.inviteCode}`)
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+
+// 获取金币💰
+async function goldInfo() {
+  return new Promise((resolve) => {
+    $.get(taskUrl(`v1/gold/account?alias=${$.alias}`),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result)
+         console.log(`当前账号金币【${result.data.goldNum}】💰`);
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
+
+// 日常签到📝
 async function sign(index){
  return new Promise((resolve) => {
    $.post(taskUrl(`v1/gold/sign?goldSignSettingId=1&hasDouble=${index}`),async(error, response, data) =>{
@@ -64,11 +129,11 @@ async function sign(index){
       } else {
         const result = JSON.parse(data)
         // 反馈信息
-        console.log(result)
+        // console.log(result)
         if(index===2){
-          console.log(`日常签到：【${result.resp.msg}】`);
+          console.log(`📝每日签到：【${result.resp.msg}】`)
         }else{
-          console.log(`领取双倍日常签到奖励:【${result.resp.msg}】`);
+          console.log(`📝领取双倍日常签到奖励:【${result.resp.msg}】`)
         }
       }}catch(e) {
           console.log(e)
@@ -78,6 +143,61 @@ async function sign(index){
     })
    })
 }
+
+// 获取任务信息📝
+async function getTaskList(){
+  return new Promise((resolve) => {
+    $.get(taskUrl(`v1/gold/dailyTask?deviceType=2`),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+        //  console.log(result)
+         const TaskListInfo = result.data.taskDetails
+         console.log(`获取任务成功~`)
+         TaskListInfo.forEach((item)=>{
+           console.log(`任务【${item.goldDailyTaskSetting.name}】，可以获得💰【${item.goldDailyTaskSetting.goldNum}】个`)
+         })
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+ }
+
+ // 随机奖励💰
+ // goldNum 金币数量20个
+ // doubleType
+ // hasDouble 是否是双倍 1为双倍 2为不是双倍(先领取不是双倍的2，在领取为双倍的1)
+ async function RandomAward(index) {
+  return new Promise((resolve) => {
+    $.post(taskUrl(`v1/gold/random?doubleType=2&goldNum=30&hasDouble=${index}`),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+        //  console.log(result)
+         if(result.resp.code===310){
+           console.log(`❌ ${result.resp.msg},跳过···`)
+           return
+         }
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+ }
+
 
 async function sendMsg() {
   await notify.sendNotify(`xxxx`,`${$.message}`);
@@ -93,7 +213,7 @@ function taskUrl(activity) {
       "Accept-Encoding": "gzip, deflate, br",
       "Accept-Language": "zh-cn",
       "Connection": "keep-alive",
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
       'Host': 'api.yundongfu.mobi',
       'token': token,
     }
