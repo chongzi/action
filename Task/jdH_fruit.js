@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-22 15:19:50 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-03-30 11:23:22
+ * @Last Modified time: 2021-04-06 10:11:03
  */
 
 const $ = Env('京东到家-免费水果')
@@ -65,14 +65,19 @@ async function todoTask(){
 
   // 浇水
   console.log(`\n🍉执行 -> 浇水`);
-  for(let i = 0;i<($.totalWater/10);i++){
-    if($.totalWater<100){
-      console.log(`水滴容量为：【${$.totalWater}】g💧存储水滴···完成第二天任务`)
-      return    
-    }else{
-      await watering()
+  if($.totalWater>200){
+    for(let i = 0;i<($.totalWater/10);i++){
+      if($.totalWater<100){
+        console.log(`水滴容量为：【${$.totalWater}】g💧存储水滴···完成第二天任务`)
+        return    
+      }else{
+        await watering()
+      }
     }
+  }else{
+    console.log(`水滴容量为：【${$.totalWater}】g💧,不足200g,退出浇水操作！`)
   }
+ 
 }
 
 // 初始化果树
@@ -91,7 +96,8 @@ async function initFruit() {
             console.log(`❌ ${result.msg}`)
           }else{
             initFruitInfo = result.result.activityInfoResponse
-            console.log(`初始化果树信息···\n当前种植：【${initFruitInfo.fruitName}】,当前阶段:【${initFruitInfo.stageName}】,还差【${(initFruitInfo.curStageLeftProcess).toFixed()}】次升级下一阶段`)
+            // console.log(initFruitInfo);
+            console.log(`初始化果树信息···\n当前种植：【${initFruitInfo.fruitName}】,当前阶段:【${initFruitInfo.stageName}】,还差【${initFruitInfo.curStageLeftProcess}%】次升级下一阶段`)
             console.log(`初始化水壶信息···\n当前水壶剩余水滴:【${result.result.userResponse.waterBalance}g】💧`)
             $.totalWater = result.result.userResponse.waterBalance
           }}} catch (e) {
