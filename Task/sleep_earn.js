@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-02 10:23:13
+ * @Last Modified time: 2021-04-06 13:52:23
  */
 
 const $ = Env('睡眠赚')
@@ -206,7 +206,7 @@ async function Withdrew() {
            result.data.cashes.forEach((item)=>{
             //  console.log(item)
              if($.WithdrawCash>=item){
-               console.log(`当前提现的金额为:【${item}】💴`)
+               console.log(`当前提现的金额为:【￥${item}】`)
                ConfirmWithdrew(item)
              }else{
                console.log(`❌ 未达到提现金额，稍后重试~`)
