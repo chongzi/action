@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-06 13:52:23
+ * @Last Modified time: 2021-04-06 15:11:08
  */
 
 const $ = Env('睡眠赚')
@@ -202,7 +202,7 @@ async function Withdrew() {
          }else{
           //  console.log(result)
            $.WithdrawCash = (result.data.canCash-0).toFixed()
-           console.log(`当前可以提现：【${$.WithdrawCash}】💴`)
+           console.log(`当前可以提现：【￥${$.WithdrawCash}】`)
            result.data.cashes.forEach((item)=>{
             //  console.log(item)
              if($.WithdrawCash>=item){
