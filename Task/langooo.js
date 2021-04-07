@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-06 17:21:16 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-07 10:25:38
+ * @Last Modified time: 2021-04-07 10:29:54
  */
 
 const $ = Env('朗果英语')
@@ -127,7 +127,7 @@ async function TaskList(){
             if(item.receivedRedId!==undefined){
               TopicIdArr.push(item.receivedRedId)
             }
-            console.log(`ID:【${item.id}】,任务【${item.taskName}】,任务奖励:【${item.rewardScore}】`)
+            console.log(`ID:【${item.id}】,任务【${item.taskName}】,任务奖励:【${item.rewardScore}】积分`)
           })
           
         }else{
