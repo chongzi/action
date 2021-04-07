@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-06 17:21:16 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-07 10:29:54
+ * @Last Modified time: 2021-04-07 10:40:18
  */
 
 const $ = Env('朗果英语')
@@ -64,7 +64,7 @@ if ($.isNode()) {
 
     // 🎧听力练习
     console.log(`\n🎧执行 -> 听力练习`)
-    for(let l = 0; l<3 ; l++){
+    for(let l = 0; l<10 ; l++){
       console.log(`当前完成第${l+1}次听力练习`)
       await Listen_Training()
       console.log(`等待了5s···`)
@@ -73,7 +73,7 @@ if ($.isNode()) {
 
     // 📕阅读看世界
     console.log(`\n📕执行 -> 阅读看世界`)
-    for(let l = 0; l<3 ; l++){
+    for(let l = 0; l<10 ; l++){
       console.log(`当前完成第${l+1}次阅读`)
       await Read_Training()
       console.log(`等待了5s···`)
@@ -171,7 +171,7 @@ async function SignIn() {
 }
 
 // 🎧听力练习
-async function Listen_Training() {
+async function Listen_Training(timeout = 1000) {
   return new Promise((resolve) => {
     let body = `{"uid":${uid},"channelNumber":2,"topicId":${Math.ceil(Math.random()*50000)},"type":"1"}`
     $.post(BodytaskUrl(`training/addUserScore`,body),async(error, response, data) =>{
@@ -190,11 +190,11 @@ async function Listen_Training() {
          resolve();
        } 
      })
-    })
+    },timeout)
 }
 
 // 📕阅读看世界
-async function Read_Training() {
+async function Read_Training(timeout = 1000) {
   return new Promise((resolve) => {
     let body = `{"uid":${uid},"channelNumber":2,"topicId":${Math.ceil(Math.random()*50000)},"type":"2"}`
     $.post(BodytaskUrl(`training/addUserScore`,body),async(error, response, data) =>{
@@ -213,7 +213,7 @@ async function Read_Training() {
          resolve();
        } 
      })
-    })
+    },timeout)
 }
 
 // 🧧领取奖励
