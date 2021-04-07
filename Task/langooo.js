@@ -2,18 +2,18 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-06 17:21:16 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-06 17:35:50
+ * @Last Modified time: 2021-04-07 10:25:38
  */
 
 const $ = Env('朗果英语')
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 
-$.message = ''
-
 const LANGOO_API_HOST = 'http://api.langooo.com'
 
-const TokenArr = []
+const TokenArr = [] , UidArr = [] , TopicIdArr = []
+
+$.message = ''
 
 if ($.isNode()) {
   if (process.env.LANGOO_TOKEN && process.env.LANGOO_TOKEN.indexOf('#') > -1) {
@@ -29,21 +29,69 @@ if ($.isNode()) {
       TokenArr.push(signToken[item])
     }
   })
+
+  if (process.env.LANGOO_UID && process.env.LANGOO_UID.indexOf('#') > -1) {
+    uid = process.env.LANGOO_UID.split('#');
+  }else if(process.env.LANGOO_UID && process.env.LANGOO_UID.indexOf('#') > -1) {
+    uid = process.env.LANGOO_UID.split('\n');
+  }else{
+    uid = [process.env.LANGOO_UID]
+  }
+
+  Object.keys(uid).forEach((item) => {
+    if (uid[item]) {
+      UidArr.push(uid[item])
+    }
+  })
 }
+
 
 
 !(async () => {
   for (let i = 0; i < TokenArr.length; i++) {
     token = TokenArr[i]
+    uid = UidArr[i]
 
     console.log(`········【帐号${i+1}】开始········`)
     
-    // 获取任务列表
-    console.log(`📕执行 -> 获取任务列表`)
+    // 任务列表&初始化账号
+    console.log(`\n📕执行 -> 获取任务列表`)
     await TaskList()
+
+    // 签到
+    console.log(`\n📕执行 -> 每日签到`)
+    await SignIn()
+
+    // 🎧听力练习
+    console.log(`\n🎧执行 -> 听力练习`)
+    for(let l = 0; l<3 ; l++){
+      console.log(`当前完成第${l+1}次听力练习`)
+      await Listen_Training()
+      console.log(`等待了5s···`)
+      await $.wait(5000)
+    }
+
+    // 📕阅读看世界
+    console.log(`\n📕执行 -> 阅读看世界`)
+    for(let l = 0; l<3 ; l++){
+      console.log(`当前完成第${l+1}次阅读`)
+      await Read_Training()
+      console.log(`等待了5s···`)
+      await $.wait(5000)
+    }
     
-    //推送消息
-    // await sendMsg()
+    // 🧧领取奖励
+    console.log(`\n🧧执行 -> 领取奖励`)
+    for(let a = 0 ; a < TopicIdArr.length; a++){
+      topicId = TopicIdArr[a]
+      console.log(`当前领取的TopicId为:${topicId}`)
+      await Award(topicId)
+      console.log(`等待了5s···`)
+      await $.wait(5000)
+    }
+    
+    // 📧推送消息
+    await sendMsg()
 
     console.log(`········【帐号${i+1}】结束········`)
 
@@ -56,7 +104,7 @@ if ($.isNode()) {
 // 任务列表&初始化账号
 async function TaskList(){
  return new Promise((resolve) => {
-   let body = '{"uid":"131297","channelNumber":2}'
+   let body = `{"uid":${uid},"channelNumber":2}`
    $.post(BodytaskUrl(`task/daily/taskList`,body),async(error, response, data) =>{
     try{
       if (error) {
@@ -67,9 +115,20 @@ async function TaskList(){
         // 反馈信息
         // console.log(result)
         if(result.code!==200){
-          // console.log(result)
           console.log(`🧧 当前红包:${result.result.userRedAmout}`)
-          console.log(`🧊 当前积分:${result.result.userScore}`)
+          $.message+=`🧧 当前红包:${result.result.userRedAmout}\n`
+          console.log(`🎈 当前积分:${result.result.userScore}`)
+          $.message+=`🎈 当前积分:${result.result.userScore}\n`
+
+          TaskListArr = result.result.taskUserEvaluationVOList
+          console.log(`📝 任务列表`)
+          TaskListArr.forEach((item)=>{
+            // console.log(item);
+            if(item.receivedRedId!==undefined){
+              TopicIdArr.push(item.receivedRedId)
+            }
+            console.log(`ID:【${item.id}】,任务【${item.taskName}】,任务奖励:【${item.rewardScore}】`)
+          })
           
         }else{
           console.log(`❌ 初始化失败！`)
@@ -83,33 +142,112 @@ async function TaskList(){
    })
 }
 
+// 签到
+async function SignIn() {
+  return new Promise((resolve) => {
+    let body = `{"uid":${uid},"channelNumber":2}`
+    $.post(BodytaskUrl(`sign/day/sinIn`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+        //  console.log(result) 
+         if(result.result.integralNum!==1){
+           console.log(`❌ 签到失败||重复签到`)
+         }else{
+           console.log(`✅ 签到成功！`)
+           $.message+=`✅ 签到成功！\n`
+         }
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
 
+// 🎧听力练习
+async function Listen_Training() {
+  return new Promise((resolve) => {
+    let body = `{"uid":${uid},"channelNumber":2,"topicId":${Math.ceil(Math.random()*50000)},"type":"1"}`
+    $.post(BodytaskUrl(`training/addUserScore`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result) 
+        console.log(`${result.result.msg}`)
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
 
+// 📕阅读看世界
+async function Read_Training() {
+  return new Promise((resolve) => {
+    let body = `{"uid":${uid},"channelNumber":2,"topicId":${Math.ceil(Math.random()*50000)},"type":"2"}`
+    $.post(BodytaskUrl(`training/addUserScore`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result) 
+        console.log(`${result.result.msg}`)
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
 
+// 🧧领取奖励
+async function Award(topicId) {
+  return new Promise((resolve) => {
+    let body = `{"uid":${uid},"channelNumber":2,"topicId":${topicId}}`
+    $.post(BodytaskUrl(`task/recevieRedBag`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         // console.log(result) 
+        if(result.code == 200){
+          console.log(`${result.message}`)
+          $.message+=`${result.message}\n`
+        } else {
+          console.log(data)
+        }
+       }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
+}
 
 // 发送通知
 async function sendMsg() {
-  await notify.sendNotify(`signToken`,`${$.message}`);
+  await notify.sendNotify(`朗果英语`,`${$.message}`);
 }
-
-
-// URL
-function taskUrl(activity) {
-  return {
-    url: `${LANGOO_API_HOST}/${activity}`,
-    headers: {
-      "Accept": "*/*",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-cn",
-      "Connection": "keep-alive",
-      "Content-Type": "application/x-www-form-urlencoded",
-      'Host': '',
-      'Cookie': cookie,
-      'User-Agent': '',
-    }
-  }
-}
-
 
  // BODYURL
  function BodytaskUrl(activity, body={}) {
@@ -124,6 +262,7 @@ function taskUrl(activity) {
       "Content-Type": "application/json",
       'Host': 'api.langooo.com',
       'token': token,
+      'versionName': '3.8.1',
       'User-Agent': 'Langooo/3.8.1 (iPhone; iOS 14.3; Scale/3.00)'
     }
   }
