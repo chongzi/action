@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-06 17:21:16 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-08 10:40:07
+ * @Last Modified time: 2021-04-08 10:46:26
  */
 
 const $ = Env('朗果英语')
@@ -230,7 +230,7 @@ async function Award(topicId) {
          // console.log(result) 
         if(result.code == 200){
           console.log(`${result.message}`)
-          $.message+=`${result.message}\n`
+          $.message+=`\n领取奖励💰\n${result.message}\n`
         } else {
           console.log(data)
         }
