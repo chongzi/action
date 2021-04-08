@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 09:11:09 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-08 10:23:58
+ * @Last Modified time: 2021-04-08 10:26:45
  */
 
 
@@ -71,7 +71,7 @@ async function checkIn(){
           console.log(`❌ ${result.msg}`)
         }else{
           console.log(`✅签到成功\n获得积分💰:[${result.data.integral}]`)
-          $.message+=`✅签到成功\n获得积分💰:[${result.data.integral}]`
+          $.message+=`✅签到成功\n获得积分💰:[${result.data.integral}]\n`
         }
       }}catch(e) {
           console.log(e)
@@ -98,9 +98,9 @@ async function totalIntegral(){
           console.log(`❌ 获取基本信息失败`)
         }else{
           console.log(`当前总积分💰:[${result.data.integralAmount}] ≈ ￥${result.data.integralAmount/100}`)
-          $.message+=`当前总积分💰:[${result.data.integralAmount}] ≈ ￥${result.data.integralAmount/100}`
+          $.message+=`当前总积分💰:[${result.data.integralAmount}] ≈ ￥${result.data.integralAmount/100}\n`
           console.log(`当前优惠券🎫:[${result.data.couponsAmount}]个`)
-          $.message+=`当前优惠券🎫:[${result.data.couponsAmount}]个`
+          $.message+=`当前优惠券🎫:[${result.data.couponsAmount}]个\n`
           if(result.data.couponsAmount!==0){
             console.log(`\n优惠券详细信息:`)
             await couponsDetail()
@@ -132,7 +132,7 @@ async function totalIntegral(){
          // console.log(result)
          result.data.couponList.forEach((item)=>{
            console.log(`🎫[${item.couponName}] -> [${item.limitValueStr}-${item.couponValue/100}元] 🕛[${item.showStartDateTime}至${item.expireTime}]`)
-           $.message+=`🎫[${item.couponName}] -> [${item.limitValueStr}-${item.couponValue/100}元] 🕛[${item.showStartDateTime}至${item.expireTime}]`
+           $.message+=`🎫[${item.couponName}] -> [${item.limitValueStr}-${item.couponValue/100}元] 🕛[${item.showStartDateTime}至${item.expireTime}]\n`
          })
 
        }}catch(e) {
