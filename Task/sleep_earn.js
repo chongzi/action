@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-08 08:58:26
+ * @Last Modified time: 2021-04-08 11:12:58
  */
 
 const $ = Env('睡眠赚')
@@ -101,13 +101,18 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
       }
     
       // 运动
-      console.log(`\n💎执行 -> 去运动`)
+      console.log(`\n🏃‍执行 -> 去运动`)
       for(let s = 0;s<sportList.length;s++){
         nowSport = sportList[s]
         await goMotion(nowSport,$.nowimei)
         console.log(`等待5s···`)
         await $.wait(5000)
       }
+
+      // 运动-领取奖励
+      console.log(`\n🏃执行 -> 运动领取奖励`)
+      await sportAward()
+
     
       // 幸运大抽奖100次
       console.log(`\n💎执行 -> 幸运大抽奖`)
@@ -255,7 +260,7 @@ async function ConfirmWithdrew(nowCash) {
 }
 
 
-// 签到💎
+// 签到 ✅
 async function sign(){
   return new Promise((resolve) => {
     $.post(taskUrl(`api/member/signCoin`),async(error, response, data) =>{
@@ -281,7 +286,7 @@ async function sign(){
     })
  }
 
-// 初始化喝水信息
+// 初始化喝水信息 ✅
 async function initDrink() {
   return new Promise((resolve) => {
     let body = `device=ios&imei=${$.nowimei}&source=ios&uid=1286337&version=1.0.7`
@@ -311,7 +316,7 @@ async function initDrink() {
     })
 }
 
-// 喝水
+// 喝水 ✅
 async function drink(d) {
   return new Promise((resolve) => {
     let body = `coin=29&cupid=${d}&device=ios&double=1&imei=${$.nowimei}&source=ios&uid=1286337&version=1.0.7`
@@ -367,7 +372,7 @@ async function sleep(p) {
     })
 }
 
-// 运动 ✅
+// 🏃‍运动 ✅
 async function goMotion(sport) {
   return new Promise((resolve) => {
     $.post(NobodytaskUrl(`api/motion/goMotion?imei=${$.nowimei}&Identification=${sport}`,$.nowimei),async(error, response, data) =>{
@@ -439,7 +444,14 @@ async function goMotionAward(sport) {
 }
 */
 
-// 幸运大转盘
+// 🏃‍运动-领取奖励 ✅
+async function sportAward() {
+  console.log(`TODO🏃‍运动-领取奖励`)
+}
+
+
+
+// 🎡幸运大转盘 ✅
 async function turntable(){
   return new Promise((resolve) => {
     $.get(NobodytaskUrl(`api/turntable/turntableCoin?imei=${$.nowimei}&source=ios&device=ios`,$.nowimei),async(error, response, data) =>{
