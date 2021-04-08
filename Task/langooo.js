@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-06 17:21:16 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-07 10:40:18
+ * @Last Modified time: 2021-04-08 10:40:07
  */
 
 const $ = Env('朗果英语')
@@ -82,7 +82,7 @@ if ($.isNode()) {
     
     // 🧧领取奖励
     console.log(`\n🧧执行 -> 领取奖励`)
-    for(let a = 0 ; a < TopicIdArr.length; a++){
+    for(let a = 0 ; a < 5; a++){
       topicId = TopicIdArr[a]
       console.log(`当前领取的TopicId为:${topicId}`)
       await Award(topicId)
@@ -123,13 +123,12 @@ async function TaskList(){
           TaskListArr = result.result.taskUserEvaluationVOList
           console.log(`📝 任务列表`)
           TaskListArr.forEach((item)=>{
-            // console.log(item);
             if(item.receivedRedId!==undefined){
               TopicIdArr.push(item.receivedRedId)
             }
             console.log(`ID:【${item.id}】,任务【${item.taskName}】,任务奖励:【${item.rewardScore}】积分`)
           })
-          
+          console.log(`当前领取TopicId数组为：${TopicIdArr}`)
         }else{
           console.log(`❌ 初始化失败！`)
         }
