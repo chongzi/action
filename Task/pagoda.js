@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 09:11:09 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-08 10:31:24
+ * @Last Modified time: 2021-04-08 10:32:49
  */
 
 
@@ -100,7 +100,7 @@ async function totalIntegral(){
           console.log(`当前总积分💰:[${result.data.integralAmount}] ≈ ￥${result.data.integralAmount/100}`)
           $.message+=`当前总积分💰:[${result.data.integralAmount}] ≈ ￥${result.data.integralAmount/100}\n`
           console.log(`当前优惠券🎫:[${result.data.couponsAmount}]个`)
-          $.message+=`当前优惠券🎫:[${result.data.couponsAmount}]个\n`
+          $.message+=`当前优惠券🎫:[${result.data.couponsAmount}]个\n\n`
           if(result.data.couponsAmount!==0){
             console.log(`\n优惠券详细信息:`)
             await couponsDetail()
