@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 13:43:32 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-02 10:30:07
+ * @Last Modified time: 2021-04-08 10:28:08
  */
 
 const $ = Env('百度网盘签到')
@@ -218,7 +218,7 @@ async function doTask(url){
 
 
 async function sendMsg() {
-  await notify.sendNotify(`百度云盘`,`${$.message},获得[${$.totalFinishScore}/${$.totalScore}]积分`);
+  await notify.sendNotify(`百度云盘`,`${$.message}\n获得[${$.totalFinishScore}/${$.totalScore}]积分`);
 }
 
 
