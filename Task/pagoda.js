@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 09:11:09 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-08 10:26:45
+ * @Last Modified time: 2021-04-08 10:29:47
  */
 
 
@@ -131,8 +131,8 @@ async function totalIntegral(){
          // 反馈信息
          // console.log(result)
          result.data.couponList.forEach((item)=>{
-           console.log(`🎫[${item.couponName}] -> [${item.limitValueStr}-${item.couponValue/100}元] 🕛[${item.showStartDateTime}至${item.expireTime}]`)
-           $.message+=`🎫[${item.couponName}] -> [${item.limitValueStr}-${item.couponValue/100}元] 🕛[${item.showStartDateTime}至${item.expireTime}]\n`
+           console.log(`🎫[${item.couponName}] -> [${item.limitValueStr}-${item.couponValue/100}元]\n🕛[${item.showStartDateTime}至${item.expireTime}]`)
+           $.message+=`🎫[${item.couponName}] -> [${item.limitValueStr}-${item.couponValue/100}元]\n🕛[${item.showStartDateTime}至${item.expireTime}]\n`
          })
 
        }}catch(e) {
