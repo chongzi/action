@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-06 15:11:08
+ * @Last Modified time: 2021-04-08 08:58:26
  */
 
 const $ = Env('睡眠赚')
@@ -13,7 +13,7 @@ const sportList = [
   `Roller_skating`,
   `Basketball`,
   `Run`,
-  `Footbal`,
+  `Football`,
   `Riding`
 ]
 
