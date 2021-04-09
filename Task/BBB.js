@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-09 16:17:03
+ * @Last Modified time: 2021-04-09 16:20:15
  * 
  * 下载链接:http://bububao.yichengw.cn/?id=527716
  */
@@ -288,7 +288,7 @@ async function Cy_Click(cy_id,site) {
   }else{
     $.guessCYNum = result.day_num
     console.log(`当前剩余次数:[${result.day_num}]次`)
-    console.log(`${result.msg}!本次获得金币💰:[${result.jinbi}]`)
+    console.log(`${result.msg}!本次获得金币💰:[${result.jinbi}]个`)
   }
 }
 
@@ -348,7 +348,7 @@ async function Water_Click(index) {
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
-    console.log(`🚰${result.msg},获得金币💰:[${result.jinbi}]`)
+    console.log(`🚰${result.msg},获得金币💰:[${result.jinbi}]个`)
   }
 }
 
@@ -451,7 +451,7 @@ async function Gua_Award(sign,glid) {
   // 调用API
   await Gua_Award_API(sign,glid)
   let result = JSON.parse($.Gua_Award_Result)
-  console.log(`本次刮刮乐获得金币💰:[${result.jf}]`)
+  console.log(`本次刮刮乐获得金币💰:[${result.jf}]个`)
 }
 
 // 🎡抽奖 100 次
@@ -587,7 +587,7 @@ async function Admobile_Done(ad_id,nonce_str) {
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
-    console.log(`本次获得金币💰:[${result.jinbi}]`)
+    console.log(`本次获得金币💰:[${result.jinbi}]个`)
   }
 }
 
