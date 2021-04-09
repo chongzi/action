@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-09 16:20:15
+ * @Last Modified time: 2021-04-09 16:32:04
  * 
  * 下载链接:http://bububao.yichengw.cn/?id=527716
  */
@@ -156,7 +156,8 @@ if ($.isNode()) {
     if($.money>=0.3){
       console.log(`提现￥0.3`)
       await With_Draw(0.3)
-    }else if($.money>=50){
+    } 
+    if($.money>=50){
       console.log(`提现￥50`)
       await With_Draw(50)
     }else{
