@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-09 15:59:30
+ * @Last Modified time: 2021-04-09 16:03:33
  */
 
 const $ = Env('步步宝')
@@ -399,6 +399,9 @@ async function Sleep_End() {
   }else{
     console.log(`🎉结束睡觉成功！\n可以收取金币:[${result.jinbi}]个\n当前taskid为:${result.taskid}\n当前nonce_str为:${result.nonce_str}`)
     await Sleep_Done(result.taskid,result.nonce_str)
+    console.log(`等待了10s···`)
+    await $.wait(10000)
+    await Sleep_Start()
   }
 
 }
