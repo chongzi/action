@@ -2,8 +2,9 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-10 13:20:18
+ * @Last Modified time: 2021-04-10 13:30:06
  * 
+ * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
  */
 
@@ -133,15 +134,23 @@ if ($.isNode()) {
 
     console.log(`\n👁执行 -> 看看`)
     $.go = true 
-    for(let k = 0 ; k < 15; k++){
-      if($.go){
-        await News()
+    if(new Date().getHours()<5&&new Date().getHours()>22){
+      for(let k = 0 ; k < 20; k++){
+        if($.go){
+          await News()
+        }
       }
+    }else{
+      console.log(`当前不在[22:00-5:00]时间段内，不执行看看赚金币操作。`)
     }
 
     console.log(`\n📺执行 -> 看视频赚金币`)
-    for(let a = 0 ; a < 5 ; a++){
-      await Watch_Video()
+    if(new Date().getHours()===1||new Date().getHours()===2){
+      for(let a = 0 ; a < 5 ; a++){
+        await Watch_Video()
+      }
+    }else{
+      console.log(`当前不在[1][2]时间点内，不执行看视频赚金币操作。`)
     }
 
     console.log(`\n📘执行 -> 点广告领金币`)
