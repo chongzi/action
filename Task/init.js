@@ -27,10 +27,12 @@ const XXXX_API_HOST = ''
   for (let i = 0; i < XXXX.length; i++) {
 
     console.log(`········【帐号${i+1}】开始········`)
+
+    // 任务
     await xxx()
     
-    //推送消息
-    await sendMsg()
+    // 推送消息
+    // await sendMsg()
 
     console.log(`········【帐号${i+1}】结束········`)
 
@@ -39,31 +41,61 @@ const XXXX_API_HOST = ''
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
     
-    
-async function xxx(){
- return new Promise((resolve) => {
-   let body = ''
-   $.post(BodytaskUrl(URL,body),async(error, response, data) =>{
-    try{
-      if (error) {
-        console.log(`${JSON.stringify(error)}`)
-        console.log(`API请求失败，请检查网路重试`)
-      } else {
-        const result = JSON.parse(data)
-        // 反馈信息
-        console.log(result)
-      }}catch(e) {
-          console.log(e)
-        } finally {
-        resolve();
-      } 
-    })
-   })
+// 任务
+async function xxx() {
+  // 调用API
+  await xxx_API()
+  let result = JSON.parse($.xxx_API_Result)
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`获得···`)
+  }
 }
 
+// 推送消息
 async function sendMsg() {
   await notify.sendNotify(`xxxx`,`${$.message}`);
 }
+
+// ==================API==================
+// API
+async function xxx_API() {
+  await postRequest(``)
+}
+
+// API
+async function xxx_XXX_API(nonce_str) {
+  let body = ``
+  $.xxx_API_Result = await postRequestBody(``,body)
+}
+
+
+
+// ==================请求==================
+
+// 正常请求 增加代码的复用率
+// RequestBody
+function postRequest(function_id, timeout = 1000){
+  return new Promise(resolve => {
+    setTimeout(() => {
+      $.post(taskUrl(function_id), (err, resp, data) => {
+        try {
+          if (err) {
+            console.log('\nAPI查询请求失败 ‼️‼️')
+            console.log(JSON.stringify(err));
+            console.log(`function_id:${function_id}`)
+          } else {
+            result = JSON.parse(data);
+          }} catch (e) {
+            console.log(e)
+        } finally {
+          resolve(data);
+        }
+      })
+    }, timeout)
+  })
+} 
 
 
 // URL
@@ -71,18 +103,34 @@ function taskUrl(activity) {
   return {
     url: `${XXXX_API_HOST}/${activity}`,
     headers: {
-      "Accept": "*/*",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-cn",
-      "Connection": "keep-alive",
-      "Content-Type": "application/x-www-form-urlencoded",
       'Host': '',
-      'Cookie': cookie,
       'User-Agent': '',
     }
   }
 }
 
+// 带Body的请求 增加代码的复用率
+// RequestBody
+function postRequestBody(function_id, body = {}, timeout = 1000){
+  return new Promise(resolve => {
+    setTimeout(() => {
+      $.post(BodytaskUrl(function_id, body), (err, resp, data) => {
+        try {
+          if (err) {
+            console.log('\nAPI查询请求失败 ‼️‼️')
+            console.log(JSON.stringify(err));
+            console.log(`function_id:${function_id}`)
+          } else {
+            result = JSON.parse(data);
+          }} catch (e) {
+            console.log(e)
+        } finally {
+          resolve(data);
+        }
+      })
+    }, timeout)
+  })
+} 
 
  // BODYURL
  function BodytaskUrl(activity, body={}) {
@@ -90,13 +138,7 @@ function taskUrl(activity) {
     url: `${XXXX_API_HOST}/${activity}`,
     body: body,
     headers: {
-      "Accept": "*/*",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-cn",
-      "Connection": "keep-alive",
-      "Content-Type": "application/x-www-form-urlencoded",
       'Host': '',
-      'Cookie': cookie,
       'User-Agent': '',
     }
   }
