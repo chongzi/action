@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-10 14:44:45
+ * @Last Modified time: 2021-04-10 14:46:43
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -202,7 +202,7 @@ async function Init(){
     $.money = result.money
     console.log(`金额💵:${result.money}`)
     console.log(`邀请码:${result.invite_code}`)
-    console.log(`------\n当日金币:${result.day_jinbi}\n当日步数:${result.steps}`)
+    console.log(`------\n当日金币💰:${result.day_jinbi}\n当日步数🏃‍:${result.steps}`)
   }else{
     console.log(`❌ 初始化失败！`)
   }
