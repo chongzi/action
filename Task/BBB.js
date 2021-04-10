@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-10 13:55:51
+ * @Last Modified time: 2021-04-10 14:41:41
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -129,26 +129,22 @@ if ($.isNode()) {
 
     console.log(`\n👀执行 -> 看看赚`)
     $.H5_List_IDArr = []
-    if(new Date().getHours()===1||new Date().getHours()===2){
       await H5_List()
-      for(let h = 0 ; h < $.H5_List_IDArr.length ; h++){
-        id = $.H5_List_IDArr[h]
-        await H5_News(id)
-      }
-    }else{
-      console.log(`当前不在[1][2]时间点内，不执行看看赚操作。`)
+      if($.H5_List_IDArr.length!==0){
+        for(let h = 0 ; h < $.H5_List_IDArr.length ; h++){
+          id = $.H5_List_IDArr[h]
+          await H5_News(id)
+        }
+      }else{
+      console.log(`当前👀看看赚无任务可做,跳出循环`)
     }
 
     console.log(`\n👁执行 -> 看看`)
     $.go = true 
-    if(new Date().getHours()<5&&new Date().getHours()>22){
-      for(let k = 0 ; k < 20; k++){
-        if($.go){
-          await News()
-        }
+    for(let k = 0 ; k < 20; k++){
+      if($.go){
+        await News()
       }
-    }else{
-      console.log(`当前不在[22:00-5:00]时间段内，不执行看看赚金币操作。`)
     }
 
     console.log(`\n📺执行 -> 看视频赚金币`)
@@ -373,11 +369,9 @@ async function Cy_Info() {
     console.log(`❌ 获取成语失败！`)
   }else{
     let cy_id = result.cy_id
-    console.log(`\n当前成语ID:[${result.cy_id}]`)
+    console.log(`当前成语ID:[${result.cy_id}]`)
     let site = result.site
     console.log(`当前正确的位置为:[${result.site}]`)
-    console.log(`等待了5s···`)
-    await $.wait(5000)
     await Cy_Click(cy_id,site)
 }
 }
@@ -435,6 +429,10 @@ async function Water_Info() {
     if(result.next_time!==0){
       console.log(`下一次领取金币需等待:[${result.next_time}]秒`)
     }else{
+      if(drinkTime===8){
+        console.log(`💧喝水领金币,已经获得最大奖励!`);
+        return
+      }
       console.log(`看视频等待了40s···`)
       await $.wait(40000)
       await Water_Video(drinkTime-1)
@@ -577,10 +575,14 @@ async function Gua_Award_Double(nonce_str) {
 async function Lucky_Init() {
   // 调用API
   await Lucky_Init_API()
-  $.luckyNum = result.lucky_num
-  if($.luckyNum==='0'){
-    await Lucky_Box(4)
+  if(result.lucky_count===100){
+    console.log(`当前已经完成100个幸运抽奖,跳出循环`)
   }
+  // 循环完后，lucky_box最后一次未领取
+  if(result.lucky_box[3]==='1'){
+    Lucky_Box(4)
+  }
+  $.luckyNum = result.lucky_num
   console.log(`当前剩余抽奖次数:[${result.lucky_num}]`)
 }
 
@@ -611,7 +613,9 @@ async function H5_List() {
   await H5_List_API()
   let result = JSON.parse($.H5_List_Result)
   result.forEach((item)=>{
-    $.H5_List_IDArr.push(item.id)
+    if(item.is_ok!==1){
+      $.H5_List_IDArr.push(item.id)
+    }
   })
 }
 
@@ -645,6 +649,11 @@ async function News() {
   // 调用API
   await News_API()
   let result = JSON.parse($.News_Result)
+  if(result.jinbi-0>=result.kk_maxjinbi-0){
+    $.go = false
+    console.log(`当前👁看看获得:[${result.jinbi}/${result.kk_maxjinbi}],跳出👁看看`)
+    return
+  }
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
@@ -652,9 +661,6 @@ async function News() {
     console.log(`现在看的新闻为:${result.nonce_str}`)
     console.log(`等待了60s···`)
     await $.wait(60000)
-    if(result.is_max===1){
-      $.go = false
-    }
     await News_Done(result.nonce_str)
   }
 }
@@ -671,48 +677,6 @@ async function News_Done(nonce_str){
       $.go = false
     }
     console.log(`获得金币💰:[${result.jinbi}]个\n当日共获得金币:[${result.day_jinbi}]个`)
-  }
-}
-
-// 任务 - 📘点广告领金币
-async function Admobile_Show() {
-  // 调用API
-  await Admobile_Show_API()
-  // console.log(result);
-  if(result.code!==1){
-    console.log(`❌ ${result.msg}`)
-  }else{
-    console.log(`\n当前广告的ID:[${result.ad_id}],${result.msg}`)
-    await Admobile_Click(result.ad_id)
-  }
-}
-
-// 任务 - 📘广告领金币详细信息
-async function Admobile_Click(ad_id) {
-  // 调用API
-  await Admobile_Click_API(ad_id)
-  let result = JSON.parse($.Admobile_Click_Result)
-  if(result.code!==1){
-    console.log(`❌ ${result.msg}`)
-  }else{
-    console.log(`获取到广告的详细信息···\n当前广告的ID为:[${result.ad_id}]\n当前广告的nonce_str为:[${result.nonce_str}]`)
-    await Admobile_Done(result.ad_id,result.nonce_str)
-  }
-}
-
-// 任务 - 📘广告领取金币奖励
-async function Admobile_Done(ad_id,nonce_str) {
-  // 调用API
-  await Admobile_Done_API(ad_id,nonce_str)
-  let result = JSON.parse($.Admobile_Done_Result)
-  console.log(result);
-  if(result.code===-1){
-    $.adgo = false
-  }
-  if(result.code!==1){
-    console.log(`❌ ${result.msg}`)
-  }else{
-    console.log(`本次获得金币💰:[${result.jinbi}]个`)
   }
 }
 
@@ -745,6 +709,46 @@ async function Watch_Video_Done(nonce_str) {
   }
 }
 
+// 任务 - 📘点广告领金币
+async function Admobile_Show() {
+  // 调用API
+  await Admobile_Show_API()
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`${result.msg}\n当前广告的ID:[${result.ad_id}]`)
+    await Admobile_Click(result.ad_id)
+  }
+}
+
+// 任务 - 📘广告领金币详细信息
+async function Admobile_Click(ad_id) {
+  // 调用API
+  await Admobile_Click_API(ad_id)
+  let result = JSON.parse($.Admobile_Click_Result)
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`当前广告的nonce_str为:[${result.nonce_str}]`)
+    await Admobile_Done(result.ad_id,result.nonce_str)
+  }
+}
+
+// 任务 - 📘广告领取金币奖励
+async function Admobile_Done(ad_id,nonce_str) {
+  // 调用API
+  await Admobile_Done_API(ad_id,nonce_str)
+  let result = JSON.parse($.Admobile_Done_Result)
+  if(result.code===-1){
+    $.adgo = false
+  }
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`本次获得金币💰:[${result.jinbi}]个`)
+  }
+}
+
 // 💰领取任务奖励
 async function Renwu_Done(num) {
   // 调用API
@@ -773,7 +777,6 @@ async function With_Draw() {
 async function sendMsg() {
   await notify.sendNotify(`步步宝`,`${$.message}`);
 }
-
 
 // ==================API==================
 // 初始化信息👨‍💻API
