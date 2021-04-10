@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-10 13:30:06
+ * @Last Modified time: 2021-04-10 13:42:04
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -126,10 +126,14 @@ if ($.isNode()) {
 
     console.log(`\n👀执行 -> 看看赚`)
     $.H5_List_IDArr = []
-    await H5_List()
-    for(let h = 0 ; h < $.H5_List_IDArr.length ; h++){
-      id = $.H5_List_IDArr[h]
-      await H5_News(id)
+    if(new Date().getHours()===1||new Date().getHours()===2){
+      await H5_List()
+      for(let h = 0 ; h < $.H5_List_IDArr.length ; h++){
+        id = $.H5_List_IDArr[h]
+        await H5_News(id)
+      }
+    }else{
+      console.log(`当前不在[1][2]时间点内，不执行看看赚操作。`)
     }
 
     console.log(`\n👁执行 -> 看看`)
