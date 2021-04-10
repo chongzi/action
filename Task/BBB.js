@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-09 16:32:04
+ * @Last Modified time: 2021-04-10 11:08:47
  * 
  * 下载链接:http://bububao.yichengw.cn/?id=527716
  */
@@ -17,23 +17,23 @@ $.guessCYNum = 1
 
 const BBB_API_HOST = 'https://bububao.duoshoutuan.com'
 
-const tokenArr = []
+const tokenArr = [`3F8ACF2C5BDE4B2CC7DD21DE9527716G1613883397`]
 
-if ($.isNode()) {
-  if (process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
-    token = process.env.BBB_TOKEN.split('#');
-  }else if(process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
-    token = process.env.BBB_TOKEN.split('\n');
-  }else{
-    token = [process.env.BBB_TOKEN]
-  }
+// if ($.isNode()) {
+//   if (process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
+//     token = process.env.BBB_TOKEN.split('#');
+//   }else if(process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
+//     token = process.env.BBB_TOKEN.split('\n');
+//   }else{
+//     token = [process.env.BBB_TOKEN]
+//   }
 
-  Object.keys(token).forEach((item) => {
-    if (token[item]) {
-      tokenArr.push(token[item])
-    }
-  })
-}
+//   Object.keys(token).forEach((item) => {
+//     if (token[item]) {
+//       tokenArr.push(token[item])
+//     }
+//   })
+// }
 
 !(async () => {
   for (let i = 0; i < tokenArr.length; i++) {
@@ -49,14 +49,18 @@ if ($.isNode()) {
     await Daily_CheckIn()
 
     console.log(`\n💰执行 -> 首页金币`)
-    await Home_Gold()
+    for(let h = 0 ; h <2 ; h++){
+      await Home_Gold()
+    }
 
-    //🧧 首页红包 TODO
+    console.log(`\n🧧执行 -> 首页红包`)
+    await Home_RedPacket()
 
     console.log(`\n🥚执行 -> 首页金蛋`)
     await Home_Egg_Click()
 
     console.log(`\n🕗执行 -> 早起&早睡打卡`)
+    console.log(`当前时间:[${new Date().getHours()}]`)
     if(new Date().getHours()>4&&new Date().getHours()<12){
       console.log(`当前时间:[${new Date().getHours()}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
       let Now = [1,2,3]
@@ -129,12 +133,10 @@ if ($.isNode()) {
 
     console.log(`\n👁执行 -> 看看`)
     $.go = true 
-    if($.go){
-      for(let k = 0 ; k < 15; k++){
+    for(let k = 0 ; k < 15; k++){
+      if($.go){
         await News()
       }
-    }else{
-      console.log(`当前已经获得最大金币数:[900]个,跳出循环`)
     }
 
     console.log(`\n📺执行 -> 看视频赚金币`)
@@ -143,8 +145,11 @@ if ($.isNode()) {
     }
 
     console.log(`\n📘执行 -> 点广告领金币`)
+    $.adgo = true
     for(let a = 0 ; a < 5 ; a++){
-      await Admobile_Show()
+      if($.adgo){
+        await Admobile_Show()
+      }
     }
 
     console.log(`\n💰执行 -> 领取任务奖励`)
@@ -154,14 +159,14 @@ if ($.isNode()) {
 
     console.log(`\n💴执行 -> 提现`)
     if($.money>=0.3){
-      console.log(`提现￥0.3`)
+      console.log(`\n提现￥0.3`)
       await With_Draw(0.3)
     } 
     if($.money>=50){
-      console.log(`提现￥50`)
+      console.log(`\n提现￥50`)
       await With_Draw(50)
     }else{
-      console.log(`当前金额不足以提现···`)
+      console.log(`金额不足以提现···`)
     }
     
     // 📧推送消息
@@ -201,6 +206,21 @@ async function Daily_CheckIn() {
     console.log(`❌ ${result.msg}`)
   }else{
     console.log(`签到成功✅,获得金币💰:[${result.jinbi}]个`)
+    console.log(`等待3s···金币翻倍`)
+    await $.wait(3000)
+    await Daily_CheckIn_Double(result.nonce_str)
+  }
+}
+
+// 每日签到【双倍】📝
+async function Daily_CheckIn_Double(nonce_str) {
+  // 调用API
+  await Daily_CheckIn_Double_API(nonce_str)
+  let result = JSON.parse($.Daily_CheckIn_Double_Result)
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`获得双倍💰`)
   }
 }
 
@@ -214,6 +234,47 @@ async function Home_Gold() {
     console.log(`❌ ${result.msg}`)
   }else{
     console.log(`${result.msg},获得金币💰:[${result.jinbi}]个`)
+    console.log(`等待3s···金币翻倍`)
+    await $.wait(3000)
+    await Home_Gold_Double(result.nonce_str)
+  }
+}
+
+// 首页金币【双倍】💰
+async function Home_Gold_Double(nonce_str) {
+  // 调用API
+  await Home_Gold_Double_API(nonce_str)
+  let result = JSON.parse($.Home_Gold_Double_Result)
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`获得双倍💰`)
+  }
+}
+
+// 首页红包🧧
+async function Home_RedPacket(){
+  // 调用API
+  await Home_RedPacket_API()
+  let result = JSON.parse($.Home_RedPacket_Result)
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`🧧红包反馈nonce_str为:${result.nonce_str}`)
+    console.log(`去领取红包奖励···`)
+    await Home_RedPacket_Award(result.nonce_str)
+  }
+}
+
+// 首页红包🧧领取奖励
+async function Home_RedPacket_Award(nonce_str) {
+  // 调用API
+  await Home_RedPacket_Award_API(nonce_str)
+  let result = JSON.parse($.Home_RedPacket_Award_Result)
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`获得首页红包🧧`)
   }
 }
 
@@ -242,7 +303,7 @@ async function Home_Egg_Done(id,str) {
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
-    console.log(`\n获得💰:[${result.jinbi}]个`)
+    console.log(`获得💰:[${result.jinbi}]个`)
   }
 }
 
@@ -453,6 +514,21 @@ async function Gua_Award(sign,glid) {
   await Gua_Award_API(sign,glid)
   let result = JSON.parse($.Gua_Award_Result)
   console.log(`本次刮刮乐获得金币💰:[${result.jf}]个`)
+  console.log(`等待3s···金币翻倍`)
+  await $.wait(3000)
+  await Gua_Award_Double(result.nonce_str)
+}
+
+// 刮刮乐 - 领取奖励【双倍】
+async function Gua_Award_Double(nonce_str) {
+  // 调用API
+  await Gua_Award_Double_API(nonce_str)
+  let result = JSON.parse($.Gua_Award_Double_Result)
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`获得双倍💰`)
+  }
 }
 
 // 🎡抽奖 100 次
@@ -534,8 +610,10 @@ async function News() {
     console.log(`现在看的新闻为:${result.nonce_str}`)
     console.log(`等待了60s···`)
     await $.wait(60000)
+    if(result.is_max===1){
+      $.go = false
+    }
     await News_Done(result.nonce_str)
-
   }
 }
 
@@ -547,7 +625,7 @@ async function News_Done(nonce_str){
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
-    if(result.day_jinbi>=900){
+    if(result.code===-1){
       $.go = false
     }
     console.log(`获得金币💰:[${result.jinbi}]个\n当日共获得金币:[${result.day_jinbi}]个`)
@@ -585,6 +663,10 @@ async function Admobile_Done(ad_id,nonce_str) {
   // 调用API
   await Admobile_Done_API(ad_id,nonce_str)
   let result = JSON.parse($.Admobile_Done_Result)
+  console.log(result);
+  if(result.code===-1){
+    $.adgo = false
+  }
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
@@ -620,7 +702,6 @@ async function Watch_Video_Done(nonce_str) {
     console.log(`增加金币💰:[50]个`)
   }
 }
-
 
 // 💰领取任务奖励
 async function Renwu_Done(num) {
@@ -663,9 +744,33 @@ async function Daily_CheckIn_API() {
   await postRequest(`user/sign`)
 }
 
+// 每日签到【双倍】📝API
+async function Daily_CheckIn_Double_API(nonce_str) {
+  let body = `nonce_str=${nonce_str}&tid=2&pos=1&`
+  $.Daily_CheckIn_Double_Result = await postRequestBody(`you/callback`,body)
+}
+
 // 首页金币💰API
 async function Home_Gold_API() {
   await postRequest(`user/homejin`)
+}
+
+// 首页金币【双倍】💰API
+async function Home_Gold_Double_API(nonce_str) {
+  let body = `nonce_str=${nonce_str}&tid=21&pos=1&`
+  $.Home_Gold_Double_Result = await postRequestBody(`you/callback`,body)
+}
+
+// 首页红包🧧API
+async function Home_RedPacket_API() {
+  let body = `mini_pos=0&c_type=2&`
+  $.Home_RedPacket_Result = await postRequestBody(`user/chuansj`,body)
+}
+
+// 首页红包奖励🧧API
+async function Home_RedPacket_Award_API(nonce_str) {
+  let body = `nonce_str=${nonce_str}&tid=17&pos=1&=`
+  $.Home_RedPacket_Award_Result = await postRequestBody(`you/callback`,body)
 }
 
 // 首页金蛋点击事件🥚API
@@ -763,6 +868,12 @@ async function Gua_Award_API(sign,glid) {
   $.Gua_Award_Result = await postRequestBody(`gua/guapost`,body)
 }
 
+// 刮刮乐领取奖励【双倍】🎟API
+async function Gua_Award_Double_API(nonce_str) {
+  let body = `nonce_str=${nonce_str}&tid=6&pos=1&`
+  $.Gua_Award_Double_Result = await postRequestBody(`you/callback`,body)
+}
+
 // 抽奖100次初始化🎡API
 async function Lucky_Init_API() {
   await postRequest(`user/lucky`)
@@ -837,6 +948,7 @@ async function Watch_Video_Done_API(nonce_str) {
   let body = `nonce_str=${nonce_str}&tid=9&pos=2&=`
   $.Watch_Video_Done_Result = await postRequestBody(`you/callback`,body)
 }
+
 
 // 领取任务奖励💰API
 async function Renwu_Done_API(taskid) {
