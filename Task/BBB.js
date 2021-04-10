@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-10 13:42:04
+ * @Last Modified time: 2021-04-10 13:55:51
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -48,6 +48,9 @@ if ($.isNode()) {
 
     console.log(`\n📝执行 -> 每日签到`)
     await Daily_CheckIn()
+
+    console.log(`\n🏃‍执行 -> 步数兑换金币`)
+    await Walk_Exchange_Gold()
 
     console.log(`\n💰执行 -> 首页金币`)
     for(let h = 0 ; h <2 ; h++){
@@ -230,6 +233,32 @@ async function Daily_CheckIn_Double(nonce_str) {
   // 调用API
   await Daily_CheckIn_Double_API(nonce_str)
   let result = JSON.parse($.Daily_CheckIn_Double_Result)
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`获得双倍💰`)
+  }
+}
+
+// 步数兑换金币🏃‍
+async function Walk_Exchange_Gold() {
+  // 调用API
+  await Walk_Exchange_Gold_API()
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`任务[${result.tip}]:${result.msg},获得金币💰:[${result.jinbi}]个`)
+    console.log(`等待3s···金币翻倍`)
+    await $.wait(3000)
+    await Walk_Exchange_Gold_Double(result.nonce_str)
+  }
+}
+
+// 步数兑换金币【双倍】🏃‍
+async function Walk_Exchange_Gold_Double(nonce_str) {
+  // 调用API
+  await Walk_Exchange_Gold_Double_API(nonce_str)
+  let result = JSON.parse($.Walk_Exchange_Gold_Double_Result)
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
@@ -761,6 +790,17 @@ async function Daily_CheckIn_API() {
 async function Daily_CheckIn_Double_API(nonce_str) {
   let body = `nonce_str=${nonce_str}&tid=2&pos=1&`
   $.Daily_CheckIn_Double_Result = await postRequestBody(`you/callback`,body)
+}
+
+// 步数兑换金币🏃‍
+async function Walk_Exchange_Gold_API() {
+  await postRequest(`user/donejin`)
+}
+
+// 步数兑换金币【双倍】🏃‍
+async function Walk_Exchange_Gold_Double_API(nonce_str) {
+  let body = `nonce_str=${nonce_str}&tid=20&pos=1&=`
+  $.Walk_Exchange_Gold_Double_Result = await postRequestBody(`you/callback`,body)
 }
 
 // 首页金币💰API
