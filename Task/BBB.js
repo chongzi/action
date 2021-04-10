@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-10 14:41:41
+ * @Last Modified time: 2021-04-10 14:44:45
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -178,7 +178,7 @@ if ($.isNode()) {
       console.log(`\n提现￥50`)
       await With_Draw(50)
     }else{
-      console.log(`金额不足以提现···`)
+      console.log(`\n金额不足以提现···`)
     }
     
     // 📧推送消息
