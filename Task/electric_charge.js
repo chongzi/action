@@ -2,7 +2,9 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-06 15:16:33 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-06 17:19:08
+ * @Last Modified time: 2021-04-12 16:13:26
+ * 
+ * 每月5日进行统计
  */
 
 const $ = Env('electric charge')
@@ -28,11 +30,11 @@ const $ = Env('electric charge')
 
   console.log(`本月总共消耗度数:[${$.totalNum}]\n`)
 
-  console.log(`【南户】\n上月度数:[${PreSouth}]\n本月度数:[${NowSouth}]\n消耗度数:[${NowSouth-PreSouth}]\n当前需要缴费:[￥${Payment(NowSouth-PreSouth)}]\n`)
+  console.log(`【南户】\n上月:[${PreSouth}]\n本月:[${NowSouth}]\n消耗:[${NowSouth-PreSouth}]度\n需缴费:[￥${Payment(NowSouth-PreSouth)}]\n`)
 
-  console.log(`【北户】\n上月度数:[${PreNorth}]\n本月度数:[${NowNorth}]\n消耗度数:[${NowNorth-PreNorth}]\n当前需要缴费:[￥${Payment(NowNorth-PreNorth)}]\n`)
+  console.log(`【北户】\n上月:[${PreNorth}]\n本月:[${NowNorth}]\n消耗:[${NowNorth-PreNorth}]度\n需缴费:[￥${Payment(NowNorth-PreNorth)}]\n`)
 
-  console.log(`注:\n1. 上月抄表时间:2021年4月5日\n2. 电表抄数不包括最后一位小数\n3. 当前缴费价格为四舍五入后的价格`)
+  console.log(`注:\n1. 上月抄表时间:2021年${new Date().getMonth()}月5日\n2. 电表抄数不包括最后一位小数\n3. 当前缴费价格为四舍五入后的价格`)
 
 })()
     .catch((e) => $.logErr(e))
