@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-12 09:20:07
+ * @Last Modified time: 2021-04-12 10:35:04
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -54,6 +54,8 @@ if ($.isNode()) {
 
     console.log(`\n💰执行 -> 首页金币`)
     for(let h = 0 ; h <2 ; h++){
+      console.log(`等待了10s···,领取第${h+1}个金币`)
+      await $.wait(10000)
       await Home_Gold()
     }
 
