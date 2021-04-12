@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-06 17:21:16 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-08 10:46:26
+ * @Last Modified time: 2021-04-12 10:53:11
  */
 
 const $ = Env('朗果英语')
@@ -64,7 +64,7 @@ if ($.isNode()) {
 
     // 🎧听力练习
     console.log(`\n🎧执行 -> 听力练习`)
-    for(let l = 0; l<10 ; l++){
+    for(let l = 0; l<3 ; l++){
       console.log(`当前完成第${l+1}次听力练习`)
       await Listen_Training()
       console.log(`等待了5s···`)
@@ -73,7 +73,7 @@ if ($.isNode()) {
 
     // 📕阅读看世界
     console.log(`\n📕执行 -> 阅读看世界`)
-    for(let l = 0; l<10 ; l++){
+    for(let l = 0; l<3 ; l++){
       console.log(`当前完成第${l+1}次阅读`)
       await Read_Training()
       console.log(`等待了5s···`)
@@ -82,8 +82,10 @@ if ($.isNode()) {
     
     // 🧧领取奖励
     console.log(`\n🧧执行 -> 领取奖励`)
-    for(let a = 0 ; a < 5; a++){
+    console.log(`当前领取TopicId数组为：${TopicIdArr}`)
+    for(let a = 0 ; a < 3; a++){
       topicId = TopicIdArr[a]
+      await $.wait(1000)
       console.log(`当前领取的TopicId为:${topicId}`)
       await Award(topicId)
       console.log(`等待了5s···`)
