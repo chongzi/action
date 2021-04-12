@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-12 10:35:04
+ * @Last Modified time: 2021-04-12 11:03:23
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -18,23 +18,23 @@ $.guessCYNum = 1
 
 const BBB_API_HOST = 'https://bububao.duoshoutuan.com'
 
-const tokenArr = []
+const tokenArr = [`3F8ACF2C5BDE4B2CC7DD21DE9527716G1613883397`]
 
-if ($.isNode()) {
-  if (process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
-    token = process.env.BBB_TOKEN.split('#');
-  }else if(process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
-    token = process.env.BBB_TOKEN.split('\n');
-  }else{
-    token = [process.env.BBB_TOKEN]
-  }
+// if ($.isNode()) {
+//   if (process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
+//     token = process.env.BBB_TOKEN.split('#');
+//   }else if(process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
+//     token = process.env.BBB_TOKEN.split('\n');
+//   }else{
+//     token = [process.env.BBB_TOKEN]
+//   }
 
-  Object.keys(token).forEach((item) => {
-    if (token[item]) {
-      tokenArr.push(token[item])
-    }
-  })
-}
+//   Object.keys(token).forEach((item) => {
+//     if (token[item]) {
+//       tokenArr.push(token[item])
+//     }
+//   })
+// }
 
 !(async () => {
   for (let i = 0; i < tokenArr.length; i++) {
@@ -54,8 +54,6 @@ if ($.isNode()) {
 
     console.log(`\n💰执行 -> 首页金币`)
     for(let h = 0 ; h <2 ; h++){
-      console.log(`等待了10s···,领取第${h+1}个金币`)
-      await $.wait(10000)
       await Home_Gold()
     }
 
@@ -72,6 +70,8 @@ if ($.isNode()) {
       let Now = [1,2,3]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
+        console.log(`尝试第${n+1}早起打卡,本次打卡携带参数:[${now}]\n等待5s···`)
+        await $.wait(5000)
         await Dk_Click(now)
       }
     }else if((new Date().getHours()+8)>20&&(new Date().getHours()+8)<4){
@@ -79,6 +79,8 @@ if ($.isNode()) {
       let Now = [4,5,6]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
+        console.log(`尝试第${n+1}早睡打卡,本次打卡携带参数:[${now}]\n等待5s···`)
+        await $.wait(5000)
         await Dk_Click(now)
       }
     }else{
