@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-12 11:03:23
+ * @Last Modified time: 2021-04-12 11:28:10
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -18,23 +18,23 @@ $.guessCYNum = 1
 
 const BBB_API_HOST = 'https://bububao.duoshoutuan.com'
 
-const tokenArr = [`3F8ACF2C5BDE4B2CC7DD21DE9527716G1613883397`]
+const tokenArr = []
 
-// if ($.isNode()) {
-//   if (process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
-//     token = process.env.BBB_TOKEN.split('#');
-//   }else if(process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
-//     token = process.env.BBB_TOKEN.split('\n');
-//   }else{
-//     token = [process.env.BBB_TOKEN]
-//   }
+if ($.isNode()) {
+  if (process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
+    token = process.env.BBB_TOKEN.split('#');
+  }else if(process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
+    token = process.env.BBB_TOKEN.split('\n');
+  }else{
+    token = [process.env.BBB_TOKEN]
+  }
 
-//   Object.keys(token).forEach((item) => {
-//     if (token[item]) {
-//       tokenArr.push(token[item])
-//     }
-//   })
-// }
+  Object.keys(token).forEach((item) => {
+    if (token[item]) {
+      tokenArr.push(token[item])
+    }
+  })
+}
 
 !(async () => {
   for (let i = 0; i < tokenArr.length; i++) {
