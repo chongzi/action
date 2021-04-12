@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-08 11:12:58
+ * @Last Modified time: 2021-04-12 09:11:57
  */
 
 const $ = Env('睡眠赚')
@@ -446,8 +446,42 @@ async function goMotionAward(sport) {
 
 // 🏃‍运动-领取奖励 ✅
 async function sportAward() {
-  console.log(`TODO🏃‍运动-领取奖励`)
+  return new Promise((resolve) => {
+    let body = `Identification=other`
+    $.post(bodytaskUrl(`api/motion/getMotionReward?imei=${$.nowimei}`,body),async(error, response, data) =>{
+     try{
+       if (error) {
+         console.log(`${JSON.stringify(error)}`)
+         console.log(`API请求失败，请检查网路重试`)
+       } else {
+         const result = JSON.parse(data)
+         // 反馈信息
+         console.log(result)
+         if(result.code!==200){
+           console.log(`❌ ${result.message}`)
+         }else{
+           console.log(`【运动-领取奖励】${result.message},获得:【${result.data.coin_numbers}💎】`)
+         }
+         
+        }}catch(e) {
+           console.log(e)
+         } finally {
+         resolve();
+       } 
+     })
+    })
 }
+
+/*
+{
+  "code": "200",
+  "message": "领取成功",
+  "data": {
+    "coin_numbers": "57",
+    "energy": "0"
+  }
+}
+*/
 
 
 
