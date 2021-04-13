@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-12 11:28:10
+ * @Last Modified time: 2021-04-13 09:27:12
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -64,9 +64,9 @@ if ($.isNode()) {
     await Home_Egg_Click()
 
     console.log(`\n🕗执行 -> 早起&早睡打卡`)
-    console.log(`当前时间:[${(new Date().getHours()+8)}]`)
+    console.log(`当前时间:[${new Date().getHours()+8}]`)
     if((new Date().getHours()+8)>4&&(new Date().getHours()+8)<12){
-      console.log(`当前时间:[${(new Date().getHours()+8)}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
+      console.log(`当前时间:[${new Date().getHours()+8}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
       let Now = [1,2,3]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
@@ -75,7 +75,7 @@ if ($.isNode()) {
         await Dk_Click(now)
       }
     }else if((new Date().getHours()+8)>20&&(new Date().getHours()+8)<4){
-      console.log(`当前时间:[${(new Date().getHours()+8)}],在早睡打卡的时间段(🕗20:00-04:00)内,执行晚上打卡:`)
+      console.log(`当前时间:[${new Date().getHours()+8}],在早睡打卡的时间段(🕗20:00-04:00)内,执行早睡打卡:`)
       let Now = [4,5,6]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
