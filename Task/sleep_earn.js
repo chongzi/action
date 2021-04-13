@@ -2,12 +2,12 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-03-31 15:53:53 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-12 09:11:57
+ * @Last Modified time: 2021-04-13 18:20:43
  */
 
 const $ = Env('睡眠赚')
 
-const CookieArr = []
+const UidArr = []
 
 const sportList = [
   `Roller_skating`,
@@ -28,17 +28,17 @@ $.nickName = ''
 $.WithdrawCash = 0
 
 if ($.isNode()) {  
-  if (process.env.SLEEP_EARN_COOKIE && process.env.SLEEP_EARN_COOKIE.indexOf('#') > -1) {
-    signCookie = process.env.SLEEP_EARN_COOKIE.split('#');
-  }else if(process.env.SLEEP_EARN_COOKIE && process.env.SLEEP_EARN_COOKIE.indexOf('#') > -1) {
-    signCookie = process.env.SLEEP_EARN_COOKIE.split('\n');
+  if (process.env.SLEEP_EARN_UID && process.env.SLEEP_EARN_UID.indexOf('#') > -1) {
+    signUid = process.env.SLEEP_EARN_UID.split('#');
+  }else if(process.env.SLEEP_EARN_UID && process.env.SLEEP_EARN_UID.indexOf('#') > -1) {
+    signUid = process.env.SLEEP_EARN_UID.split('\n');
   }else{
-    signCookie = [process.env.SLEEP_EARN_COOKIE]
+    signUid = [process.env.SLEEP_EARN_UID]
   }
   
-  Object.keys(signCookie).forEach((item) => {
-    if (signCookie[item]) {
-      CookieArr.push(signCookie[item])
+  Object.keys(signUid).forEach((item) => {
+    if (signUid[item]) {
+      UidArr.push(signUid[item])
     }
   })
 }
@@ -50,15 +50,10 @@ $.BJT = new Date(nowTime)
 $.BJH = $.BJT.getUTCHours() // 当前小时
 
 !(async () => {
-  for(let i = 0 ; i < CookieArr.length;i++){
+  for(let i = 0 ; i < UidArr.length;i++){
 
-    cookie =  CookieArr[i]
-    // body = BodyArr[i]
+    uid = UidArr[i]
 
-    // let start = body.indexOf('imei')
-    // let end = body.indexOf('&source')
-    // const $.nowimei = body.slice(start+5,end)
-    
     // 初始化个人信息
     console.log(`\n💎执行 -> 初始化个人信息`)
     await initUser()
@@ -170,7 +165,7 @@ async function initUser() {
        } else {
          const result = JSON.parse(data)
          // 反馈信息
-         // console.log(result)
+        //  console.log(result)
          if(result.code!==200){
            $.isLogin = false
            console.log(`❌ ${result.message}`)
@@ -230,7 +225,7 @@ async function Withdrew() {
 // 提现确认💴
 async function ConfirmWithdrew(nowCash) {
   return new Promise((resolve) => {
-    let body = `amount=${nowCash}&channel=1&device=ios&imei=018e6c84ed05501906d4457d9d3b60fbf2ceadcd&source=ios&uid=1286337&version=1.0.7`
+    let body = `amount=${nowCash}&channel=1&device=ios&imei=018e6c84ed05501906d4457d9d3b60fbf2ceadcd&source=ios&uid=${uid}&version=1.0.7`
     $.post(drinkURL(`api/withdraws/confirm`,body),async(error, response, data) =>{
      try{
        if (error) {
@@ -289,7 +284,7 @@ async function sign(){
 // 初始化喝水信息 ✅
 async function initDrink() {
   return new Promise((resolve) => {
-    let body = `device=ios&imei=${$.nowimei}&source=ios&uid=1286337&version=1.0.7`
+    let body = `device=ios&imei=${$.nowimei}&source=ios&uid=${uid}&version=1.0.7`
     $.post(drinkURL(`api/home/index`,body),async(error, response, data) =>{
      try{
        if (error) {
@@ -319,7 +314,7 @@ async function initDrink() {
 // 喝水 ✅
 async function drink(d) {
   return new Promise((resolve) => {
-    let body = `coin=29&cupid=${d}&device=ios&double=1&imei=${$.nowimei}&source=ios&uid=1286337&version=1.0.7`
+    let body = `coin=29&cupid=${d}&device=ios&double=1&imei=${$.nowimei}&source=ios&uid=${uid}&version=1.0.7`
     $.post(drinkURL(`api/home/drink`,body),async(error, response, data) =>{
      try{
        if (error) {
@@ -345,7 +340,7 @@ async function drink(d) {
 // 传递coin=999 double=1
 async function sleep(p) {
   return new Promise((resolve) => {
-    let body = `bubbleid=${p}&coin=999&device=ios&double=1&imei=${$.nowimei}=ios&type=1&uid=1286337&version=1.0.7`
+    let body = `bubbleid=${p}&coin=999&device=ios&double=1&imei=${$.nowimei}=ios&type=1&uid=${uid}&version=1.0.7`
     $.post(drinkURL(`api/home/getsleepcoin`,body),async(error, response, data) =>{
      try{
        if (error) {
@@ -596,7 +591,7 @@ async function sendMsg() {
 function taskUrl(activity) {
   return {
     url: `${SLEEP_API_HOST}/${activity}`,
-    body:`device=ios&imei=${$.imei}&source=ios&uid=1286337&version=1.0.7`,
+    body:`device=ios&imei=${$.imei}&source=ios&uid=${uid}&version=1.0.7`,
     headers: {
       "Accept": "*/*",
       "Accept-Encoding": "gzip, deflate",
@@ -605,7 +600,6 @@ function taskUrl(activity) {
       'Content-Length': '110',
       "Content-Type": "application/x-www-form-urlencoded",
       'Host': 'sleep.zouluzhuan.com',
-      'Cookie': cookie,
       'User-Agent': 'SMMon/1.0.7 (iPhone; iOS 14.3; Scale/3.00)',
     }
   }
@@ -622,7 +616,6 @@ function NobodytaskUrl(activity) {
       'Content-Length': '110',
       "Content-Type": "application/x-www-form-urlencoded",
       'Host': 'sleep.zouluzhuan.com',
-      'Cookie': cookie,
       'Referer':`http://sleep.zouluzhuan.com/api/turntable/index?imei=${$.nowimei}&version=1.0.7&device=ios&source=ios`,
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
     }
@@ -641,7 +634,6 @@ function bodytaskUrl(activity,body) {
       'Content-Length': '110',
       "Content-Type": "application/x-www-form-urlencoded",
       'Host': 'sleep.zouluzhuan.com',
-      'Cookie': cookie,
       'Referer':`http://sleep.zouluzhuan.com/api/turntable/index?imei=${$.nowimei}&version=1.0.7&device=ios&source=ios`,
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
     }
@@ -659,7 +651,6 @@ function drinkURL(activity,body) {
       "Connection": "keep-alive",
       "Content-Type": "application/x-www-form-urlencoded",
       'Host': 'sleep.zouluzhuan.com',
-      'Cookie': cookie,
       'User-Agent': 'SMMon/1.0.7 (iPhone; iOS 14.3; Scale/3.00)',
     }
   }
