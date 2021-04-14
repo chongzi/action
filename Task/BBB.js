@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 11:29:16
+ * @Last Modified time: 2021-04-14 11:33:27
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -79,7 +79,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
         console.log(`尝试第${n+1}次早起打卡,本次打卡携带参数:[${now}]\n等待5s···`)
         await $.wait(5000)
         await Dk_Click(now)
-        if($.Dk_Click_Result.jinbi!==0){
+        if($.Dk_Click_Result.jinbi!==undefined){
           console.log(`当前参数[${now}],返回值不为空,开始刷金币💰···`)
           for(let rush = 0 ; rush <100 ; rush++){
             console.log(`当前循环第[${rush+1}]次`)
