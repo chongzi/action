@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 08:49:48
+ * @Last Modified time: 2021-04-14 09:05:25
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -71,6 +71,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
 
     console.log(`\n🕗执行 -> 早起&早睡打卡`)
     console.log(`当前小时数:[${$.BJH}]`)
+    await Dk_Info()
     if($.BJH>=4&&$.BJH<=12){
       console.log(`当前时间:[${$.BJH}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
       let Now = [1,2,3]
@@ -355,6 +356,18 @@ async function Home_Egg_Done(id,str) {
   }
 }
 
+
+// 🕗早起&早睡打卡信息
+async function Dk_Info() {
+  // 调用API
+  await Dk_Info_API()
+  if(result.code!==1){
+    console.log(`❌ ${result.msg}`)
+  }else{
+    console.log(`当前日期：${result.day}\n${result.title1}\n${result.title2}`)
+    console.log(`打卡状态：【${result.btn_txt==='继续打卡'?`✅当前时间段[${$.BJH}]已打卡`:`未打卡`}】`)
+  }
+}
 
 // 🕗早起打卡[1,2,3]
 // (4:00-12:00)
@@ -848,6 +861,11 @@ async function Home_Egg_Click_API(){
 async function Home_Egg_Done_API(id,str){
   let body =`taskid=${id}&clicktime=${JSON.stringify(JSON.stringify(new Date().getTime()).slice(0,10)-0)}&donetime=${JSON.stringify(JSON.stringify(new Date().getTime()).slice(0,10)-0+2)}&nonce_str=${str}&`
   $.Home_Egg_Done_Result = await postRequestBody(`user/jindan_done`,body)
+}
+
+// 早起&早睡打卡信息🕗API
+async function Dk_Info_API() {
+  await postRequest(`mini/dk_info`)
 }
 
 // 早起&早睡打卡🕗API
