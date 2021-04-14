@@ -383,7 +383,7 @@ async function Dk_Click(num) {
     console.log(`获得💰:[${result.jinbi}]个`)
     console.log(`\n尝试进行刷[${num}]这个参数`)
     $._3 = true
-      for(var q = 1 ; q <= 50 ; q++ ){
+      for(let q = 0 ; q < 100 ; q++ ){
         if($._3){
           console.log(`等待了3s···`)
           await $.wait(3000)
