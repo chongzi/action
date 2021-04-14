@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-13 09:27:12
+ * @Last Modified time: 2021-04-14 08:49:48
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -36,6 +36,12 @@ if ($.isNode()) {
   })
 }
 
+const nowTime = new Date().getTime()+8*60*60*1000
+$.BJT = new Date(nowTime)
+// 2021-04-01 09:18:14
+// console.log(JSON.stringify(BJT).slice(1,20).replace('T',' '))
+$.BJH = $.BJT.getUTCHours() // 当前小时
+
 !(async () => {
   for (let i = 0; i < tokenArr.length; i++) {
 
@@ -64,9 +70,9 @@ if ($.isNode()) {
     await Home_Egg_Click()
 
     console.log(`\n🕗执行 -> 早起&早睡打卡`)
-    console.log(`当前时间:[${new Date().getHours()+8}]`)
-    if((new Date().getHours()+8)>4&&(new Date().getHours()+8)<12){
-      console.log(`当前时间:[${new Date().getHours()+8}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
+    console.log(`当前小时数:[${$.BJH}]`)
+    if($.BJH>=4&&$.BJH<=12){
+      console.log(`当前时间:[${$.BJH}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
       let Now = [1,2,3]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
@@ -74,8 +80,8 @@ if ($.isNode()) {
         await $.wait(5000)
         await Dk_Click(now)
       }
-    }else if((new Date().getHours()+8)>20&&(new Date().getHours()+8)<4){
-      console.log(`当前时间:[${new Date().getHours()+8}],在早睡打卡的时间段(🕗20:00-04:00)内,执行早睡打卡:`)
+    }else if($.BJH>=20&&$.BJH<=4){
+      console.log(`当前时间:[${$.BJH}],在早睡打卡的时间段(🕗20:00-04:00)内,执行早睡打卡:`)
       let Now = [4,5,6]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
@@ -152,7 +158,7 @@ if ($.isNode()) {
     }
 
     console.log(`\n📺执行 -> 看视频赚金币`)
-    if((new Date().getHours()+8)===1||(new Date().getHours()+8)===2){
+    if($.BJH===1||$.BJH===2){
       for(let a = 0 ; a < 5 ; a++){
         await Watch_Video()
       }
