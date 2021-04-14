@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 09:05:25
+ * @Last Modified time: 2021-04-14 09:12:41
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -70,10 +70,9 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
     await Home_Egg_Click()
 
     console.log(`\n🕗执行 -> 早起&早睡打卡`)
-    console.log(`当前小时数:[${$.BJH}]`)
     await Dk_Info()
     if($.BJH>=4&&$.BJH<=12){
-      console.log(`当前时间:[${$.BJH}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
+      console.log(`\n当前时间:[${$.BJH}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
       let Now = [1,2,3]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
@@ -82,7 +81,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
         await Dk_Click(now)
       }
     }else if($.BJH>=20&&$.BJH<=4){
-      console.log(`当前时间:[${$.BJH}],在早睡打卡的时间段(🕗20:00-04:00)内,执行早睡打卡:`)
+      console.log(`\n当前时间:[${$.BJH}],在早睡打卡的时间段(🕗20:00-04:00)内,执行早睡打卡:`)
       let Now = [4,5,6]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
@@ -364,7 +363,7 @@ async function Dk_Info() {
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
-    console.log(`当前日期：${result.day}\n${result.title1}\n${result.title2}`)
+    console.log(`${result.title1}\n${result.title2}\n当前日期：${result.day}`)
     console.log(`打卡状态：【${result.btn_txt==='继续打卡'?`✅当前时间段[${$.BJH}]已打卡`:`未打卡`}】`)
   }
 }
@@ -380,7 +379,7 @@ async function Dk_Click(num) {
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
-    console.log(`\n获得💰:[${result.jinbi}]个`)
+    console.log(`获得💰:[${result.jinbi}]个`)
   }
 }
 
