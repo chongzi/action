@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 12:13:38
+ * @Last Modified time: 2021-04-14 14:03:52
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -10,9 +10,9 @@
 
 const $ = Env('步步宝')
 
-// const notify = $.isNode() ? require('./sendNotify') : '';
+const notify = $.isNode() ? require('./sendNotify') : '';
 
-// $.message = ''
+$.message = ''
 
 $.guessCYNum = 1
 
@@ -202,13 +202,9 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
     }
 
     console.log(`\n💴执行 -> 提现`)
-    if($.money>=0.3){
-      console.log(`\n提现￥0.3`)
-      await With_Draw(0.3)
-    } 
     if($.money>=50){
       console.log(`\n提现￥50`)
-      await With_Draw(50)
+      await With_Draw()
     }else{
       console.log(`\n金额不足以提现···`)
     }
@@ -808,13 +804,13 @@ async function Renwu_Done(num) {
 // 💴提现
 async function With_Draw() {
   // 调用API
-  await With_Draw_API(1)
+  await With_Draw_API()
   let result = JSON.parse($.With_Draw_Result)
   console.log(result)
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
   }else{
-    console.log(`提现成功`)
+    console.log(result)
   }
 }
 
@@ -1054,7 +1050,6 @@ async function Watch_Video_Done_API(nonce_str) {
   $.Watch_Video_Done_Result = await postRequestBody(`you/callback`,body)
 }
 
-
 // 领取任务奖励💰API
 async function Renwu_Done_API(taskid) {
   let body = `taskid=${taskid}&=`
@@ -1062,8 +1057,8 @@ async function Renwu_Done_API(taskid) {
 }
 
 // 提现💴API
-async function With_Draw_API(num) {
-  let body =`tx=${num}&=`
+async function With_Draw_API() {
+  let body =`tx=50&=`
   $.With_Draw_Result = await postRequestBody(`user/tixian`,body)
 }
 
@@ -1090,7 +1085,6 @@ function postRequest(function_id, timeout = 1000){
     }, timeout)
   })
 } 
-
 
 // URL
 function taskUrl(activity) {
@@ -1135,6 +1129,7 @@ function postRequestBody(function_id, body = {}, timeout = 1000){
     headers: {
       'Host': 'bububao.duoshoutuan.com',
       'tokenstr': token,
+      'version': '11',
       'User-Agent': 'BBB/133 CFNetwork/1209 Darwin/20.2.0',
     }
   }
