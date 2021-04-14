@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 10:11:03
+ * @Last Modified time: 2021-04-14 10:25:11
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -378,15 +378,26 @@ async function Dk_Click(num) {
   let result = JSON.parse($.Dk_Click_Result)
   if(result.code!==1){
     console.log(`❌ ${result.msg}`)
+    $._3 = false
   }else{
     console.log(`获得💰:[${result.jinbi}]个`)
-    console.log(`尝试进行刷[${num}]这个参数`)
-    for(let k = 0 ; k < 10 ; k++){
-      console.log(`等待了60s···`)
-      await $.wait(60000)
-      await Dk_Info()
-      await Dk_Click(num)
+    console.log(`\n尝试进行刷[${num}]这个参数`)
+    $._3 = true
+      for(let k = 0 ; k < 20 ; k++){
+        if($._3){
+          console.log(`第[${k+1}]次,等待了5s···`)
+          await $.wait(5000)
+          await Dk_Info()
+          await Dk_Click(num)
+        }else{
+          console.log(`❌ ${result.msg}`)
+          console.log(`结束循环`)
+          return
+        }
+        
+      }
     }
+
   }
 }
 
