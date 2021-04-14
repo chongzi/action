@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 09:26:57
+ * @Last Modified time: 2021-04-14 09:32:35
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -76,7 +76,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
       let Now = [1,2,3,4,5,6,7,8,9,10]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
-        console.log(`尝试第${n+1}早起打卡,本次打卡携带参数:[${now}]\n等待5s···`)
+        console.log(`尝试第${n+1}次早起打卡,本次打卡携带参数:[${now}]\n等待5s···`)
         await $.wait(5000)
         await Dk_Click(now)
       }
@@ -85,7 +85,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
       let Now = [1,2,3,4,5,6,7,8,9,10]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
-        console.log(`尝试第${n+1}早睡打卡,本次打卡携带参数:[${now}]\n等待5s···`)
+        console.log(`尝试第${n+1}次早睡打卡,本次打卡携带参数:[${now}]\n等待5s···`)
         await $.wait(5000)
         await Dk_Click(now)
       }
