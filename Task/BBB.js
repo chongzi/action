@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 09:22:44
+ * @Last Modified time: 2021-04-14 09:26:57
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -73,24 +73,16 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
     await Dk_Info()
     if($.BJH>=4&&$.BJH<=12){
       console.log(`\n当前时间:[${$.BJH}],在早起打卡的时间段(🕗04:00-12:00)内,执行早起打卡:`)
-      let Now = [1,2,3]
+      let Now = [1,2,3,4,5,6,7,8,9,10]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
         console.log(`尝试第${n+1}早起打卡,本次打卡携带参数:[${now}]\n等待5s···`)
         await $.wait(5000)
-        if(now===3){
-          for(let i = 0 ; i < 50 ; i++){
-            console.log(`开始刷参数为${now}的金币,等待了5s···`)
-            await $.wait(5000)
-            await Dk_Click(now)
-          }
-        }else{
-          await Dk_Click(now)
-        }
+        await Dk_Click(now)
       }
     }else if($.BJH>=20&&$.BJH<=4){
       console.log(`\n当前时间:[${$.BJH}],在早睡打卡的时间段(🕗20:00-04:00)内,执行早睡打卡:`)
-      let Now = [4,5,6]
+      let Now = [1,2,3,4,5,6,7,8,9,10]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
         console.log(`尝试第${n+1}早睡打卡,本次打卡携带参数:[${now}]\n等待5s···`)
