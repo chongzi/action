@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 11:33:27
+ * @Last Modified time: 2021-04-14 12:13:38
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -10,9 +10,9 @@
 
 const $ = Env('步步宝')
 
-const notify = $.isNode() ? require('./sendNotify') : '';
+// const notify = $.isNode() ? require('./sendNotify') : '';
 
-$.message = ''
+// $.message = ''
 
 $.guessCYNum = 1
 
@@ -76,17 +76,19 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
       let Now = [1,2,3,4,5,6,7,8,9,10]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
-        console.log(`尝试第${n+1}次早起打卡,本次打卡携带参数:[${now}]\n等待5s···`)
+        console.log(`\n尝试第${n+1}次早起打卡,本次打卡携带参数:[${now}]\n等待5s···`)
         await $.wait(5000)
         await Dk_Click(now)
-        if($.Dk_Click_Result.jinbi!==undefined){
+        let resultInfo = JSON.parse($.Dk_Click_Result)
+        if(resultInfo.code!==-1){
           console.log(`当前参数[${now}],返回值不为空,开始刷金币💰···`)
           for(let rush = 0 ; rush <100 ; rush++){
             console.log(`当前循环第[${rush+1}]次`)
-            await console.log(`等待了3s···`)
-            await $.wait(3000)
+            await Dk_Info()
             await Dk_Click(now)
           }
+        }else{
+          console.log(`无金币,跳过参数[${now}]`)
         }
       }
     }else if($.BJH>=20&&$.BJH<=4){
@@ -94,9 +96,20 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
       let Now = [1,2,3,4,5,6,7,8,9,10]
       for(let n = 0 ; n < Now.length ; n++){
         now = Now[n]
-        console.log(`尝试第${n+1}次早睡打卡,本次打卡携带参数:[${now}]\n等待5s···`)
+        console.log(`\n尝试第${n+1}次早睡打卡,本次打卡携带参数:[${now}]\n等待5s···`)
         await $.wait(5000)
         await Dk_Click(now)
+        let resultInfo = JSON.parse($.Dk_Click_Result)
+        if(resultInfo.code!==-1){
+          console.log(`当前参数[${now}],返回值不为空,开始刷金币💰···`)
+          for(let rush = 0 ; rush <100 ; rush++){
+            console.log(`当前循环第[${rush+1}]次`)
+            await Dk_Info()
+            await Dk_Click(now)
+          }
+        }else{
+          console.log(`无金币,跳过参数[${now}]`)
+        }
       }
     }else{
       console.log(`当前不在[04:00-12:00][20:00-04:00]时间段内`)
