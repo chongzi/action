@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 09:12:41
+ * @Last Modified time: 2021-04-14 09:22:44
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -78,7 +78,15 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
         now = Now[n]
         console.log(`尝试第${n+1}早起打卡,本次打卡携带参数:[${now}]\n等待5s···`)
         await $.wait(5000)
-        await Dk_Click(now)
+        if(now===3){
+          for(let i = 0 ; i < 50 ; i++){
+            console.log(`开始刷参数为${now}的金币,等待了5s···`)
+            await $.wait(5000)
+            await Dk_Click(now)
+          }
+        }else{
+          await Dk_Click(now)
+        }
       }
     }else if($.BJH>=20&&$.BJH<=4){
       console.log(`\n当前时间:[${$.BJH}],在早睡打卡的时间段(🕗20:00-04:00)内,执行早睡打卡:`)
