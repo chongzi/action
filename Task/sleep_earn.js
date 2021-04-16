@@ -353,7 +353,7 @@ async function sleep(p) {
          if(result.code!==200){
            console.log(`❌ ${result.message}`)
          }else{
-           console.log(`获得钻石`+999*2+`个`)
+           console.log(`获得钻石💎【`+999*2+`】个`)
            console.log(`等待5s···`)
            await $.wait(5000)
          }
