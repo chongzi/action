@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-06 17:21:16 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-12 10:53:11
+ * @Last Modified time: 2021-04-16 10:59:57
  */
 
 const $ = Env('朗果英语')
@@ -79,6 +79,10 @@ if ($.isNode()) {
       console.log(`等待了5s···`)
       await $.wait(5000)
     }
+
+    // 完成任务
+    console.log(`\n执行 -> 完成任务`)
+    await Done()
     
     // 🧧领取奖励
     console.log(`\n🧧执行 -> 领取奖励`)
@@ -121,16 +125,6 @@ async function TaskList(){
           $.message+=`🧧 当前红包:${result.result.userRedAmout}\n`
           console.log(`🎈 当前积分:${result.result.userScore}`)
           $.message+=`🎈 当前积分:${result.result.userScore}\n`
-
-          TaskListArr = result.result.taskUserEvaluationVOList
-          console.log(`📝 任务列表`)
-          TaskListArr.forEach((item)=>{
-            if(item.receivedRedId!==undefined){
-              TopicIdArr.push(item.receivedRedId)
-            }
-            console.log(`ID:【${item.id}】,任务【${item.taskName}】,任务奖励:【${item.rewardScore}】积分`)
-          })
-          console.log(`当前领取TopicId数组为：${TopicIdArr}`)
         }else{
           console.log(`❌ 初始化失败！`)
         }
@@ -215,6 +209,41 @@ async function Read_Training(timeout = 1000) {
        } 
      })
     },timeout)
+}
+
+// 完成任务推送到数组内
+async function Done() {
+  return new Promise((resolve) => {
+    let body = `{"uid":${uid},"channelNumber":2}`
+    $.post(BodytaskUrl(`task/daily/taskList`,body),async(error, response, data) =>{
+      try{
+        if (error) {
+          console.log(`${JSON.stringify(error)}`)
+          console.log(`API请求失败，请检查网路重试`)
+        } else {
+          const result = JSON.parse(data)
+          // 反馈信息
+          // console.log(result)
+          if(result.code!==200){
+            TaskListArr = result.result.taskUserEvaluationVOList
+            console.log(`📝 任务列表`)
+            TaskListArr.forEach((item)=>{
+              if(item.receivedRedId!==undefined){
+                TopicIdArr.push(item.receivedRedId)
+              }
+              console.log(`ID:【${item.id}】,任务【${item.taskName}】,任务奖励:【${item.rewardScore}】积分`)
+            })
+            console.log(`当前领取TopicId数组为：${TopicIdArr}`)
+          }else{
+            console.log(`❌ 初始化失败！`)
+          }
+        }}catch(e) {
+          console.log(e)
+        } finally {
+          resolve();
+        } 
+      })
+    })
 }
 
 // 🧧领取奖励
