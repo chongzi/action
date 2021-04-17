@@ -82,7 +82,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
         let resultInfo = JSON.parse($.Dk_Click_Result)
         if(resultInfo.code!==-1){
           console.log(`\n------------------\n当前参数[${now}],返回值不为空,开始刷金币💰···\n------------------\n`)
-          for(let rush = 0 ; rush <100 ; rush++){
+          for(let rush = 0 ; rush <200 ; rush++){
             console.log(`\n当前循环第[${rush+1}]次`)
             await Dk_Info()
             await Dk_Click(now)
