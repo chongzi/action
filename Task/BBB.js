@@ -102,7 +102,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
         let resultInfo = JSON.parse($.Dk_Click_Result)
         if(resultInfo.code!==-1){
           console.log(`当前参数[${now}],返回值不为空,开始刷金币💰···`)
-          for(let rush = 0 ; rush <100 ; rush++){
+          for(let rush = 0 ; rush < 200 ; rush++){
             console.log(`当前循环第[${rush+1}]次`)
             await Dk_Info()
             await Dk_Click(now)
@@ -180,12 +180,12 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
     }
 
     console.log(`\n📺执行 -> 看视频赚金币`)
-    if($.BJH===1||$.BJH===2){
+    if($.BJH==1||$.BJH==2||$.BJH==3){
       for(let a = 0 ; a < 5 ; a++){
         await Watch_Video()
       }
     }else{
-      console.log(`当前不在[1][2]时间点内，不执行看视频赚金币操作。`)
+      console.log(`当前不在[1][2][3]时间点内，不执行看视频赚金币操作。`)
     }
 
     console.log(`\n📘执行 -> 点广告领金币`)
