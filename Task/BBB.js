@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-14 14:03:52
+ * @Last Modified time: 2021-04-19 12:53:18
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -82,7 +82,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
         let resultInfo = JSON.parse($.Dk_Click_Result)
         if(resultInfo.code!==-1){
           console.log(`\n------------------\n当前参数[${now}],返回值不为空,开始刷金币💰···\n------------------\n`)
-          for(let rush = 0 ; rush <200 ; rush++){
+          for(let rush = 0 ; rush < 400 ; rush++){
             console.log(`\n当前循环第[${rush+1}]次`)
             await Dk_Info()
             await Dk_Click(now)
@@ -102,7 +102,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
         let resultInfo = JSON.parse($.Dk_Click_Result)
         if(resultInfo.code!==-1){
           console.log(`当前参数[${now}],返回值不为空,开始刷金币💰···`)
-          for(let rush = 0 ; rush < 200 ; rush++){
+          for(let rush = 0 ; rush < 400 ; rush++){
             console.log(`当前循环第[${rush+1}]次`)
             await Dk_Info()
             await Dk_Click(now)
