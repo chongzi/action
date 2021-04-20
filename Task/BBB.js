@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-08 11:18:12 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-20 21:59:17
+ * @Last Modified time: 2021-04-20 22:12:07
  * 
  * 脚本自用，仅支持Github Action
  * 下载链接:http://bububao.yichengw.cn/?id=527716
@@ -92,7 +92,7 @@ $.BJH = $.BJT.getUTCHours() // 当前小时
           console.log(`无金币,跳过参数[${now}]`)
         }
       }
-    }else if($.BJH>=20&&$.BJH<=4){
+    }else if($.BJH>=20||$.BJH<=4){
       console.log(`\n当前时间:[${$.BJH}],在早睡打卡的时间段(🕗20:00-04:00)内,执行早睡打卡:`)
       let Now = [1,2,3,4,5,6,7,8,9,10]
       for(let n = 0 ; n < Now.length ; n++){
