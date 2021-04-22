@@ -1,4 +1,4 @@
-name: 运动服极速版
+name: 运动福极速版
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: '运行 【运动服极速版】'
+      - name: '运行 【运动福极速版】'
         run: |
           node ./Task/sportFu_speed.js
         env:
