@@ -2,7 +2,7 @@
  * @Author: Xin https://github.com/Xin-code 
  * @Date: 2021-04-02 11:15:20 
  * @Last Modified by: Xin 
- * @Last Modified time: 2021-04-20 16:26:21
+ * @Last Modified time: 2021-04-22 18:45:00
  */
 
 const $ = Env('运动福极速版')
@@ -13,23 +13,23 @@ $.message = ''
 
 const SPORT_FU_API_HOST = 'https://api.yundongfu.mobi'
 
-const TokenArr = [`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdWNreVRva2VuIiwiYXVkIjoiQVBQIiwiaXNzIjoiU0VSVklDRSIsImFsaWFzIjoiMjkxMDAzYTk0MDEyNDdiMWIwNmM5ODRhM2Q4N2FhZDciLCJpYXQiOjE2MTczMzI4NTR9.TN5ITve0RjMzsPqFh8_I11XgHfa4Ucf11r8TrX93TIs`]
+const TokenArr = []
 
-// if ($.isNode()) {
-//   if (process.env.SPORTFU_SPEED_COOKIE && process.env.SPORTFU_SPEED_COOKIE.indexOf('#') > -1) {
-//     signToken = process.env.SPORTFU_SPEED_COOKIE.split('#');
-//   }else if(process.env.SPORTFU_SPEED_COOKIE && process.env.SPORTFU_SPEED_COOKIE.indexOf('#') > -1) {
-//     signToken = process.env.SPORTFU_SPEED_COOKIE.split('\n');
-//   }else{
-//     signToken = [process.env.SPORTFU_SPEED_COOKIE]
-//   }
+if ($.isNode()) {
+  if (process.env.SPORTFU_SPEED_TOKEN && process.env.SPORTFU_SPEED_TOKEN.indexOf('#') > -1) {
+    signToken = process.env.SPORTFU_SPEED_TOKEN.split('#');
+  }else if(process.env.SPORTFU_SPEED_TOKEN && process.env.SPORTFU_SPEED_TOKEN.indexOf('#') > -1) {
+    signToken = process.env.SPORTFU_SPEED_TOKEN.split('\n');
+  }else{
+    signToken = [process.env.SPORTFU_SPEED_TOKEN]
+  }
 
-//   Object.keys(signToken).forEach((item) => {
-//     if (signToken[item]) {
-//       TokenArr.push(signToken[item])
-//     }
-//   })
-// }
+  Object.keys(signToken).forEach((item) => {
+    if (signToken[item]) {
+      TokenArr.push(signToken[item])
+    }
+  })
+}
 
 !(async () => {
   for (let i = 0; i < TokenArr.length; i++) {
