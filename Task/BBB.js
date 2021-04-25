@@ -18,7 +18,7 @@ $.guessCYNum = 1
 
 const BBB_API_HOST = 'https://bububao.duoshoutuan.com'
 
-const tokenArr = []
+const tokenArr = ["EEBCE773E3A3D9AB4B0CDE0EB535307G1619329972"]
 
 if ($.isNode()) {
   if (process.env.BBB_TOKEN && process.env.BBB_TOKEN.indexOf('#') > -1) {
