@@ -1,7 +1,7 @@
 /*
- * @Author: Xin https://github.com/Xin-code 
- * @Date: 2021-01-27 08:40:21 
- * @Last Modified by: Xin 
+ * @Author: Xin https://github.com/Xin-code
+ * @Date: 2021-01-27 08:40:21
+ * @Last Modified by: Xin
  * @Last Modified time: 2021-03-30 09:44:49
  */
 
@@ -71,7 +71,7 @@ let PUSH_PLUS_USER = '';
 
 //==========================云端环境变量的判断与接收=========================
 if (process.env.PUSH_KEY) {
-  SCKEY = process.env.PUSH_KEY;
+  SCKEY = process.env.PUSH_PLUS_TOKEN;
 }
 
 if (process.env.QQ_SKEY) {
@@ -480,7 +480,7 @@ function qywxamNotify(text, desp) {
         },
       };
     $.post(options_accesstoken, (err, resp, data) => {
-      html=desp.replace(/\n/g,"<br/>")    
+      html=desp.replace(/\n/g,"<br/>")
       var json = JSON.parse(data);
       accesstoken = json.access_token;
       let options;
@@ -514,10 +514,10 @@ function qywxamNotify(text, desp) {
               articles: [
                 {
                   title: `${text}`,
-                  thumb_media_id: `${QYWX_AM_AY[4]}`,  
+                  thumb_media_id: `${QYWX_AM_AY[4]}`,
                   author : `智能助手` ,
                   content_source_url: ``,
-                  content : `${html}`, 
+                  content : `${html}`,
                   digest: `${desp}`
                 }
               ]
@@ -537,7 +537,7 @@ function qywxamNotify(text, desp) {
           'Content-Type': 'application/json',
         },
       }
-      
+
       $.post(options, (err, resp, data) => {
         try {
           if (err) {
@@ -573,7 +573,7 @@ function iGotNotify(text, desp, params={}){
       if(!IGOT_PUSH_KEY_REGX.test(IGOT_PUSH_KEY)) {
         console.log('您所提供的IGOT_PUSH_KEY无效')
         resolve()
-        return 
+        return
       }
       const options = {
         url: `https://push.hellyw.com/${IGOT_PUSH_KEY.toLowerCase()}`,
