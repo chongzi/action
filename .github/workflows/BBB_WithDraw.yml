@@ -1,9 +1,10 @@
 name: 步步宝_提现
-
+env:
+  TZ: Asia/Shanghai
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 16 * * *'
+    - cron: '0 0 * * *'
   watch:
     types: started
   repository_dispatch:
